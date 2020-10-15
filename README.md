@@ -1,4 +1,4 @@
-# compiladorMeMyself
+# Compilador MeMyself
 
 Guillermo Enrique Valles Villegas A01561722
 
