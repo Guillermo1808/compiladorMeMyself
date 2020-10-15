@@ -1,0 +1,1 @@
+program memo; var int : i, j, p; int module fact(int j); var char : uno; {return(5)} main(){}
