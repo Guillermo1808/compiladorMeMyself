@@ -11,8 +11,8 @@ solo es cuestion de checar esos errores y arreglarlos.
 Codigo de Semantica
 Arreglar los errores previos del avance 1, para que funcionara bien la sintaxis.
 Se agregó el Cubo semantico funcional, la tabla de variables y la tabla de funciones.
-[x] Cubo Semantico
-[x] Tabla Variables
-[x] Tabla Funciones
+- [x] Cubo Semantico
+- [x] Tabla Variables
+- [x] Tabla Funciones
 
 ## AVANCE 3
