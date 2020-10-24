@@ -3,6 +3,7 @@
     # MeMyself
 
 from sly import Lexer, Parser
+from TablaFunciones import tablaFunciones
 
 
 class MeMyselfLexer(Lexer):
@@ -69,6 +70,9 @@ class MeMyselfParser(Parser):
         #       PROGRAM
         @_('PROGRAM ID ";" program2 program3 program4')
         def program(self, p):
+            DirFuncs = tablaFunciones()
+            DirFuncs.addFunction('metodoMain', 'main', '', '')
+            DirFuncs.printFunction()
             pass
         @_('vars', '')
         def program2(self, p):
@@ -286,8 +290,8 @@ if __name__ == '__main__':
          try:
              text = input('---> ')
              parser.parse(lexer.tokenize(text))
-             for tok in lexer.tokenize(text):
-                 print(tok)
+            #  for tok in lexer.tokenize(text):
+            #      print(tok)
          except EOFError:
              break
     
