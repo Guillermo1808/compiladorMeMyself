@@ -5,17 +5,24 @@
 #   Tabla con diccionario para guardar las variables del programa
 import sys
 
+
 class tablaVariables:
+    
+    
     def __init__(self):
         self.variables = { }
+        
         
     def search(self, id):               # DEVUELVE TRUE OR FALSE SI LA VARIABLE EXISTE
         return id in self.variables
     
-    def add(self, id, type):            # AGREGA LA VARIABLE Y TIPO A LA TABLA
+    
+    def add(self, id, type, scope):            # AGREGA LA VARIABLE Y TIPO A LA TABLA
         self.variables[id] = {
-            'type': type
+            'type': type,
+            'scope': scope
         }
+        
         
     def print(self):                    # IMPRIME LA TABLA
         #print(self.variables)

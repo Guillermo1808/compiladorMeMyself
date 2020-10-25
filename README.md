@@ -16,3 +16,7 @@ Se agregó el Cubo semantico funcional, la tabla de variables y la tabla de func
 - [x] Tabla Funciones
 
 ## AVANCE 3
+Se finalizaron de hacer las tablas de variables y funciones, y su consturccion.
+Falta investigar como accesar al valor de los TOKENS
+- [] Crear Stacks
+

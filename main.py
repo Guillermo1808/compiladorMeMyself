@@ -4,6 +4,7 @@
 
 from sly import Lexer, Parser
 from TablaFunciones import tablaFunciones
+from CuboSemantico import cuboSemantico as Cube
 
 
 class MeMyselfLexer(Lexer):
@@ -71,7 +72,7 @@ class MeMyselfParser(Parser):
         @_('PROGRAM ID ";" program2 program3 program4')
         def program(self, p):
             DirFuncs = tablaFunciones()
-            DirFuncs.addFunction('metodoMain', 'main', '', '')
+            DirFuncs.addFunction(p.ID, 'main', '', '', 'global')
             DirFuncs.printFunction()
             pass
         @_('vars', '')
@@ -129,7 +130,7 @@ class MeMyselfParser(Parser):
         @_('WRITE "(" escritura2 ")" ";"')
         def escritura(self, p):
             pass
-        @_('printe printe', 'escritura3')
+        @_('printe', 'escritura3')
         def escritura2(self, p):
             pass
         @_('"," escritura2', '')
