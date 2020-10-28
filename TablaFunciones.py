@@ -5,6 +5,7 @@
 #   Tabla con diccionario para guardar las variables del programa
 
 from TablaVariables import tablaVariables
+from TablaParametros import tablaParametros
 import sys
 
 
@@ -22,33 +23,36 @@ class tablaFunciones:
     
     
     # AGREGA LA FUNCION Y CREA SU TABLA
-    def addFunction(self, fid, type, parametersType, parametersId, FScope):
+    def addFunction(self, fid, typeF, FScope):
         if fid in self.funciones.keys():
             print('ERROR:', fid, 'module is already declared')
         else:
             self.funciones[fid] = {
-                'type': type,
-                'parameterId': parametersId,
-                'parameterType': parametersType,
+                'type': typeF,
                 'FScope': FScope,
-                'variables': tablaVariables()
+                'variables': tablaVariables(),
+                'parametros': tablaParametros()
             }
         
         
         
     # AGREGA VARIABLES A LA TABLA
-    def addVariable(self, fid, type, id):
+    def addVariable(self, fid, id, typeV, memory):
         if(self.funciones[fid]['variables'].search(id)):
             print('ERROR:', id, 'variable is already declared')
         else:
-            self.funciones[fid]['variables'].add(id, type, self.funciones[fid]['FScope'])
-        
+            self.funciones[fid]['variables'].add(id, typeV, self.funciones[fid]['FScope'], memory)
+    
+    def addParametros(self, fid, typeP):
+        self.funciones[fid]['parametros'].add(typeP)
         
         
     # IMPRIME LA TABLA DE FUNCIONES
     def printFunction(self):                    
         for fid in self.funciones:
             print('METOD ',fid, self.funciones[fid])
+            self.printFunctionParam(fid)
+            self.printFunctionVars(fid)
            
            
             
@@ -56,23 +60,28 @@ class tablaFunciones:
     def printFunctionVars(self, fid):                    
         for id in self.funciones:
             self.funciones[fid]['variables'].print()
-
-
-
-
-if __name__ == "__main__":
-    tablaFun = tablaFunciones()
-    tablaFun.addFunction('metodo', 'int', ['int', 'float', 'char'], ['uno', 'dos', 'tres'], 'global')
-    tablaFun.addVariable('metodo', 'int', 'smigle')
-    tablaFun.addVariable('metodo', 'char', 'memo')
-    tablaFun.addVariable('metodo', 'float', 'lotr')
     
-    tablaFun.addFunction('suma', 'int', ['int', 'float', 'char'], ['uno', 'dos', 'tres'], 'funsuma')
-    tablaFun.addVariable('suma', 'int', 'smigle')
-    tablaFun.addVariable('suma', 'char', 'memo')
-    tablaFun.addVariable('suma', 'float', 'lotr')
+    # IMPRIME LA TABLA PARAMETROS DE FUNCION
+    def printFunctionParam(self, fid):                    
+        for id in self.funciones:
+            self.funciones[fid]['parametros'].print()
+
+
+
+
+# if __name__ == "__main__":
+#     tablaFun = tablaFunciones()
+#     tablaFun.addFunction('metodo', 'int', 'global')
+#     tablaFun.addVariable('metodo', 'int', 'smigle')
+#     tablaFun.addVariable('metodo', 'char', 'memo')
+#     tablaFun.addVariable('metodo', 'float', 'lotr')
     
-    tablaFun.printFunction()
+#     tablaFun.addFunction('suma', 'int', 'funsuma')
+#     tablaFun.addVariable('suma', 'int', 'smigle')
+#     tablaFun.addVariable('suma', 'char', 'memo')
+#     tablaFun.addVariable('suma', 'float', 'lotr')
+    
+#     tablaFun.printFunction()
     
     # tablaFun.addFunction('sumar', 'int', ['int', 'float', 'char'], ['uno', 'dos', 'tres'])
     # tablaFun.addVariable('sumar', 'int', 'smigle')

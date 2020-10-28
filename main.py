@@ -6,6 +6,7 @@ from sly import Lexer, Parser
 from TablaFunciones import tablaFunciones
 from CuboSemantico import cuboSemantico as Cube
 
+DirFuncs = tablaFunciones()
 
 class MeMyselfLexer(Lexer):
         tokens = { PROGRAM, VAR, MODULE, VOID, INT, FLOAT, ASSIGN, CHAR, RELOP, 
@@ -64,15 +65,15 @@ class MeMyselfLexer(Lexer):
 class MeMyselfParser(Parser):
         
         tokens = MeMyselfLexer.tokens
-
+        #DirFuncs = tablaFunciones()
         def __init__(self):
             self.names = { }
 
         #       PROGRAM
         @_('PROGRAM ID ";" program2 program3 program4')
         def program(self, p):
-            DirFuncs = tablaFunciones()
-            DirFuncs.addFunction(p.ID, 'main', '', '', 'global')
+            #DirFuncs = tablaFunciones()     #CREATE DIR TABLE   
+            DirFuncs.addFunction(p.ID, 'main', 'global') #ADD ID AND TYPE TO DIRFUNC // CREATE TABLES
             DirFuncs.printFunction()
             pass
         @_('vars', '')
@@ -272,6 +273,10 @@ class MeMyselfParser(Parser):
         #       VARS
         @_('VAR tipov ":" ID ";"',' VAR tipov ":" ID vars2 ";"')
         def vars(self, p):
+            print(p.ID)
+            print(p.tipov)
+            DirFuncs.printFunction()
+            DirFuncs.addVariable('memo',p.ID, p.tipov, 10001)
             pass
         @_('"," ID vars2', '')
         def vars2(self, p):
@@ -286,7 +291,6 @@ if __name__ == '__main__':
     
     lexer = MeMyselfLexer()
     parser = MeMyselfParser()
-    
     while True:
          try:
              text = input('---> ')

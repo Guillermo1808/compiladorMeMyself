@@ -17,21 +17,20 @@ class tablaVariables:
         return id in self.variables
     
     
-    def add(self, id, type, scope):            # AGREGA LA VARIABLE Y TIPO A LA TABLA
+    def add(self, id, typeV, memory):            # AGREGA LA VARIABLE Y TIPO A LA TABLA
         self.variables[id] = {
-            'type': type,
-            'scope': scope
+            'typeV': typeV,
+            'memory': memory
         }
         
         
     def print(self):                    # IMPRIME LA TABLA
         #print(self.variables)
-        for i in self.variables:
-            print( i, 'esta en lista de variables')
+        print(self.variables)
 
 
 # if __name__ == "__main__":
 #     tablaVar = tablaVariables()
-#     tablaVar.add('x', 'int')
-#     tablaVar.add('y', 'float')
+#     tablaVar.add('x', 'int', 10002)
+#     tablaVar.add('y', 'float', 3001)
 #     tablaVar.print()
