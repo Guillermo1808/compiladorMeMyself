@@ -38,7 +38,7 @@ class tablaFunciones:
         
     # AGREGA VARIABLES A LA TABLA
     def addVariable(self, fid, id, typeV, memory):
-        if(self.funciones[fid]['variables'].search(id)):
+        if(self.funciones[fid]['variables'].search(id) | self.funciones[fid]['main'].search(id)):
             print('ERROR:', id, 'variable is already declared')
         else:
             self.funciones[fid]['variables'].add(id, typeV, self.funciones[fid]['FScope'], memory)

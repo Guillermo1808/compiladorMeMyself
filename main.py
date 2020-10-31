@@ -4,7 +4,7 @@
 
 from sly import Lexer, Parser
 from TablaFunciones import tablaFunciones
-from CuboSemantico import cuboSemantico as Cube
+from Cuadruplos import cuadruplos
 
 DirFuncs = tablaFunciones()
 
@@ -287,10 +287,12 @@ class MeMyselfParser(Parser):
         def tipov(self, p):
             pass
 
+        # FUNCION PRINCIPAL DEL PROGRAMA 
 if __name__ == '__main__':
     
     lexer = MeMyselfLexer()
     parser = MeMyselfParser()
+    cuadruplo = cuadruplos()
     while True:
          try:
              text = input('---> ')
