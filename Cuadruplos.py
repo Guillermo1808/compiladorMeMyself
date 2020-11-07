@@ -5,6 +5,7 @@
 
 from CuboSemantico import CuboSemantico
 
+
 class cuadruplos:
     
     def __init__(self):
@@ -32,11 +33,16 @@ class cuadruplos:
     def search(self, iteracion):
         print(self.cuadruplo.get(iteracion))
     
-    # def updateCuad(self, iteracion, operador, termino1, termino2, asignar):
-    #     if(self.cuadruplo.get(iteracion, None) == None):
-    #         print('ERROR THAT ITERATION DOES NOT EXIST')
-    #     else:
-    #         self.cuadruplo[iteracion].update(self.cuadruplo(iteracion, operador, termino1, termino2, asignar))
+    def updateCuad(self, iteracion, operador, termino1, termino2, asignar):
+        if(self.cuadruplo.get(iteracion, None) == None):
+            print('ERROR THAT ITERATION DOES NOT EXIST')
+        # else:
+        #     print(self.cuadruplo[iteracion])
+        #     self.cuadruplo['operador'] = operador
+        #     self.cuadruplo['termino1'] = termino1
+        #     self.cuadruplo['termino2'] = termino2
+        #     self.cuadruplo['asignar']= asignar
+        #     print(self.cuadruplo[iteracion])
     
     def print(self):
         for key in self.cuadruplo:

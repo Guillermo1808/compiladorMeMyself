@@ -5,8 +5,32 @@
 from sly import Lexer, Parser
 from TablaFunciones import tablaFunciones
 from Cuadruplos import cuadruplos
+from Stacks import stacks
 
-DirFuncs = tablaFunciones()
+# DECLARACION DE VARIABLES GLOBALES Y STACKS
+currentFunction = ''
+currentScope = 'global'
+currentType = ''
+varType = ''
+DirFuncs = tablaFunciones() #CREATE DIR TABLE
+POper = stacks()
+PID = stacks()
+PSaltos = stacks()
+PArreglos = stacks()
+PTypes = stacks()
+
+# CONTADORES DE VARIABLES Y SUS BASES
+IntBase     = 10000
+FloatBase   = 15000
+CharsBase   = 18000
+TempsBase   = 20000
+CtesBase    = 22000
+IntCont     = 0
+FloatCont   = 0
+CharsCont   = 0
+TempsCont   = 0
+CtesCont    = 0
+
 
 class MeMyselfLexer(Lexer):
         tokens = { PROGRAM, VAR, MODULE, VOID, INT, FLOAT, ASSIGN, CHAR, RELOP, 
@@ -60,23 +84,19 @@ class MeMyselfLexer(Lexer):
         ID['size'] = SIZE
         ID['clear'] = CLEAR
 
-
-
 class MeMyselfParser(Parser):
         
         tokens = MeMyselfLexer.tokens
-        #DirFuncs = tablaFunciones()
+
         def __init__(self):
             self.names = { }
 
         #       PROGRAM
-        @_('PROGRAM ID ";" program2 program3 program4')
+        @_('PROGRAM ID funcs_1 ";" program2 program3 program4')
         def program(self, p):
-            #DirFuncs = tablaFunciones()     #CREATE DIR TABLE   
-            DirFuncs.addFunction(p.ID, 'main', 'global') #ADD ID AND TYPE TO DIRFUNC // CREATE TABLES
             DirFuncs.printFunction()
             pass
-        @_('vars', '')
+        @_('vars program2', '')
         def program2(self, p):
             pass
         @_('funcs', '')
@@ -95,12 +115,12 @@ class MeMyselfParser(Parser):
             pass
 
         #       FUNCV
-        @_('VOID MODULE ID "(" parametros ")" ";" vars "{" estatutos "}"', '')
+        @_('VOID current_typeV MODULE ID funcs_3 "(" parametros ")" ";" vars "{" estatutos "}"', '')
         def funcv(self, p):
             pass
 
         #       FUNCR
-        @_('tipov MODULE ID "(" parametros ")" ";" vars "{" estatutos return0 "}"', '')
+        @_('tipov MODULE ID funcs_3 "(" parametros ")" ";" vars "{" estatutos return0 "}"', '')
         def funcr(self, p):
             pass
 
@@ -251,12 +271,15 @@ class MeMyselfParser(Parser):
             pass
 
         #       PARAMETROS
-        @_('tipov ID parametros2')
+        @_('tipov ID funcs_4 parametros2 parametros3', '')
         def parametros(self,p):
             pass
         
-        @_('"," ID parametros2','')
+        @_('"," ID funcs_5 parametros2','')
         def parametros2(self,p):
+            pass
+        @_('"," parametros','')
+        def parametros3(self,p):
             pass
 
         #       FACTOR
@@ -271,36 +294,127 @@ class MeMyselfParser(Parser):
             pass
 
         #       VARS
-        @_('VAR tipov ":" ID ";"',' VAR tipov ":" ID vars2 ";"')
+        @_('VAR tipov ":" ID funcs_2 vars2 ";"')
         def vars(self, p):
-            print(p.ID)
-            print(p.tipov)
-            DirFuncs.printFunction()
-            DirFuncs.addVariable('memo',p.ID, p.tipov, 10001)
+            
             pass
-        @_('"," ID vars2', '')
+        @_('"," ID funcs_2 vars2', '')
         def vars2(self, p):
             pass
 
         #       TIPOV
         @_('INT', 'FLOAT', 'CHAR')
         def tipov(self, p):
+            PTypes.add(p[0])
+            PTypes.print()
             pass
+        
+        ################################
+        # FUNCIONES PARA LAS ACCIONES #
+        ###############################
+        
+        #FUNCIONES PARA LOS STACKS
+        @_('')
+        def quad_1(self, p):
+            print('quad_1')
+        @_('')
+        def quad_2(self, p):
+            print('quad_2')
+        @_('')
+        def quad_3(self, p):
+            print('quad_3')    
+        @_('')
+        def quad_4(self, p):
+            print('quad_4')
+        # FUNCIONES PARA AGREGAR A LAS TABLAS
+        @_('')
+        def funcs_1(self, p): # Agrega el programa
+            self.currentFunction = p[-1]
+            print('current function: ', self.currentFunction)
+            self.currentScope = 'global'
+            DirFuncs.addFunction(self.currentFunction, 'main', self.currentScope)
+            print('funcs_1')
+        @_('')
+        def funcs_2(self, p): #Agrega Variable
+            self.currentType = PTypes.pop()
+            # global IntCont
+            # global FloatCont
+            # global CharsCont
+            #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
+            if(self.currentType == 'int'):
+                DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, IntBase+IntCont)
+                #IntCont+=1
+            if(self.currentType == 'float'):
+                DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, FloatBase+FloatCont)
+                #FloatCont+=1
+            if(self.currentType == 'char'):
+                DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, CharsBase+CharsCont)
+                #CharsCont+=1
+            print('funcs_2')
+        @_('')
+        def funcs_3(self, p): #Agregar modulo a DirFuncs
+            self.currentType = PTypes.pop()
+            self.currentFunction = p[-1]
+            print('current function: ', self.currentFunction)
+            DirFuncs.addFunction(self.currentFunction, self.currentType, 'module'+str(self.currentFunction))
+            print('funcs_3')
+        @_('')
+        def funcs_4(self, p): #Agregar parametros a modulo
+            self.currentType = PTypes.pop()
+            DirFuncs.addParametros(self.currentFunction, self.currentType)
+            print('funcs_4')
+        @_('')
+        def funcs_5(self, p): #Agregar parametros a modulo
+            print('SSAAAAAHHHAAH',self.currentType)
+            DirFuncs.addParametros(self.currentFunction, self.currentType)
+            print('funcs_5')
+                       
+        @_('')
+        def current_typeV(self, p):
+            PTypes.add('void')
+            print('current_typeV')
+        
 
         # FUNCION PRINCIPAL DEL PROGRAMA 
 if __name__ == '__main__':
-    
+
+    file = open("test.txt", 'r')
+    masterline = ""
+
+    for line in file:
+        masterline = masterline + line.strip()
+        
     lexer = MeMyselfLexer()
     parser = MeMyselfParser()
     cuadruplo = cuadruplos()
-    while True:
-         try:
-             text = input('---> ')
-             parser.parse(lexer.tokenize(text))
-            #  for tok in lexer.tokenize(text):
-            #      print(tok)
-         except EOFError:
-             break
+    result = parser.parse(lexer.tokenize(masterline))
+    print(result)
+    # while True:
+    #     try:
+    #         text = input('duck > ')
+    #         result = parser.parse(lexer.tokenize(text))
+    #         print(result)
+    #         # for line in file:
+    #         #     result = parser.parse(lexer.tokenize(line.strip()))
+    #         #     print(result)
+
+    #     except EOFError:
+    #         break
+    file.close()
+
+# if __name__ == '__main__':
+    
+#     lexer = MeMyselfLexer()
+#     parser = MeMyselfParser()
+#     cuadruplo = cuadruplos()
+#     while True:
+#          try:
+#              text = input('---> ')
+#              parser.parse(lexer.tokenize(text))
+#              for tok in lexer.tokenize(text):
+#                  print(tok)
+#          except EOFError:
+#              break
     
 # if __name__ == '__main__':
 #     file = open("test.txt", 'r')

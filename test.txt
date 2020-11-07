@@ -1,1 +1,17 @@
-program memo; var int : i, j, p; int module fact(int j); var char : uno; {return(5)} main(){}
+program sumas;
+var int : i; 
+var float : j; 
+
+int module fact(float j, k); 
+var char : uno; 
+{
+    return(5)
+}
+char module letra(int i, float j); 
+var int : x;
+{
+    return(2)
+} 
+main(){
+    write(j);
+}

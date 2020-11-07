@@ -18,9 +18,12 @@ Se agregó el Cubo semantico funcional, la tabla de variables y la tabla de func
 ## AVANCE 3
 Se finalizaron de hacer las tablas de variables y funciones, y su consturccion.
 Falta investigar como accesar al valor de los TOKENS
-- [ ] Crear Stacks
+- [x] Crear Stacks
 
 ## AVANCE 4
 Agregada la funcion para los Cuadruplos.
 El cubo semantico ya se puede usar en laclase de Cuadruplos. Pendiente crear exepciones de PRINT, GOTO, etc.
 Investigacion de uso de diccionarios
+
+## AVANCE 5
+Diseño de la arquitectura
