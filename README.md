@@ -11,21 +11,21 @@ solo es cuestion de checar esos errores y arreglarlos.
 Codigo de Semantica
 Arreglar los errores previos del avance 1, para que funcionara bien la sintaxis.
 Se agregó el Cubo semantico funcional, la tabla de variables y la tabla de funciones.
-- [x] Cubo Semantico
-- [x] Tabla Variables
-- [x] Tabla Funciones
+- [x] Cubo Semantico.
+- [x] Tabla Variables.
+- [x] Tabla Funciones.
 
 ## AVANCE 3
 Se finalizaron de hacer las tablas de variables y funciones, y su consturccion.
-Falta investigar como accesar al valor de los TOKENS
-- [x] Crear Stacks
+Falta investigar como accesar al valor de los TOKENS.
+- [x] Crear Stacks.
 
 ## AVANCE 4
 Agregada la funcion para los Cuadruplos.
 El cubo semantico ya se puede usar en laclase de Cuadruplos. Pendiente crear exepciones de PRINT, GOTO, etc.
-Investigacion de uso de diccionarios
+Investigacion de uso de diccionarios.
 
 ## AVANCE 5
-Diseño de la arquitectura
-Se creo la clase para los stacks
-Las tablas de funciones y variables ya se llenan con lo que lee
+Diseño de la arquitectura.
+Se creo la clase para los stacks.
+Las tablas de funciones y variables ya se llenan con lo que lee.
