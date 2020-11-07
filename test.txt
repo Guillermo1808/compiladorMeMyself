@@ -3,11 +3,12 @@ var int : i;
 var float : j; 
 
 int module fact(float j, k); 
-var char : uno; 
+var char : i; 
 {
+    i = i + 8;
     return(5)
 }
-char module letra(int i, float j); 
+char module letra(int i); 
 var int : x;
 {
     return(2)

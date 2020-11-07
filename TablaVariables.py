@@ -25,8 +25,9 @@ class tablaVariables:
         
         
     def print(self):                    # IMPRIME LA TABLA
-        #print(self.variables)
-        print(self.variables)
+        print('VARIABLES:')
+        if(self.variables != {}):
+            print(self.variables)
 
 
 # if __name__ == "__main__":

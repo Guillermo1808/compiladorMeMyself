@@ -49,26 +49,16 @@ class tablaFunciones:
         
         
     # IMPRIME LA TABLA DE FUNCIONES
-    def printFunction(self):                    
+    def printFunction(self):
+        print('------ FUNCIONES -----')               
         for fid in self.funciones:
-            print('METOD ',fid, self.funciones[fid])
-            self.printFunctionParam(fid)
-            self.printFunctionVars(fid)
-           
-           
-            
-    # IMPRIME LA TABLA VARIABLES DE FUNCION
-    def printFunctionVars(self, fid):                    
-        for id in self.funciones:
+            print('-----------')
+            print('MODULE',fid, self.funciones[fid])
             self.funciones[fid]['variables'].print()
-    
-    # IMPRIME LA TABLA PARAMETROS DE FUNCION
-    def printFunctionParam(self, fid):                    
-        for id in self.funciones:
             self.funciones[fid]['parametros'].print()
-
-
-
+            print('-----------')
+        print('----------------------') 
+        
 
 # if __name__ == "__main__":
 #     tablaFun = tablaFunciones()

@@ -94,7 +94,6 @@ class MeMyselfParser(Parser):
         #       PROGRAM
         @_('PROGRAM ID funcs_1 ";" program2 program3 program4')
         def program(self, p):
-            DirFuncs.printFunction()
             pass
         @_('vars program2', '')
         def program2(self, p):
@@ -309,9 +308,9 @@ class MeMyselfParser(Parser):
             PTypes.print()
             pass
         
-        ################################
-        # FUNCIONES PARA LAS ACCIONES #
-        ###############################
+        #################################
+        ## FUNCIONES PARA LAS ACCIONES ##
+        #################################
         
         #FUNCIONES PARA LOS STACKS
         @_('')
@@ -337,19 +336,19 @@ class MeMyselfParser(Parser):
         @_('')
         def funcs_2(self, p): #Agrega Variable
             self.currentType = PTypes.pop()
-            # global IntCont
-            # global FloatCont
-            # global CharsCont
+            global IntCont
+            global FloatCont
+            global CharsCont
             #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
             if(self.currentType == 'int'):
                 DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, IntBase+IntCont)
-                #IntCont+=1
+                IntCont+=1
             if(self.currentType == 'float'):
                 DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, FloatBase+FloatCont)
-                #FloatCont+=1
+                FloatCont+=1
             if(self.currentType == 'char'):
                 DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, CharsBase+CharsCont)
-                #CharsCont+=1
+                CharsCont+=1
             print('funcs_2')
         @_('')
         def funcs_3(self, p): #Agregar modulo a DirFuncs
@@ -368,6 +367,11 @@ class MeMyselfParser(Parser):
             print('SSAAAAAHHHAAH',self.currentType)
             DirFuncs.addParametros(self.currentFunction, self.currentType)
             print('funcs_5')
+        @_('')
+        def funcs_6(self, p): #Agregar constantes
+            global CtesCont
+            DirFuncs.addVariable(self.currentFunction, 'cte', 'cte', CtesCont+CtesB)
+            print('funcs_6')
                        
         @_('')
         def current_typeV(self, p):
@@ -401,6 +405,7 @@ if __name__ == '__main__':
     #     except EOFError:
     #         break
     file.close()
+    DirFuncs.printFunction()
 
 # if __name__ == '__main__':
     

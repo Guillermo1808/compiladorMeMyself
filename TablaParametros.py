@@ -18,13 +18,15 @@ class tablaParametros:
     
     
     def add(self, typeExpected):            # AGREGA LA VARIABLE Y TIPO A LA TABLA
-        self.parametros[typeExpected] = {
+        self.parametros= {
             'type': typeExpected,
         }
         
         
     def print(self):                    # IMPRIME LA TABLA
-        print(self.parametros)
+        if(self.parametros != {}):
+            print('PARAMETROS:')
+            print(self.parametros)
 
 
 # if __name__ == "__main__":
