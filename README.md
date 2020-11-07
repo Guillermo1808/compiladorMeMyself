@@ -27,3 +27,5 @@ Investigacion de uso de diccionarios
 
 ## AVANCE 5
 Diseño de la arquitectura
+Se creo la clase para los stacks
+Las tablas de funciones y variables ya se llenan con lo que lee
