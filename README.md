@@ -2,7 +2,7 @@
 ##### *Proyecto final Compiladores*
 ##### Guillermo Enrique Valles Villegas A01561722 :pizza:
 
-Proyecto de desarrollo de un compilador de codigo.
+Proyecto de desarrollo de un compilador de codigo.\
 Hecho con **[Python](https://www.python.org)** y **[SLY](https://sly.readthedocs.io/en/latest/sly.html)**.
 
 ## AVANCE 1 
@@ -19,16 +19,17 @@ Se agregó el Cubo semantico funcional, la tabla de variables y la tabla de func
 - [x] Tabla Funciones.
 
 ## AVANCE 3
-Se finalizaron de hacer las tablas de variables y funciones, y su consturccion.
+Se finalizaron de hacer las tablas de variables y funciones, y su consturccion.\
 Falta investigar como accesar al valor de los TOKENS.
 - [x] Crear Stacks.
 
 ## AVANCE 4
 Agregada la funcion para los Cuadruplos.
-El cubo semantico ya se puede usar en laclase de Cuadruplos. Pendiente crear exepciones de PRINT, GOTO, etc.
+El cubo semantico ya se puede usar en laclase de Cuadruplos.\ 
+Pendiente crear exepciones de PRINT, GOTO, etc.\
 Investigacion de uso de diccionarios.
 
 ## AVANCE 5
-Diseño de la arquitectura.
-Se creo la clase para los stacks.
+Diseño de la arquitectura.\
+Se creo la clase para los stacks.\
 Las tablas de funciones y variables ya se llenan con lo que lee.
