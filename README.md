@@ -2,6 +2,9 @@
 ##### *Proyecto final Compiladores*
 ##### Guillermo Enrique Valles Villegas A01561722 :pizza:
 
+Proyecto de desarrollo de un compilador de codigo.
+Hecho con [Python](https://www.python.org) y [SLY](https://sly.readthedocs.io/en/latest/sly.html)
+
 ## AVANCE 1 
 Codigo de la sintaxis y gramatica.
 Me marca errores aun y no corre pero ya tiene el cuerpo que necesita,
