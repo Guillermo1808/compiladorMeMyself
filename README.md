@@ -33,3 +33,8 @@ Investigacion de uso de diccionarios.
 Diseño de la arquitectura.\
 Se creo la clase para los stacks.\
 Las tablas de funciones y variables ya se llenan con lo que lee.
+
+## AVANCE 5
+- [x] Tabla Variables Funcional.
+- [x] Tabla Funciones Funcional.
+- [] Cuadruplos Funcional.
