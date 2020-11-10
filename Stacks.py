@@ -19,8 +19,23 @@ class stacks:
     def print(self):
         print(self.stack)
     
-if __name__ == "__main__":
-    POper = stacks()
-    POper.add('int')
-    var = POper.pop()
-    print(var)
+    def top(self):
+        return self.stack[-1]
+    
+    def empty(self):
+        if len(self.stack) > 0:
+            return False
+        else:
+            return True
+    
+    def size(self):
+        return len(self.stack)
+    
+# if __name__ == "__main__":
+#     POper = stacks()
+#     PIper = stacks()
+#     POper.add('x')
+#     em = POper.empty()
+#     print(em)
+#     em = PIper.empty()
+#     print(em)

@@ -52,18 +52,18 @@ class cuadruplos:
         # for key in self.cuadruplo:
         #     print(key)
 
-if __name__ == "__main__":
-    cuadruplo = cuadruplos()
-    cuadruplo.add(1, '+', 'int', 'int', 't1')
-    cuadruplo.add(2, 'GOTO', 0, 0, '_')
-    cuadruplo.add(3, '*', 't2', 'd', 't3')
-    cuadruplo.add(4, '/', 't3', 'e', 't4')
-    cuadruplo.add(5, 'print', 0, 0, 't4')
-    cuadruplo.print()
-    print('---------')
-    cuadruplo.updateCuad(2,'GOTO', 0, 0, 5)
-    cuadruplo.print()
-    print('---------')
-    cuadruplo.updateCuad(7,'print', 0, 0, 't4')
+# if __name__ == "__main__":
+#     cuadruplo = cuadruplos()
+#     cuadruplo.add(1, '+', 'int', 'int', 't1')
+#     cuadruplo.add(2, 'GOTO', 0, 0, '_')
+#     cuadruplo.add(3, '*', 't2', 'd', 't3')
+#     cuadruplo.add(4, '/', 't3', 'e', 't4')
+#     cuadruplo.add(5, 'print', 0, 0, 't4')
+#     cuadruplo.print()
+#     print('---------')
+#     cuadruplo.updateCuad(2,'GOTO', 0, 0, 5)
+#     cuadruplo.print()
+#     print('---------')
+#     cuadruplo.updateCuad(7,'print', 0, 0, 't4')
     
     

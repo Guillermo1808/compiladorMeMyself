@@ -16,6 +16,8 @@ class tablaVariables:
     def search(self, id):               # DEVUELVE TRUE OR FALSE SI LA VARIABLE EXISTE
         return id in self.variables
     
+    def getType(self, id):                      #DEVUELVE EL TIPO DE VARIABLE
+        return self.variables[id]['typeV']
     
     def add(self, id, typeV, memory):            # AGREGA LA VARIABLE Y TIPO A LA TABLA
         self.variables[id] = {
@@ -25,8 +27,8 @@ class tablaVariables:
         
         
     def print(self):                    # IMPRIME LA TABLA
-        print('VARIABLES:')
         if(self.variables != {}):
+            print('VARIABLES:')
             print(self.variables)
 
 
@@ -35,3 +37,5 @@ class tablaVariables:
 #     tablaVar.add('x', 'int', 10002)
 #     tablaVar.add('y', 'float', 3001)
 #     tablaVar.print()
+#     x = tablaVar.getType('x')
+#     print(x)

@@ -34,7 +34,8 @@ Diseño de la arquitectura.\
 Se creo la clase para los stacks.\
 Las tablas de funciones y variables ya se llenan con lo que lee.
 
-## AVANCE 5
+## AVANCE 6
 - [x] Tabla Variables Funcional.
 - [x] Tabla Funciones Funcional.
 - [] Cuadruplos Funcional.
+Los cuadruplos ya casi estan listos. Faltan algunas modificaciones para verificar que funcionen bien

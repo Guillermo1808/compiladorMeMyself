@@ -20,6 +20,11 @@ class tablaFunciones:
     def search(self, fid):              
         return fid in self.funciones
     
+    def getVarType(self, id):
+        for fid in self.funciones.keys():
+            if self.funciones[fid]['variables'].search(id):
+                return self.funciones[fid]['variables'].getType(id)
+            #     return self.funciones[fid]['variables'].getType(id)
     
     
     # AGREGA LA FUNCION Y CREA SU TABLA
@@ -40,7 +45,8 @@ class tablaFunciones:
     def addVariable(self, fid, id, typeV, memory):
         #print('fid', fid, 'id',id,'type', typeV,'memory', memory)
         if(self.funciones[fid]['variables'].search(id)):
-            print('ERROR:', id, 'variable is already declared')
+            print('ERROR:', id, 'VARIABLE IS ALREADY DECLARED')
+            exit()
         else:
             self.funciones[fid]['variables'].add(id, typeV, memory)
     
@@ -66,13 +72,15 @@ class tablaFunciones:
 # if __name__ == "__main__":
 #     tablaFun = tablaFunciones()
 #     tablaFun.addFunction('metodo', 'int', 'global')
-#     tablaFun.addParametros('metodo', 'int')
-#     tablaFun.addParametros('metodo', 'char')
-#     tablaFun.printFunction()
+#     # tablaFun.addParametros('metodo', 'int')
+#     # tablaFun.addParametros('metodo', 'char')
+#     # tablaFun.printFunction()
 #     tablaFun.addFunction('suma', 'int', 'funsuma')
-#     tablaFun.addVariable('suma', 'int', 'smigle')
-#     tablaFun.addVariable('suma', 'char', 'memo')
-#     tablaFun.addVariable('suma', 'float', 'lotr')
+#     tablaFun.addVariable('suma', 'smigle', 'char', 100)
+#     tablaFun.addVariable('suma', 'memo', 'char', 101)
+#     x = tablaFun.getVarType('memo')
+#     print(x)
+# #     tablaFun.addVariable('suma', 'float', 'lotr')
     
 #     tablaFun.printFunction()
     
