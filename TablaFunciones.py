@@ -44,8 +44,8 @@ class tablaFunciones:
         else:
             self.funciones[fid]['variables'].add(id, typeV, memory)
     
-    def addParametros(self, fid, typeP):
-        self.funciones[fid]['parametros'].add(typeP)
+    def addParametros(self, fid, ParCont, typeP):
+        self.funciones[fid]['parametros'].add(ParCont, typeP)
         
         
     # IMPRIME LA TABLA DE FUNCIONES
@@ -57,16 +57,18 @@ class tablaFunciones:
             self.funciones[fid]['variables'].print()
             self.funciones[fid]['parametros'].print()
             print('-----------')
-        print('----------------------') 
+        print('----------------------')
+    
+    def deleteFunction(self, fid):
+        self.funciones[fid]['variables'] = {}
         
 
 # if __name__ == "__main__":
 #     tablaFun = tablaFunciones()
 #     tablaFun.addFunction('metodo', 'int', 'global')
-#     tablaFun.addVariable('metodo', 'int', 'smigle')
-#     tablaFun.addVariable('metodo', 'char', 'memo')
-#     tablaFun.addVariable('metodo', 'float', 'lotr')
-    
+#     tablaFun.addParametros('metodo', 'int')
+#     tablaFun.addParametros('metodo', 'char')
+#     tablaFun.printFunction()
 #     tablaFun.addFunction('suma', 'int', 'funsuma')
 #     tablaFun.addVariable('suma', 'int', 'smigle')
 #     tablaFun.addVariable('suma', 'char', 'memo')

@@ -2,13 +2,13 @@ program sumas;
 var int : i; 
 var float : j; 
 
-int module fact(float j, k); 
+int module fact(int j, float k); 
 var char : i; 
 {
     i = i + 8;
     return(5)
 }
-char module letra(int i); 
+char module letra(char m); 
 var int : x;
 {
     return(2)

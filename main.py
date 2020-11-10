@@ -30,6 +30,7 @@ FloatCont   = 0
 CharsCont   = 0
 TempsCont   = 0
 CtesCont    = 0
+ParCont     = 1
 
 
 class MeMyselfLexer(Lexer):
@@ -270,15 +271,14 @@ class MeMyselfParser(Parser):
             pass
 
         #       PARAMETROS
-        @_('tipov ID funcs_4 parametros2 parametros3', '')
+        @_('tipov ID funcs_4 parametros2', '')
         def parametros(self,p):
+            global ParCont
+            ParCont = 1
             pass
         
-        @_('"," ID funcs_5 parametros2','')
+        @_('"," tipov ID funcs_4 parametros2','')
         def parametros2(self,p):
-            pass
-        @_('"," parametros','')
-        def parametros3(self,p):
             pass
 
         #       FACTOR
@@ -295,7 +295,6 @@ class MeMyselfParser(Parser):
         #       VARS
         @_('VAR tipov ":" ID funcs_2 vars2 ";"')
         def vars(self, p):
-            
             pass
         @_('"," ID funcs_2 vars2', '')
         def vars2(self, p):
@@ -305,7 +304,6 @@ class MeMyselfParser(Parser):
         @_('INT', 'FLOAT', 'CHAR')
         def tipov(self, p):
             PTypes.add(p[0])
-            PTypes.print()
             pass
         
         #################################
@@ -359,19 +357,11 @@ class MeMyselfParser(Parser):
             print('funcs_3')
         @_('')
         def funcs_4(self, p): #Agregar parametros a modulo
+            global ParCont
             self.currentType = PTypes.pop()
-            DirFuncs.addParametros(self.currentFunction, self.currentType)
+            DirFuncs.addParametros(self.currentFunction, ParCont ,self.currentType)
+            ParCont+=1
             print('funcs_4')
-        @_('')
-        def funcs_5(self, p): #Agregar parametros a modulo
-            print('SSAAAAAHHHAAH',self.currentType)
-            DirFuncs.addParametros(self.currentFunction, self.currentType)
-            print('funcs_5')
-        @_('')
-        def funcs_6(self, p): #Agregar constantes
-            global CtesCont
-            DirFuncs.addVariable(self.currentFunction, 'cte', 'cte', CtesCont+CtesB)
-            print('funcs_6')
                        
         @_('')
         def current_typeV(self, p):

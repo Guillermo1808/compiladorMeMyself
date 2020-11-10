@@ -5,9 +5,8 @@
 #   Tabla con diccionario para guardar los parametros que necesita la funcion
 import sys
 
-
 class tablaParametros:
-   
+
     
     def __init__(self):
         self.parametros = { }
@@ -17,8 +16,8 @@ class tablaParametros:
         return id in self.parametros
     
     
-    def add(self, typeExpected):            # AGREGA LA VARIABLE Y TIPO A LA TABLA
-        self.parametros= {
+    def add(self,parNum ,typeExpected):            # AGREGA LA VARIABLE Y TIPO A LA TABLA
+        self.parametros[parNum]= {
             'type': typeExpected,
         }
         
@@ -31,6 +30,6 @@ class tablaParametros:
 
 # if __name__ == "__main__":
 #     tablaPar = tablaParametros()
-#     tablaPar.add('int')
-#     tablaPar.add('float')
+#     tablaPar.add(1,'int')
+#     tablaPar.add(2,'float')
 #     tablaPar.print()
