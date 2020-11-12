@@ -37,6 +37,9 @@ Las tablas de funciones y variables ya se llenan con lo que lee.
 ## AVANCE 6
 - [x] Tabla Variables Funcional.
 - [x] Tabla Funciones Funcional.
-- [ ] Cuadruplos Funcional.\
+- [_] Cuadruplos Estatutos Funcionales.
+- [x] Cuadruplos Aritmeticos Funcionales.\
 \
-Los cuadruplos ya casi estan listos. Faltan algunas modificaciones para verificar que funcionen bien.
+Los cuadruplos ya casi estan listos. Faltan algunas modificaciones para verificar que funcionen bien.\
+Se eliminó el error en el que no se podian tener varios estatutos seguidos.\
+

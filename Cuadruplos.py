@@ -11,46 +11,32 @@ class cuadruplos:
     def __init__(self):
         self.cuadruplo = { }
         
-    def add(self, iteracion, operador, termino1, termino2, asignar):
+    def add(self, iteracion, operador, termino1, termino2, asignar):  #AGREGA UN CUADRUPLO AL DICCIONARIO
         self.cuadruplo[iteracion] = {
                 'operador': operador,
                 'termino1': termino1,
                 'termino2': termino2,
                 'asignar': asignar
             }
-        # # FUNCION UTILIZANDO EL CUBO SEMANTICO PARA VERIFICACION
-        # cubo = CuboSemantico()
-        # if(cubo.obtenerTipo(termino1, termino2, operador) != 'error'):
-        #     self.cuadruplo[iteracion] = {
-        #         'operador': operador,
-        #         'termino1': termino1,
-        #         'termino2': termino2,
-        #         'asignar': asignar
-        #     }
-        # else:
-        #     print('ERROR: TYPE MISSMATCH WITH', termino1, 'AND', termino2)
     
-    def search(self, iteracion):
-        print(self.cuadruplo.get(iteracion))
+    def search(self, iteracion):                #BUSCA UN CUADRUPLO Y LO IMPRIME
+        if iteracion in self.cuadruplo:
+            print(self.cuadruplo.get(iteracion))
+        else:
+            print("ERROR: QUADRUPLE DOES NOT EXIST")
     
-    def updateCuad(self, iteracion, operador, termino1, termino2, asignar):
+    def updateCuad(self, iteracion, asignar):       #ACTUALIZA EL ULTIMO VALOR DE UN CUADRUPLO 
         if(self.cuadruplo.get(iteracion, None) == None):
-            print('ERROR THAT ITERATION DOES NOT EXIST')
-        # else:
-        #     print(self.cuadruplo[iteracion])
-        #     self.cuadruplo['operador'] = operador
-        #     self.cuadruplo['termino1'] = termino1
-        #     self.cuadruplo['termino2'] = termino2
-        #     self.cuadruplo['asignar']= asignar
-        #     print(self.cuadruplo[iteracion])
+            print('ERROR: ITERATION DOES NOT EXIST')
+        else:
+            print(self.cuadruplo[iteracion])
+            self.cuadruplo[iteracion]['asignar']= asignar
+            print(self.cuadruplo[iteracion])
     
-    def print(self):
+    def print(self):                                #IMPRIME LOS CUADRUPLOS
         for key in self.cuadruplo:
             cuadList = list(self.cuadruplo[key].values())
             print(key, cuadList)
-        # print(self.cuadruplo.pop(1))
-        # for key in self.cuadruplo:
-        #     print(key)
 
 # if __name__ == "__main__":
 #     cuadruplo = cuadruplos()
@@ -61,9 +47,9 @@ class cuadruplos:
 #     cuadruplo.add(5, 'print', 0, 0, 't4')
 #     cuadruplo.print()
 #     print('---------')
-#     cuadruplo.updateCuad(2,'GOTO', 0, 0, 5)
+#     cuadruplo.updateCuad(2,5)
 #     cuadruplo.print()
 #     print('---------')
-#     cuadruplo.updateCuad(7,'print', 0, 0, 't4')
+#     cuadruplo.updateCuad(7,'t4')
     
     

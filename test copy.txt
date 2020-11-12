@@ -9,3 +9,29 @@ program memo; main(){ while(2 < i) do { t * 4;} }
 program memo; main(){ if (3<4 & x<4) then {4+1;} else {3*6;} }
 program memo; main(){  write("meen"); }
 program memo; main(){ var int : i; }
+
+program sumas;
+var int : i, m, n;
+var float : j; 
+
+int module fact(int x, float y); 
+var int : a; 
+{
+    write("func");
+    return(a);
+}
+
+char module letra(char b); 
+var int : c;
+{
+    i = i + j;
+    return(i);
+}
+
+void module print(); 
+{
+    write("memo", i*j, "yo");
+}
+main(){
+    while(2 < i) do {j = j+4;}
+}

@@ -50,7 +50,6 @@ class MeMyselfLexer(Lexer):
 
         CTEFLOAT  = r'([0-9]+)(\.)([0-9]+)?'
         CTEINT    = r'[0-9]+'
-        # CTECHAR    = r'[\']([a-zA-Z])+[\']'
         ID        = r'[a-zA-Z]([a-zA-Z]|[0-9_])*'
         LETRERO   = r'[\"]([a-zA-Z]*)+[\"]'
         MINUS     = r'[\-]'
@@ -108,7 +107,7 @@ class MeMyselfParser(Parser):
         @_('funcs', '')
         def program3(self, p):
             pass
-        @_('MAIN quad_f1 "(" ")" "{" estatutos "}"')
+        @_('MAIN "(" ")" "{" estatutos "}"')
         def program4(self, p):
             pass
 
@@ -128,6 +127,21 @@ class MeMyselfParser(Parser):
         #       FUNCR
         @_('tipov MODULE ID funcs_3 "(" parametros ")" ";" vars "{" estatutos return0 "}"', '')
         def funcr(self, p):
+            pass
+
+        #       ESTATUTOS
+        @_('estatuto', 'estatutos')
+        def estatutos(self, p):
+            pass
+
+        #       ESTATUTO
+        @_('asignacion', 'funcs', 'lectura estatuto', 'escritura estatuto', 'decision estatuto', 'repeticiondo estatuto', 'repeticionfor estatuto', 'exp estatuto', 'especiales estatuto', '')
+        def estatuto(self, p):
+            pass
+        
+        #       ASIGNACION
+        @_('ID ASSIGN exp ";"')
+        def asignacion(self, p):
             pass
 
         #       LECTURA
@@ -153,44 +167,29 @@ class MeMyselfParser(Parser):
         @_('LETRERO printe2', 'exp printe2')
         def printe(self, p):
             pass
-        @_('"," LETRERO printe2', '"," exp printe2', '')
+        @_('LETRERO', 'exp', '')
         def printe2(self, p):
             pass
 
         #       DECISION
-        @_('IF "(" expresion ")" quad_if1 THEN decision2 decision3 quad_if2')
+        @_('IF "(" expresion ")" THEN decision2 decision3')
         def decision(self, p):
             pass
-        @_('"{" estatutos "}"')
+        @_('"{" estatutos ";" "}"')
         def decision2(self, p):
             pass
-        @_('ELSE "{" quad_if3 estatutos "}"', '')
+        @_('ELSE "{" estatutos ";" "}"', '')
         def decision3(self, p):
             pass
 
         #       DO
-        @_('WHILE "(" expresion ")" DO "{" estatutos "}"')
+        @_('WHILE "(" expresion ")" DO "{" estatutos ";" "}"')
         def repeticiondo(self, p):
             pass
 
         #       FOR
-        @_('FOR ID ASSIGN exp TO exp DO "{" estatutos "}"')
+        @_('FOR ID ASSIGN exp TO exp DO "{" estatutos ";" "}"')
         def repeticionfor(self, p):
-            pass
-        
-        #       ESTATUTOS
-        @_('estatuto', 'estatutos')
-        def estatutos(self, p):
-            pass
-
-        #       ESTATUTO
-        @_('asignacion estatuto', 'funcs', 'lectura estatuto', 'escritura estatuto', 'decision estatuto', 'repeticiondo estatuto', 'repeticionfor estatuto', 'exp estatuto', 'especiales estatuto', '')
-        def estatuto(self, p):
-            pass
-        
-        #       ASIGNACION
-        @_('ID quad_1 ASSIGN exp quad_a ";"')
-        def asignacion(self, p):
             pass
 
         #       ESPECIALES
@@ -244,8 +243,7 @@ class MeMyselfParser(Parser):
             pass
 
         #      EXPRESION
-        # @_('comparar LOGICOS quad_19 comparar', 'comparar')
-        @_('comparar LOGICOS quad_10 comparar quad_11')
+        @_('comparar LOGICOS comparar', 'comparar')
         def expresion(self,p):
             pass
         
@@ -255,7 +253,7 @@ class MeMyselfParser(Parser):
             pass
 
         #       RETURN
-        @_('RETURN "(" exp ")" ";"')
+        @_('RETURN "(" exp ")"')
         def return0(self,p):
             pass
 
@@ -264,16 +262,16 @@ class MeMyselfParser(Parser):
         def exp(self,p):
             pass
 
-        @_('PLUS quad_2 exp','MINUS quad_2 termino exp', '')
+        @_('PLUS quad_2 termino exp2','MINUS quad_2 termino exp2', '')
         def exp2(self,p):
             pass
         
         #       TERMINO
-        @_('factor quad_5 termino2')
+        @_('factor termino2')
         def termino(self,p):
             pass
-        # @_('TIMES quad_3 factor termino2', 'DIVIDE quad_3 factor termino2','')
-        @_('TIMES quad_3 termino', 'DIVIDE quad_3 termino','')
+        
+        @_('TIMES quad_3 factor termino2', 'DIVIDE quad_3 factor termino2','')
         def termino2(self,p):
             pass
 
@@ -290,12 +288,13 @@ class MeMyselfParser(Parser):
 
         #       FACTOR
         #@_('"(" quad_6 expresion ")" quad_7','PLUS varcte',  'MINUS varcte', 'varcte')
-        @_('"(" quad_6 exp ")" quad_7','PLUS varcte',  'MINUS varcte', 'varcte')
+        @_('"(" expresion ")"','PLUS varcte',  'MINUS varcte', 'varcte')
         def factor(self,p):
             pass
 
+
         #       VARCTE
-        @_('ID quad_1','CTEINT quad_cteI','CTEFLOAT quad_cteF','LETRERO quad_let')
+        @_('ID quad_1','CTEINT quad_cteI','CTEFLOAT quad_cteF','LETRERO')
         def varcte(self, p):
             pass
 
@@ -330,12 +329,12 @@ class MeMyselfParser(Parser):
             PID.add(cte)
             PQTypes.add('float')
             # print('quad_cteF')
-        @_('')
-        def quad_let(self, p): # HACER PUSH A LOS STACKS CON LETREROS
-            cte = p[-1]
-            PID.add(cte)
-            PQTypes.add('letrero')
-            # print('quad_cteS')
+        # @_('')
+        # def quad_cteS(self, p): # HACER PUSH A LOS STACKS CON LETREROS
+        #     cte = p[-1]
+        #     PID.add(cte)
+        #     PQTypes.add('letrero')
+        #     print('quad_cteS')
         @_('')
         def quad_1(self, p): # HACER PUSH A LOS STACKS CON EL ID DE LA VARIABLE Y SU TIPO
             PID.add(p[-1])
@@ -347,22 +346,20 @@ class MeMyselfParser(Parser):
                 PQTypes.add(DirFuncs.getVarType(p[-1]))
             # PID.print()
             # PQTypes.print()
-            print('quad_1')
+            # print('quad_1')
         @_('')
         def quad_2(self, p): #AGREGAR + o - AL POper 
             POper.add(p[-1])
             # POper.print()
-            print('quad_2')
+            # print('quad_2')
         @_('')
         def quad_3(self, p): #AGREGAR * o / AL POper
             POper.add(p[-1])
             # POper.print()
-            print('quad_3')    
+            # print('quad_3')    
         @_('')
         def quad_4(self, p): # CREA EL CUADRUPLO CON + -
             global QuadCont
-            global TempsCont
-            global TempsBase
             # POper.print()
             # PID.print()
             if ((POper.empty() == False) and (PID.size() >= 2)):
@@ -378,22 +375,17 @@ class MeMyselfParser(Parser):
                     print('CUBE:', left_type, right_type, operator)
                     result_Type = Cube.obtenerTipo(left_type, right_type, operator)
                     if(result_Type != 'error'):
-                        result = TempsBase + TempsCont
-                        TempsCont+=1
+                        result = 't'
                         Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
-                        PQTypes.add(result_Type)
-                        PID.add(result)
                         QuadCont+=1
                         Quadruples.print()
                     else:
                         print("ERROR: TYPE MISMATCH")
                         exit()
-            print('quad_4')
+            # print('quad_4')
         @_('')
         def quad_5(self, p): # CREA EL CUADRUPLO CON / *
             global QuadCont
-            global TempsCont
-            global TempsBase
             # POper.print()
             # PID.print()
             if ((POper.empty() == False) and (PID.size() >= 2)):
@@ -409,11 +401,8 @@ class MeMyselfParser(Parser):
                     print('CUBE:', left_type, right_type, operator)
                     result_Type = Cube.obtenerTipo(left_type, right_type, operator)
                     if(result_Type != 'error'):
-                        result = TempsBase + TempsCont
-                        TempsCont+=1
+                        result = 't'
                         Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
-                        PQTypes.add(result_Type)
-                        PID.add(result)
                         QuadCont+=1
                         Quadruples.print()
                     else:
@@ -440,8 +429,6 @@ class MeMyselfParser(Parser):
         @_('')
         def quad_9(self, p): # CREA EL CUADRUPLO CON RELOPS (!=)|(==)|(<=)|(>=)|(<)|(>)
             global QuadCont
-            global TempsCont
-            global TempsBase
             # POper.print()
             # PID.print()
             if ((POper.empty() == False) and (PID.size() >= 2)):
@@ -457,102 +444,15 @@ class MeMyselfParser(Parser):
                     print('CUBE:', left_type, right_type, operator)
                     result_Type = Cube.obtenerTipo(left_type, right_type, operator)
                     if(result_Type != 'error'):
-                        result = TempsBase + TempsCont
-                        TempsCont+=1
+                        result = 't'
                         Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
-                        PQTypes.add(result_Type)
-                        PID.add(result)
                         QuadCont+=1
                         Quadruples.print()
                     else:
                         print("ERROR: TYPE MISMATCH")
                         exit()
             # print('quad_9')
-            
-        @_('')
-        def quad_10(self, p): # POP FALSE BOTTOM MARK
-            POper.add(p[-1])
-            POper.print()
-            print('quad_10')
-        @_('')
-        def quad_11(self, p): # CREA EL CUADRUPLO CON & |
-            # print('AND Y OR')
-            global QuadCont
-            global TempsCont
-            global TempsBase
-            # POper.print()
-            # PID.print()
-            # PQTypes.print()
-            if ((POper.empty() == False) and (PID.size() >= 2)):
-                # print('entra al primer if')
-                if ((POper.top() == '&') or (POper.top() == '|')):
-                    # print("entra al segundo if")
-                    right_operand = PID.pop()
-                    right_type = PQTypes.pop()
-                    left_operand = PID.pop()
-                    left_type = PQTypes.pop()
-                    print('RO:', right_operand, '| RT: ', right_type, '| LO:', left_operand, '| LT: ', left_type)
-                    operator = POper.pop()
-                    print('CUBE:', left_type, right_type, operator)
-                    result_Type = Cube.obtenerTipo(left_type, right_type, operator)
-                    if(result_Type != 'error'):
-                        result = TempsBase + TempsCont
-                        TempsCont+=1
-                        Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
-                        PTypes.add(result_Type)
-                        PID.add(result)
-                        QuadCont+=1
-                        Quadruples.print()
-                    else:
-                        print("ERROR: TYPE MISMATCH")
-                        exit()
-            print('quad_11')
-        @_('')
-        def quad_a(self, p): # CUADRUPLO DE ASIGNACION
-            global QuadCont
-            PID.print()
-            PQTypes.print()
-            # if ((PID.size() >= 2)):
-            right_operand = PID.pop()
-            right_type = PQTypes.pop()
-            left_operand = PID.pop()
-            left_type = PTypes = PQTypes.pop()
-            operator = '='
-            result_Type = Cube.obtenerTipo(left_type, right_type, operator)
-            if(result_Type != 'error'):
-                result = left_operand
-                Quadruples.add(QuadCont, operator, right_operand, '0', result)
-                QuadCont+=1
-                Quadruples.print()
-            else:
-                print("ERROR: CANNOT ASSING VALUE", left_type ,'TO', right_type)
-                exit()
-            # print('quad_a')
-            
-        ###############            
-        # FUNCIONES PARA GOTOS Y FUNCIONES
-        ############### 
-        @_('')
-        def quad_f1(self, p): # POP FALSE BOTTOM MARK
-            global QuadCont
-            PSaltos.print()
-            Salto = PSaltos.pop()
-            Quadruples.updateCuad(Salto, QuadCont)
-            print('quad_f1')
-        @_('')
-        def quad_if1(self, p): # POP FALSE BOTTOM MARK
-            global QuadCont
-            
-            print('quad_if1')
-        @_('')
-        def quad_if2(self, p): # POP FALSE BOTTOM MARK
-            global QuadCont
-
-            print('quad_if2')
-        @_('')
-        def quad_if3(self, p): # POP FALSE BOTTOM MARK
-            global QuadCont
-            print('quad_if3')       
+                    
         ###############            
         # FUNCIONES PARA AGREGAR A LAS TABLAS
         ############### 
@@ -563,7 +463,6 @@ class MeMyselfParser(Parser):
             self.currentScope = 'global'
             DirFuncs.addFunction(self.currentFunction, 'main', self.currentScope)
             Quadruples.add(QuadCont, 'GOTO', 0, 0, '_')
-            PSaltos.add(QuadCont)
             QuadCont+=1
             # print('funcs_1')
         @_('')
@@ -645,7 +544,7 @@ if __name__ == '__main__':
     #     except EOFError:
     #         break
     file.close()
-    DirFuncs.printFunction()
+    # DirFuncs.printFunction()
 
 # if __name__ == '__main__':
     
