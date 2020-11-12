@@ -3,7 +3,8 @@
 ##### Guillermo Enrique Valles Villegas A01561722 :pizza:
 
 Proyecto de desarrollo de un compilador de codigo.\
-Hecho con **[Python](https://www.python.org)** y **[SLY](https://sly.readthedocs.io/en/latest/sly.html)**.
+Hecho con **[Python](https://www.python.org)** y **[SLY](https://sly.readthedocs.io/en/latest/sly.html)**.\
+Para la parte grafica, se utiliza  **[Turtle Graphics](https://docs.python.org/3/library/turtle.html)**.
 
 ## AVANCE 1 
 Codigo de la sintaxis y gramatica.
