@@ -16,14 +16,24 @@ class tablaFunciones:
         
         
         
-    # DEVUELVE TRUE OR FALSE SI LA VARIABLE EXISTE
-    def search(self, fid):              
+                                                
+    def search(self, fid):              # DEVUELVE TRUE OR FALSE SI LA VARIABLE EXISTE
         return fid in self.funciones
-    
-    def getVarType(self, id):
+                                        
+    def getVarType(self, id):                 # DEVUELVE EL TYPE DE LA VARIABLE          
         for fid in self.funciones.keys():
             if self.funciones[fid]['variables'].search(id):
-                return self.funciones[fid]['variables'].getType(id)
+                if(self.funciones[fid]['variables'].getType(id) == None):
+                    print('ERROR: VAR NOT FOUND')
+                    exit()
+                else:
+                    return self.funciones[fid]['variables'].getType(id)
+            #     return self.funciones[fid]['variables'].getType(id)
+            
+    def getVarDir(self, id):                # DEVUELVE EL TYPE DE LA VARIABLE    
+        for fid in self.funciones.keys():
+            if self.funciones[fid]['variables'].search(id):
+                return self.funciones[fid]['variables'].getDir(id)
             #     return self.funciones[fid]['variables'].getType(id)
     
     

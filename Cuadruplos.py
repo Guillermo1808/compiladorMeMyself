@@ -29,9 +29,9 @@ class cuadruplos:
         if(self.cuadruplo.get(iteracion, None) == None):
             print('ERROR: ITERATION DOES NOT EXIST')
         else:
-            print(self.cuadruplo[iteracion])
+            # print(self.cuadruplo[iteracion])
             self.cuadruplo[iteracion]['asignar']= asignar
-            print(self.cuadruplo[iteracion])
+            # print(self.cuadruplo[iteracion])
     
     def print(self):                                #IMPRIME LOS CUADRUPLOS
         for key in self.cuadruplo:

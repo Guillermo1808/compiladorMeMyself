@@ -35,3 +35,29 @@ void module print();
 main(){
     while(2 < i) do {j = j+4;}
 }
+
+program sumas;
+var int : i, m, n;
+var char : a;
+var float: x, y;
+
+void module fact(int j); 
+var char : o;
+{
+    m = m*m;
+    write("mem", o);
+}
+main(){
+    m = 4*5;
+    i = m * (n + (i*i));
+    if(i > 3 & i < 10) then{
+    n = (1);
+    } else{
+    i = m * n;
+    }
+    x = x/y;
+    while(x < 3) do { 
+        y = x * 4;
+        }
+    n = 1+578;
+}

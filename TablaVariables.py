@@ -19,6 +19,9 @@ class tablaVariables:
     def getType(self, id):                      #DEVUELVE EL TIPO DE VARIABLE
         return self.variables[id]['typeV']
     
+    def getDir(self, id):                      #DEVUELVE LA DIRECCION DE VARIABLE
+        return self.variables[id]['memory']
+    
     def add(self, id, typeV, memory):            # AGREGA LA VARIABLE Y TIPO A LA TABLA
         self.variables[id] = {
             'typeV': typeV,

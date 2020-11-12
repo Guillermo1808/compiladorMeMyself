@@ -1,19 +1,10 @@
 program sumas;
 var int : i, m, n;
-var char : a;
+var float: x, y;
 
-void module fact(int j); 
-var char : o;
-{
-    m = m*m;
-    write("mem", o);
-}
 main(){
-    m = 4*5;
-    i = m * (n + (i*i));
-    if(i > 3 & i < 10) then{
-    n = (1);
-    } else{
-    i = m * n;
-    }
+    for i = 0 to 3 do {
+        x = m/2;
+    } 
+    i = 0+1;
 }
