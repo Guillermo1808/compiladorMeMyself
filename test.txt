@@ -6,5 +6,13 @@ main(){
     for i = 0 to 3 do {
         x = m/2;
     } 
-    color(x, n, m);
+    line(i*2,m+1);
+    point();
+    circle(y/2);
+    arc(y*2/(4/3));
+    penup();
+    pendown();
+    color(i+3,m*2,n*2);
+    size(x*x*x);
+    clear();
 }

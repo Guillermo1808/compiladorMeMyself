@@ -201,47 +201,47 @@ class MeMyselfParser(Parser):
             pass
         
         #       LINE
-        @_('LINE "(" exp "," exp ")" ";"')
+        @_('LINE "(" exp "," exp ")" quad_line ";"')
         def line(self, p):
             pass
 
         #       POINT
-        @_('POINT "(" ")" ";"')
+        @_('POINT "(" ")" quad_point ";"')
         def point(self, p):
             pass
 
         #       CIRCLE
-        @_('CIRCLE "(" exp ")" ";"')
+        @_('CIRCLE "(" exp ")" quad_circle ";"')
         def circle(self, p):
             pass
 
         #       ARC
-        @_('ARC "(" exp ")" ";"')
+        @_('ARC "(" exp ")" quad_arc ";"')
         def arc(self, p):
             pass
 
         #       PENUP
-        @_('PENUP "(" ")" ";"')
+        @_('PENUP "(" ")" quad_penup ";"')
         def penup(self, p):
             pass
 
         #       PENDOWN
-        @_('PENDOWN "(" ")" ";"')
+        @_('PENDOWN "(" ")" quad_pendown ";"')
         def pendown(self, p):
             pass
 
         #       COLOR
-        @_('COLOR "(" exp "," exp "," exp ")" ";"')
+        @_('COLOR "(" exp "," exp "," exp ")" quad_color ";"')
         def color(self, p):
             pass
 
         #       SIZE
-        @_('SIZE "(" exp ")" ";"')
+        @_('SIZE "(" exp ")" quad_size ";"')
         def size(self, p):
             pass
 
         #       CLEAR
-        @_('CLEAR "(" ")" ";"')
+        @_('CLEAR "(" ")" quad_clear ";"')
         def clear(self, p):
             pass
 
@@ -704,6 +704,109 @@ class MeMyselfParser(Parser):
             print(fin, QuadCont)
             Quadruples.updateCuad(fin, QuadCont)
             print('quad_for4')
+        
+        ###############            
+        # PUNTOS NEURALGICOS PARA FUNCIONES ESPECIALES
+        # 'line','point','circle','arc','penup','pendown','color','size','clear'
+        ############### 
+        
+        @_('')
+        def quad_line(self, p):
+            global QuadCont
+            typeV = PQTypes.pop()
+            var = PID.pop()
+            typeV2 = PQTypes.pop()
+            var2 = PID.pop()
+            result_type = Cube.obtenerTipo(typeV, typeV2, 'LINE')
+            if(result_type != 'error'):
+                Quadruples.add(QuadCont, 'LINE', 0, var2, var)
+                QuadCont+=1
+            else:
+                print('ERROR: TYPE MISMATCH')
+                exit()
+            print('quad_line')
+        @_('')
+        def quad_point(self, p):
+            global QuadCont
+            Quadruples.add(QuadCont, 'POINT', 0, 0, 0)
+            QuadCont+=1
+            print('quad_point') 
+        @_('')
+        def quad_circle(self, p):
+            global QuadCont
+            typeV = PQTypes.pop()
+            var = PID.pop()
+            result_type = Cube.obtenerTipo(typeV, '_', 'CIRCLE')
+            if(result_type != 'error'):
+                Quadruples.add(QuadCont, 'CIRCLE', 0, 0, var)
+                QuadCont+=1
+            else:
+                print('ERROR: TYPE MISMATCH')
+                exit()
+            print('quad_circle') 
+        @_('')
+        def quad_arc(self, p):
+            global QuadCont
+            typeV = PQTypes.pop()
+            var = PID.pop()
+            result_type = Cube.obtenerTipo(typeV, '_', 'ARC')
+            if(result_type != 'error'):
+                Quadruples.add(QuadCont, 'ARC', 0, 0, var)
+                QuadCont+=1
+            else:
+                print('ERROR: TYPE MISMATCH')
+                exit()
+            print('quad_arc') 
+        @_('')
+        def quad_penup(self, p):
+            global QuadCont
+            Quadruples.add(QuadCont, 'PENUP', 0, 0, 0)
+            QuadCont+=1
+            print('quad_penup')
+        @_('')
+        def quad_pendown(self, p):
+            global QuadCont
+            Quadruples.add(QuadCont, 'PENDOWN', 0, 0, 0)
+            QuadCont+=1
+            print('quad_pendown') 
+        @_('')
+        def quad_color(self, p):
+            global QuadCont
+            typeV = PQTypes.pop()
+            b = PID.pop()
+            typeV2 = PQTypes.pop()
+            g = PID.pop()
+            typeV3 = PQTypes.pop()
+            r = PID.pop()
+            if(typeV != 'int' or typeV2 != 'int' or typeV3 != 'int'):
+                print('ERROR: TYPE MISMATCH')
+                exit()
+            else:
+                Quadruples.add(QuadCont, 'COLOR', r, g, b)
+                QuadCont+=1
+            print('quad_color') 
+        @_('')
+        def quad_size(self, p):
+            global QuadCont
+            typeV = PQTypes.pop()
+            var = PID.pop()
+            result_type = Cube.obtenerTipo(typeV, '_', 'SIZE')
+            if(result_type != 'error'):
+                Quadruples.add(QuadCont, 'SIZE', 0, 0, var)
+                QuadCont+=1
+            else:
+                print('ERROR: TYPE MISMATCH')
+                exit()
+            print('quad_size')
+        @_('')
+        def quad_clear(self, p):
+            global QuadCont
+            Quadruples.add(QuadCont, 'CLEAR', 0, 0, 0)
+            QuadCont+=1
+            print('quad_clear') 
+         
+        
+         
         ###############            
         # FUNCIONES PARA AGREGAR A LAS TABLAS
         ############### 

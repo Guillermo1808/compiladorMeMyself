@@ -39,8 +39,10 @@ Las tablas de funciones y variables ya se llenan con lo que lee.
 - [x] Tabla Variables Funcional.
 - [x] Tabla Funciones Funcional.
 - [x] Cuadruplos Estatutos Funcionales.
+- [x] Cuadruplos Funciones Especiales.
 - [x] Cuadruplos Aritmeticos Funcionales.\
 \
 Los cuadruplos ya casi estan listos. Faltan algunas modificaciones para verificar que funcionen bien.\
 Se eliminó el error en el que no se podian tener varios estatutos seguidos.\
+Los cuadruplos fueron arreglados.
 

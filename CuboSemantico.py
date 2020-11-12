@@ -79,6 +79,22 @@ class CuboSemantico:
 
         # | OR
     cuboSemantico['int']['int']['|'] = 'int'
+    
+        # LINE
+    cuboSemantico['int']['int']['LINE'] = 'int'
+    
+        # CIRCLE
+    cuboSemantico['int']['_']['CIRCLE'] = 'int'
+    cuboSemantico['float']['_']['CIRCLE'] = 'float'
+    
+        # ARC
+    cuboSemantico['int']['_']['ARC'] = 'int'
+    cuboSemantico['float']['_']['ARC'] = 'float'
+    
+        # SIZE
+    cuboSemantico['int']['_']['SIZE'] = 'int'
+    cuboSemantico['float']['_']['SIZE'] = 'int'
+    
 
 
     def obtenerTipo(self, left, right, operador):
