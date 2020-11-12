@@ -15,6 +15,7 @@ currentType = ''
 varType = ''
 VControl = ''
 DirFuncs = tablaFunciones() #CREATE DIR TABLE
+DirFuncs.addFunction('globales','ctes','global')
 POper = stacks()
 PID = stacks()
 PSaltos = stacks()
@@ -200,12 +201,12 @@ class MeMyselfParser(Parser):
             pass
         
         #       LINE
-        @_('LINE "(" exp "," exp "," exp "," exp ")" ";"')
+        @_('LINE "(" exp "," exp ")" ";"')
         def line(self, p):
             pass
 
         #       POINT
-        @_('POINT "(" exp "," exp ")" ";"')
+        @_('POINT "(" ")" ";"')
         def point(self, p):
             pass
 
@@ -230,7 +231,7 @@ class MeMyselfParser(Parser):
             pass
 
         #       COLOR
-        @_('COLOR "(" CTEINT ")" ";"')
+        @_('COLOR "(" exp "," exp "," exp ")" ";"')
         def color(self, p):
             pass
 
@@ -336,7 +337,7 @@ class MeMyselfParser(Parser):
             cte = p[-1]
             PID.add(cte)
             PQTypes.add('letrero')
-            # print('quad_cteS')
+            print('quad_cteS')
         @_('')
         def quad_1(self, p): # HACER PUSH A LOS STACKS CON EL ID DE LA VARIABLE Y SU TIPO
             PID.add(p[-1])
@@ -797,6 +798,7 @@ if __name__ == '__main__':
     file.close()
     # DirFuncs.printFunction()
     Quadruples.print()
+    PID.print()
 
 # if __name__ == '__main__':
     
