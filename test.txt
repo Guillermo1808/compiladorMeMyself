@@ -7,6 +7,7 @@ var float : j;
 int module fact(int x, float y); 
 var int : a; 
 {
+    write("func");
     return(a)
 }
 
@@ -22,5 +23,8 @@ void module print();
     write("memo");
 }
 main(){
-    if (3<4 & m<4) then {4+1;} else {3*6;}
+    if (3<4 & m<4) then 
+    {4+1;} 
+    else {3*6;}
+    write("result");
 }

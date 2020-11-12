@@ -98,7 +98,7 @@ class MeMyselfParser(Parser):
             self.names = { }
 
         #       PROGRAM
-        @_('PROGRAM ID funcs_1 ";" program2 program3 program4')
+        @_('PROGRAM ID ";" program2 program3 program4')
         def program(self, p):
             pass
         @_('vars program2', '')
@@ -120,12 +120,12 @@ class MeMyselfParser(Parser):
             pass
 
         #       FUNCV
-        @_('VOID current_typeV MODULE ID funcs_3 "(" parametros ")" ";" vars "{" estatutos "}"', '')
+        @_('VOID MODULE ID "(" parametros ")" ";" vars "{" estatutos "}"', '')
         def funcv(self, p):
             pass
 
         #       FUNCR
-        @_('tipov MODULE ID funcs_3 "(" parametros ")" ";" vars "{" estatutos return0 "}"', '')
+        @_('tipov MODULE ID "(" parametros ")" ";" vars "{" estatutos return0 "}"', '')
         def funcr(self, p):
             pass
 
@@ -138,7 +138,7 @@ class MeMyselfParser(Parser):
         @_('asignacion', 'funcs', 'lectura estatuto', 'escritura estatuto', 'decision estatuto', 'repeticiondo estatuto', 'repeticionfor estatuto', 'exp estatuto', 'especiales estatuto', '')
         def estatuto(self, p):
             pass
-        
+
         #       ASIGNACION
         @_('ID ASSIGN exp ";"')
         def asignacion(self, p):
@@ -248,7 +248,7 @@ class MeMyselfParser(Parser):
             pass
         
         #      COMPARAR
-        @_('exp RELOP quad_8 exp quad_9')
+        @_('exp RELOP exp')
         def comparar(self,p):
             pass
 
@@ -258,11 +258,11 @@ class MeMyselfParser(Parser):
             pass
 
         #       EXP
-        @_('termino quad_4 exp2')
+        @_('termino exp2')
         def exp(self,p):
             pass
 
-        @_('PLUS quad_2 termino exp2','MINUS quad_2 termino exp2', '')
+        @_('PLUS termino exp2','MINUS termino exp2', '')
         def exp2(self,p):
             pass
         
@@ -271,18 +271,18 @@ class MeMyselfParser(Parser):
         def termino(self,p):
             pass
         
-        @_('TIMES quad_3 factor termino2', 'DIVIDE quad_3 factor termino2','')
+        @_('TIMES factor termino2', 'DIVIDE factor termino2','')
         def termino2(self,p):
             pass
 
         #       PARAMETROS
-        @_('tipov ID funcs_4 parametros2', '')
+        @_('tipov ID parametros2', '')
         def parametros(self,p):
             global ParCont
             ParCont = 1
             pass
         
-        @_('"," tipov ID funcs_4 parametros2','')
+        @_('"," tipov ID parametros2','')
         def parametros2(self,p):
             pass
 
@@ -294,15 +294,15 @@ class MeMyselfParser(Parser):
 
 
         #       VARCTE
-        @_('ID quad_1','CTEINT quad_cteI','CTEFLOAT quad_cteF','LETRERO')
+        @_('ID','CTEINT','CTEFLOAT','LETRERO')
         def varcte(self, p):
             pass
 
         #       VARS
-        @_('VAR tipov ":" ID funcs_2 vars2 ";"', '')
+        @_('VAR tipov ":" ID vars2 ";"', '')
         def vars(self, p):
             pass
-        @_('"," ID funcs_2 vars2', '')
+        @_('"," ID vars2', '')
         def vars2(self, p):
             pass
 
@@ -312,194 +312,194 @@ class MeMyselfParser(Parser):
             PTypes.add(p[0])
             pass
         
-        #################################
-        ## FUNCIONES PARA LAS ACCIONES ##
-        #################################
+        # #################################
+        # ## FUNCIONES PARA LAS ACCIONES ##
+        # #################################
         
-        #FUNCIONES PARA LOS CUADRUPLOS
-        @_('')
-        def quad_cteI(self, p): # HACER PUSH A LOS STACKS CON CTE INTS
-            cte = p[-1]
-            PID.add(cte)
-            PQTypes.add('int')
-            # print('quad_cteI')
-        @_('')
-        def quad_cteF(self, p): # HACER PUSH A LOS STACKS CON CTE FLOATS
-            cte = p[-1]
-            PID.add(cte)
-            PQTypes.add('float')
-            # print('quad_cteF')
+        # #FUNCIONES PARA LOS CUADRUPLOS
         # @_('')
-        # def quad_cteS(self, p): # HACER PUSH A LOS STACKS CON LETREROS
+        # def quad_cteI(self, p): # HACER PUSH A LOS STACKS CON CTE INTS
         #     cte = p[-1]
         #     PID.add(cte)
-        #     PQTypes.add('letrero')
-        #     print('quad_cteS')
-        @_('')
-        def quad_1(self, p): # HACER PUSH A LOS STACKS CON EL ID DE LA VARIABLE Y SU TIPO
-            PID.add(p[-1])
-            tipo = DirFuncs.getVarType(p[-1])
-            if tipo == None:
-                print('ERROR: VARIABLE', p[-1], 'NOT DECLARED')
-                exit()
-            else:
-                PQTypes.add(DirFuncs.getVarType(p[-1]))
-            # PID.print()
-            # PQTypes.print()
-            # print('quad_1')
-        @_('')
-        def quad_2(self, p): #AGREGAR + o - AL POper 
-            POper.add(p[-1])
-            # POper.print()
-            # print('quad_2')
-        @_('')
-        def quad_3(self, p): #AGREGAR * o / AL POper
-            POper.add(p[-1])
-            # POper.print()
-            # print('quad_3')    
-        @_('')
-        def quad_4(self, p): # CREA EL CUADRUPLO CON + -
-            global QuadCont
-            # POper.print()
-            # PID.print()
-            if ((POper.empty() == False) and (PID.size() >= 2)):
-                # print('entra al primer if')
-                if ((POper.top() == '+') or (POper.top() == '-')):
-                    # print("entra al segundo if")
-                    right_operand = PID.pop()
-                    right_type = PQTypes.pop()
-                    left_operand = PID.pop()
-                    left_type = PQTypes.pop()
-                    print('RO:', right_operand, '| RT: ', right_type, '| LO:', left_operand, '| LT: ', left_type)
-                    operator = POper.pop()
-                    print('CUBE:', left_type, right_type, operator)
-                    result_Type = Cube.obtenerTipo(left_type, right_type, operator)
-                    if(result_Type != 'error'):
-                        result = 't'
-                        Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
-                        QuadCont+=1
-                        Quadruples.print()
-                    else:
-                        print("ERROR: TYPE MISMATCH")
-                        exit()
-            # print('quad_4')
-        @_('')
-        def quad_5(self, p): # CREA EL CUADRUPLO CON / *
-            global QuadCont
-            # POper.print()
-            # PID.print()
-            if ((POper.empty() == False) and (PID.size() >= 2)):
-                # print('entra al primer if')
-                if ((POper.top() == '/') or (POper.top() == '*')):
-                    # print("entra al segundo if")
-                    right_operand = PID.pop()
-                    right_type = PQTypes.pop()
-                    left_operand = PID.pop()
-                    left_type = PQTypes.pop()
-                    print('RO:', right_operand, '| RT: ', right_type, '| LO:', left_operand, '| LT: ', left_type)
-                    operator = POper.pop()
-                    print('CUBE:', left_type, right_type, operator)
-                    result_Type = Cube.obtenerTipo(left_type, right_type, operator)
-                    if(result_Type != 'error'):
-                        result = 't'
-                        Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
-                        QuadCont+=1
-                        Quadruples.print()
-                    else:
-                        print("ERROR: TYPE MISMATCH")
-                        exit()
-            # print('quad_5')
+        #     PQTypes.add('int')
+        #     # print('quad_cteI')
+        # @_('')
+        # def quad_cteF(self, p): # HACER PUSH A LOS STACKS CON CTE FLOATS
+        #     cte = p[-1]
+        #     PID.add(cte)
+        #     PQTypes.add('float')
+        #     # print('quad_cteF')
+        # # @_('')
+        # # def quad_cteS(self, p): # HACER PUSH A LOS STACKS CON LETREROS
+        # #     cte = p[-1]
+        # #     PID.add(cte)
+        # #     PQTypes.add('letrero')
+        # #     print('quad_cteS')
+        # @_('')
+        # def quad_1(self, p): # HACER PUSH A LOS STACKS CON EL ID DE LA VARIABLE Y SU TIPO
+        #     PID.add(p[-1])
+        #     tipo = DirFuncs.getVarType(p[-1])
+        #     if tipo == None:
+        #         print('ERROR: VARIABLE', p[-1], 'NOT DECLARED')
+        #         exit()
+        #     else:
+        #         PQTypes.add(DirFuncs.getVarType(p[-1]))
+        #     # PID.print()
+        #     # PQTypes.print()
+        #     # print('quad_1')
+        # @_('')
+        # def quad_2(self, p): #AGREGAR + o - AL POper 
+        #     POper.add(p[-1])
+        #     # POper.print()
+        #     # print('quad_2')
+        # @_('')
+        # def quad_3(self, p): #AGREGAR * o / AL POper
+        #     POper.add(p[-1])
+        #     # POper.print()
+        #     # print('quad_3')    
+        # @_('')
+        # def quad_4(self, p): # CREA EL CUADRUPLO CON + -
+        #     global QuadCont
+        #     # POper.print()
+        #     # PID.print()
+        #     if ((POper.empty() == False) and (PID.size() >= 2)):
+        #         # print('entra al primer if')
+        #         if ((POper.top() == '+') or (POper.top() == '-')):
+        #             # print("entra al segundo if")
+        #             right_operand = PID.pop()
+        #             right_type = PQTypes.pop()
+        #             left_operand = PID.pop()
+        #             left_type = PQTypes.pop()
+        #             print('RO:', right_operand, '| RT: ', right_type, '| LO:', left_operand, '| LT: ', left_type)
+        #             operator = POper.pop()
+        #             print('CUBE:', left_type, right_type, operator)
+        #             result_Type = Cube.obtenerTipo(left_type, right_type, operator)
+        #             if(result_Type != 'error'):
+        #                 result = 't'
+        #                 Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
+        #                 QuadCont+=1
+        #                 Quadruples.print()
+        #             else:
+        #                 print("ERROR: TYPE MISMATCH")
+        #                 exit()
+        #     # print('quad_4')
+        # @_('')
+        # def quad_5(self, p): # CREA EL CUADRUPLO CON / *
+        #     global QuadCont
+        #     # POper.print()
+        #     # PID.print()
+        #     if ((POper.empty() == False) and (PID.size() >= 2)):
+        #         # print('entra al primer if')
+        #         if ((POper.top() == '/') or (POper.top() == '*')):
+        #             # print("entra al segundo if")
+        #             right_operand = PID.pop()
+        #             right_type = PQTypes.pop()
+        #             left_operand = PID.pop()
+        #             left_type = PQTypes.pop()
+        #             print('RO:', right_operand, '| RT: ', right_type, '| LO:', left_operand, '| LT: ', left_type)
+        #             operator = POper.pop()
+        #             print('CUBE:', left_type, right_type, operator)
+        #             result_Type = Cube.obtenerTipo(left_type, right_type, operator)
+        #             if(result_Type != 'error'):
+        #                 result = 't'
+        #                 Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
+        #                 QuadCont+=1
+        #                 Quadruples.print()
+        #             else:
+        #                 print("ERROR: TYPE MISMATCH")
+        #                 exit()
+        #     # print('quad_5')
             
-        @_('')
-        def quad_6(self, p): # PUSH FALSE BOTTOM MARK
-            POper.add(p[-1])
-            POper.print()
-            # print('quad_6')
-        @_('')
-        def quad_7(self, p): # POP FALSE BOTTOM MARK
-            POper.pop()
-            POper.print()
-            # print('quad_7')
-        @_('')
-        def quad_8(self, p): # POP FALSE BOTTOM MARK
-            POper.add(p[-1])
-            POper.print()
-            # print('quad_7')
+        # @_('')
+        # def quad_6(self, p): # PUSH FALSE BOTTOM MARK
+        #     POper.add(p[-1])
+        #     POper.print()
+        #     # print('quad_6')
+        # @_('')
+        # def quad_7(self, p): # POP FALSE BOTTOM MARK
+        #     POper.pop()
+        #     POper.print()
+        #     # print('quad_7')
+        # @_('')
+        # def quad_8(self, p): # POP FALSE BOTTOM MARK
+        #     POper.add(p[-1])
+        #     POper.print()
+        #     # print('quad_7')
         
-        @_('')
-        def quad_9(self, p): # CREA EL CUADRUPLO CON RELOPS (!=)|(==)|(<=)|(>=)|(<)|(>)
-            global QuadCont
-            # POper.print()
-            # PID.print()
-            if ((POper.empty() == False) and (PID.size() >= 2)):
-                # print('entra al primer if')
-                if ((POper.top() == '!=') or (POper.top() == '==')or (POper.top() == '<=')or (POper.top() == '>=')or (POper.top() == '<')or (POper.top() == '>')):
-                    # print("entra al segundo if")
-                    right_operand = PID.pop()
-                    right_type = PQTypes.pop()
-                    left_operand = PID.pop()
-                    left_type = PQTypes.pop()
-                    print('RO:', right_operand, '| RT: ', right_type, '| LO:', left_operand, '| LT: ', left_type)
-                    operator = POper.pop()
-                    print('CUBE:', left_type, right_type, operator)
-                    result_Type = Cube.obtenerTipo(left_type, right_type, operator)
-                    if(result_Type != 'error'):
-                        result = 't'
-                        Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
-                        QuadCont+=1
-                        Quadruples.print()
-                    else:
-                        print("ERROR: TYPE MISMATCH")
-                        exit()
-            # print('quad_9')
+        # @_('')
+        # def quad_9(self, p): # CREA EL CUADRUPLO CON RELOPS (!=)|(==)|(<=)|(>=)|(<)|(>)
+        #     global QuadCont
+        #     # POper.print()
+        #     # PID.print()
+        #     if ((POper.empty() == False) and (PID.size() >= 2)):
+        #         # print('entra al primer if')
+        #         if ((POper.top() == '!=') or (POper.top() == '==')or (POper.top() == '<=')or (POper.top() == '>=')or (POper.top() == '<')or (POper.top() == '>')):
+        #             # print("entra al segundo if")
+        #             right_operand = PID.pop()
+        #             right_type = PQTypes.pop()
+        #             left_operand = PID.pop()
+        #             left_type = PQTypes.pop()
+        #             print('RO:', right_operand, '| RT: ', right_type, '| LO:', left_operand, '| LT: ', left_type)
+        #             operator = POper.pop()
+        #             print('CUBE:', left_type, right_type, operator)
+        #             result_Type = Cube.obtenerTipo(left_type, right_type, operator)
+        #             if(result_Type != 'error'):
+        #                 result = 't'
+        #                 Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
+        #                 QuadCont+=1
+        #                 Quadruples.print()
+        #             else:
+        #                 print("ERROR: TYPE MISMATCH")
+        #                 exit()
+        #     # print('quad_9')
                     
-        ###############            
-        # FUNCIONES PARA AGREGAR A LAS TABLAS
-        ############### 
-        @_('')
-        def funcs_1(self, p): # Agrega el programa
-            global QuadCont
-            self.currentFunction = p[-1]
-            self.currentScope = 'global'
-            DirFuncs.addFunction(self.currentFunction, 'main', self.currentScope)
-            Quadruples.add(QuadCont, 'GOTO', 0, 0, '_')
-            QuadCont+=1
-            # print('funcs_1')
-        @_('')
-        def funcs_2(self, p): #Agrega Variable
-            self.currentType = PTypes.pop()
-            global IntCont
-            global FloatCont
-            global CharsCont
-            #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
-            if(self.currentType == 'int'):
-                DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, IntBase+IntCont)
-                IntCont+=1
-            if(self.currentType == 'float'):
-                DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, FloatBase+FloatCont)
-                FloatCont+=1
-            if(self.currentType == 'char'):
-                DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, CharsBase+CharsCont)
-                CharsCont+=1
-            # print('funcs_2')
-        @_('')
-        def funcs_3(self, p): #Agregar modulo a DirFuncs
-            self.currentType = PTypes.pop()
-            # print('current Type:', self.currentType)
-            self.currentFunction = p[-1]
-            # print('current function: ', self.currentFunction)
-            DirFuncs.addFunction(self.currentFunction, self.currentType, 'module'+str(self.currentFunction))
-        @_('')
-        def funcs_4(self, p): #Agregar parametros a modulo
-            global ParCont
-            self.currentType = PTypes.pop()
-            DirFuncs.addParametros(self.currentFunction, ParCont ,self.currentType)
-            ParCont+=1
+        # ###############            
+        # # FUNCIONES PARA AGREGAR A LAS TABLAS
+        # ############### 
+        # @_('')
+        # def funcs_1(self, p): # Agrega el programa
+        #     global QuadCont
+        #     self.currentFunction = p[-1]
+        #     self.currentScope = 'global'
+        #     DirFuncs.addFunction(self.currentFunction, 'main', self.currentScope)
+        #     Quadruples.add(QuadCont, 'GOTO', 0, 0, '_')
+        #     QuadCont+=1
+        #     # print('funcs_1')
+        # @_('')
+        # def funcs_2(self, p): #Agrega Variable
+        #     self.currentType = PTypes.pop()
+        #     global IntCont
+        #     global FloatCont
+        #     global CharsCont
+        #     #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
+        #     if(self.currentType == 'int'):
+        #         DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, IntBase+IntCont)
+        #         IntCont+=1
+        #     if(self.currentType == 'float'):
+        #         DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, FloatBase+FloatCont)
+        #         FloatCont+=1
+        #     if(self.currentType == 'char'):
+        #         DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, CharsBase+CharsCont)
+        #         CharsCont+=1
+        #     # print('funcs_2')
+        # @_('')
+        # def funcs_3(self, p): #Agregar modulo a DirFuncs
+        #     self.currentType = PTypes.pop()
+        #     # print('current Type:', self.currentType)
+        #     self.currentFunction = p[-1]
+        #     # print('current function: ', self.currentFunction)
+        #     DirFuncs.addFunction(self.currentFunction, self.currentType, 'module'+str(self.currentFunction))
+        # @_('')
+        # def funcs_4(self, p): #Agregar parametros a modulo
+        #     global ParCont
+        #     self.currentType = PTypes.pop()
+        #     DirFuncs.addParametros(self.currentFunction, ParCont ,self.currentType)
+        #     ParCont+=1
                        
-        @_('')
-        def current_typeV(self, p):
-            PTypes.add('void')
-            # print('current_typeV')
+        # @_('')
+        # def current_typeV(self, p):
+        #     PTypes.add('void')
+        #     # print('current_typeV')
         
 
         # FUNCION PRINCIPAL DEL PROGRAMA 
