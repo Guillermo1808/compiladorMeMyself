@@ -49,7 +49,7 @@ No se pueden agregar valores de funciones a variables.
 
 ## AVANCE 7
 - [x] Maquina Virtual Funcional Para Cuadruplos Simples.
-- [_] Maquina Virtual Funcional Para Cuadruplos De Funciones.
+- [ ] Maquina Virtual Funcional Para Cuadruplos De Funciones.
 
 La maquina virtual ya analiza los cuadruplos y toma decisiones para ejecutarlos.\
 Solo falta que ejecute funciones.
