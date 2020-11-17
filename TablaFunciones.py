@@ -33,7 +33,15 @@ class tablaFunciones:
     def getVarDir(self, id):                # DEVUELVE EL TYPE DE LA VARIABLE    
         for fid in self.funciones.keys():
             if self.funciones[fid]['variables'].search(id):
-                return self.funciones[fid]['variables'].getDir(id)
+                if(self.funciones[fid]['variables'].getDir(id) == None):
+                    print('ERROR: VAR NOT FOUND')
+                    exit()
+                else:
+                    # print(id,'DIR:',self.funciones[fid]['variables'].getDir(id))
+                    return self.funciones[fid]['variables'].getDir(id)
+        # for fid in self.funciones.keys():
+        #     if self.funciones[fid]['variables'].search(id):
+        #         return self.funciones[fid]['variables'].getDir(id)
             #     return self.funciones[fid]['variables'].getType(id)
         
     def getParType(self, fid, num):                 # DEVUELVE EL TYPE DE PARAMETRO          
@@ -45,14 +53,19 @@ class tablaFunciones:
             if count > 0:
                 return count
             
+    def getJump(self, fid):
+        if(fid in self.funciones.keys()):
+            return self.funciones[fid]['QuadCont']
+
     # AGREGA LA FUNCION Y CREA SU TABLA
-    def addFunction(self, fid, typeF, FScope):
+    def addFunction(self, fid, typeF, FScope, QuadCont):
         if fid in self.funciones.keys():
             print('ERROR:', fid, 'module is already declared')
         else:
             self.funciones[fid] = {
                 'type': typeF,
                 'FScope': FScope,
+                'QuadCont': QuadCont,
                 'variables': tablaVariables(),
                 'parametros': tablaParametros()
             }

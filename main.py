@@ -14,11 +14,13 @@ currentScope = 'global'
 currentType = ''
 varType = ''
 VControl = ''
+ParamPointer = ''
 DirFuncs = tablaFunciones() #CREATE DIR TABLE
-DirFuncs.addFunction('globales','ctes','global')
+DirFuncs.addFunction('globales','ctes','global',1)
 POper = stacks()
 PID = stacks()
 PPar = stacks()
+PQPar = stacks()
 PSaltos = stacks()
 PArreglos = stacks()
 PTypes = stacks()
@@ -38,13 +40,14 @@ CharsCont   = 0
 TempsCont   = 0
 CtesCont    = 0
 ParCont     = 1
+ParK        = 0
 QuadCont    = 1
 
 
 class MeMyselfLexer(Lexer):
         tokens = { PROGRAM, VAR, MODULE, VOID, INT, FLOAT, ASSIGN, CHAR, RELOP, 
                     IF, ELSE, FOR, TO, THEN, DO, WHILE, RETURN, PLUS, MAIN, TO, WRITE, READ, 
-                    MINUS, TIMES, DIVIDE, CTEINT, CTEFLOAT, 
+                    MINUS, TIMES, DIVIDE, CTEINT, CTEFLOAT, CTECHAR,  
                     LETRERO, ID, LOGICOS,
                     LINE, POINT, CIRCLE, ARC, PENUP, PENDOWN, COLOR, SIZE, CLEAR}
 
@@ -53,7 +56,7 @@ class MeMyselfLexer(Lexer):
 
         CTEFLOAT  = r'([0-9]+)(\.)([0-9]+)?'
         CTEINT    = r'[0-9]+'
-        # CTECHAR    = r'[\']([a-zA-Z])+[\']'
+        CTECHAR    = r'\'[a-zA-Z_]\''
         ID        = r'[a-zA-Z]([a-zA-Z]|[0-9_])*'
         LETRERO   = r'[\"]([a-zA-Z]*)+[\"]'
         MINUS     = r'[\-]'
@@ -194,19 +197,30 @@ class MeMyselfParser(Parser):
             pass
         
         #       ASIGNACION
-        @_('ID quad_1 ASSIGN exp quad_a ";"')
+        @_('ID quad_1 ASSIGN exp quad_a ";"', 'ID quad_1 ASSIGN funcionD')
         def asignacion(self, p):
             pass
         
+    
+        # #       FUNCION
+        # @_('ID funcs_calls "(" funcionD2 ")" funcs_calls3 ";"')
+        # def funcionD(self, p):
+        #     pass
+        # @_('exp funcs_calls2 ', 'exp funcs_calls2 funcionD3','')
+        # def funcionD2(self, p):
+        #     pass
+        # @_('"," exp funcs_calls2 funcionD3','')
+        # def funcionD3(self, p):
+        #     pass
         
         #       FUNCION
-        @_('MODULE ID funcs_calls "(" funcionD2 ")" funcs_calls2 ";"')
+        @_('ID funcs_calls "(" funcs_calls2 funcionD2 funcs_calls5 ")" funcs_calls6 ";"')
         def funcionD(self, p):
             pass
-        @_('exp', 'exp funcionD3','')
+        @_('exp funcs_calls3 funcionD3','')
         def funcionD2(self, p):
             pass
-        @_('"," exp funcionD3','')
+        @_('"," funcs_calls4 funcionD2','')
         def funcionD3(self, p):
             pass
 
@@ -295,13 +309,13 @@ class MeMyselfParser(Parser):
             pass
 
         #       PARAMETROS
-        @_('tipov ID funcs_4 parametros2', '')
+        @_('tipov ID funcs_2 funcs_4 parametros2', '')
         def parametros(self,p):
             global ParCont
             ParCont = 1
             pass
         
-        @_('"," tipov ID funcs_4 parametros2','')
+        @_('"," tipov ID funcs_2 funcs_4 parametros2','')
         def parametros2(self,p):
             pass
 
@@ -312,7 +326,7 @@ class MeMyselfParser(Parser):
             pass
 
         #       VARCTE
-        @_('ID quad_1','CTEINT funcs_cteI quad_cteI','CTEFLOAT funcs_cteF quad_cteF','LETRERO funcs_cteL quad_let')
+        @_('ID quad_1','CTEINT funcs_cteI quad_cteI','CTEFLOAT funcs_cteF quad_cteF','CTECHAR funcs_cteC quad_cteF','LETRERO funcs_cteL quad_let')
         def varcte(self, p):
             pass
 
@@ -347,6 +361,13 @@ class MeMyselfParser(Parser):
             PID.add(cte)
             PQTypes.add('float')
             # print('quad_cteF')
+            
+        @_('')
+        def quad_cteC(self, p): # HACER PUSH A LOS STACKS CON CTE INTS
+            cte = p[-2]
+            PID.add(cte)
+            PQTypes.add('char')
+            print('quad_cteI')
         @_('')
         def quad_let(self, p): # HACER PUSH A LOS STACKS CON LETREROS
             print('--------------- ENTRA A LETRERO --------')
@@ -398,6 +419,10 @@ class MeMyselfParser(Parser):
                     if(result_Type != 'error'):
                         result = TempsBase + TempsCont
                         TempsCont+=1
+                        if(type(left_operand) == str):
+                            left_operand = DirFuncs.getVarDir(left_operand)
+                        if(type(right_operand) == str):
+                            right_operand = DirFuncs.getVarDir(right_operand)
                         Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
                         PQTypes.add(result_Type)
                         PID.add(result)
@@ -429,6 +454,10 @@ class MeMyselfParser(Parser):
                     if(result_Type != 'error'):
                         result = TempsBase + TempsCont
                         TempsCont+=1
+                        if(type(left_operand) == str):
+                            left_operand = DirFuncs.getVarDir(left_operand)
+                        if(type(right_operand) == str):
+                            right_operand = DirFuncs.getVarDir(right_operand)
                         Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
                         PQTypes.add(result_Type)
                         PID.add(result)
@@ -477,6 +506,10 @@ class MeMyselfParser(Parser):
                     if(result_Type != 'error'):
                         result = TempsBase + TempsCont
                         TempsCont+=1
+                        if(type(left_operand) == str):
+                            left_operand = DirFuncs.getVarDir(left_operand)
+                        if(type(right_operand) == str):
+                            right_operand = DirFuncs.getVarDir(right_operand)
                         Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
                         PQTypes.add(result_Type)
                         PID.add(result)
@@ -516,6 +549,10 @@ class MeMyselfParser(Parser):
                     if(result_Type != 'error'):
                         result = TempsBase + TempsCont
                         TempsCont+=1
+                        if(type(left_operand) == str):
+                            left_operand = DirFuncs.getVarDir(left_operand)
+                        if(type(right_operand) == str):
+                            right_operand = DirFuncs.getVarDir(right_operand)
                         Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
                         PTypes.add(result_Type)
                         PID.add(result)
@@ -539,35 +576,19 @@ class MeMyselfParser(Parser):
             result_Type = Cube.obtenerTipo(left_type, right_type, operator)
             if(result_Type != 'error'):
                 result = left_operand
-                Quadruples.add(QuadCont, operator, right_operand, '0', result)
+                # print('RESULT ',result)
+                if(type(result) == str):
+                    result = DirFuncs.getVarDir(result)
+                if(type(right_operand) == str):
+                    right_operand = DirFuncs.getVarDir(right_operand)
+                # print('RESULT memory ',result)
+                Quadruples.add(QuadCont, operator, right_operand, 0, result)
                 QuadCont+=1
                 #1 Quadruples.print()
             else:
                 print("ERROR: CANNOT ASSING VALUE", left_type ,'TO', right_type)
                 exit()
             # print('quad_a')
-        
-        @_('')
-        def quad_a2(self, p): # CUADRUPLO DE ASIGNACION
-            global QuadCont
-            # PID.print()
-            # PQTypes.print()
-            # if ((PID.size() >= 2)):
-            # right_operand = PID.pop()
-            # right_type = PQTypes.pop()
-            # left_operand = PID.pop()
-            # left_type = PQTypes.pop()
-            # operator = '='
-            # result_Type = Cube.obtenerTipo(left_type, right_type, operator)
-            # if(result_Type != 'error'):
-            #     result = left_operand
-            #     Quadruples.add(QuadCont, operator, right_operand, '0', result)
-            #     QuadCont+=1
-            #     #1 Quadruples.print()
-            # else:
-            #     print("ERROR: CANNOT ASSING VALUE", left_type ,'TO', right_type)
-            #     exit()
-            print('quad_a2')
             
         ###############            
         # PUNTOS NEURALGICOS: FUNCIONES PARA GOTOS Y FUNCIONES
@@ -591,6 +612,8 @@ class MeMyselfParser(Parser):
                 exit()
             else:
                 result = PID.pop()
+                if(type(result) == str):
+                    result = DirFuncs.getVarDir(result)
                 Quadruples.add(QuadCont, 'GOTOF', result, 0, '_')
                 PSaltos.add(QuadCont)
                 QuadCont+=1
@@ -632,6 +655,8 @@ class MeMyselfParser(Parser):
                 print('ERROR: TYPE MISMATCH')
             else:
                 result = PID.pop()
+                if(type(result) == str):
+                    result = DirFuncs.getVarDir(result)
                 Quadruples.add(QuadCont, 'GOTOF', result, 0, '_')
                 QuadCont+=1
                 PSaltos.add(QuadCont)
@@ -682,7 +707,9 @@ class MeMyselfParser(Parser):
                     # result = TempsBase + TempsCont
                     # TempsCont+=1
                     # print(exp, VControl)
-                    Quadruples.add(QuadCont, '=', exp, 0, VControl)
+                    exp_dir = DirFuncs.getVarDir(exp)
+                    VControl_dir = DirFuncs.getVarDir(right_operand)
+                    Quadruples.add(QuadCont, '=', exp_dir, 0, VControl_dir)
                     # Quadruples.print()
                     # print('----')
                     PTypes.add(Tipo_Res)
@@ -707,10 +734,19 @@ class MeMyselfParser(Parser):
                 resultF = TempsBase + TempsCont
                 TempsCont+=1
                 result = TempsBase + TempsCont
+                
+                if(type(exp) == str):
+                    exp = DirFuncs.getVarDir(exp)
+                if(type(resultF) == str):
+                    resultF = DirFuncs.getVarDir(resultF)
                 Quadruples.add(QuadCont, '=', exp, 0, resultF)
                 # Quadruples.print()
                 # print('----')
                 QuadCont+=1
+                if(type(VControl) == str):
+                    VControl = DirFuncs.getVarDir(VControl)
+                if(type(resultF) == str):
+                    resultF = DirFuncs.getVarDir(resultF)
                 Quadruples.add(QuadCont, '<', VControl, resultF, result)
                 # Quadruples.print()
                 # print('----')
@@ -731,6 +767,8 @@ class MeMyselfParser(Parser):
             
             result = TempsBase + TempsCont
             TempsCont+=1
+            if(type(VControl) == str):
+                    VControl = DirFuncs.getVarDir(VControl)
             Quadruples.add(QuadCont, '+', VControl, 1, result)
             fin = PSaltos.pop()
             ret = PSaltos.pop()
@@ -757,6 +795,10 @@ class MeMyselfParser(Parser):
             var2 = PID.pop()
             result_type = Cube.obtenerTipo(typeV, typeV2, 'LINE')
             if(result_type != 'error'):
+                if(type(var2) == str):
+                    var2 = DirFuncs.getVarDir(var2)
+                if(type(var) == str):
+                    var = DirFuncs.getVarDir(var)
                 Quadruples.add(QuadCont, 'LINE', 0, var2, var)
                 QuadCont+=1
             else:
@@ -776,6 +818,8 @@ class MeMyselfParser(Parser):
             var = PID.pop()
             result_type = Cube.obtenerTipo(typeV, '_', 'CIRCLE')
             if(result_type != 'error'):
+                if(type(var) == str):
+                    var = DirFuncs.getVarDir(var)
                 Quadruples.add(QuadCont, 'CIRCLE', 0, 0, var)
                 QuadCont+=1
             else:
@@ -789,6 +833,8 @@ class MeMyselfParser(Parser):
             var = PID.pop()
             result_type = Cube.obtenerTipo(typeV, '_', 'ARC')
             if(result_type != 'error'):
+                if(type(var) == str):
+                    var = DirFuncs.getVarDir(var)
                 Quadruples.add(QuadCont, 'ARC', 0, 0, var)
                 QuadCont+=1
             else:
@@ -820,6 +866,12 @@ class MeMyselfParser(Parser):
                 print('ERROR: TYPE MISMATCH')
                 exit()
             else:
+                if(type(r) == str):
+                    r = DirFuncs.getVarDir(r)
+                if(type(g) == str):
+                    g = DirFuncs.getVarDir(g)
+                if(type(b) == str):
+                    b = DirFuncs.getVarDir(b)
                 Quadruples.add(QuadCont, 'COLOR', r, g, b)
                 QuadCont+=1
             # print('quad_color') 
@@ -830,6 +882,8 @@ class MeMyselfParser(Parser):
             var = PID.pop()
             result_type = Cube.obtenerTipo(typeV, '_', 'SIZE')
             if(result_type != 'error'):
+                if(type(var) == str):
+                    var = DirFuncs.getVarDir(var)
                 Quadruples.add(QuadCont, 'SIZE', 0, 0, var)
                 QuadCont+=1
             else:
@@ -848,6 +902,8 @@ class MeMyselfParser(Parser):
             global QuadCont
             typeV = PQTypes.pop()
             var = PID.pop()
+            if(type(var) == str):
+                var = DirFuncs.getVarDir(var)
             Quadruples.add(QuadCont, 'WRITE', 0, 0, var)
             QuadCont+=1
             # print('quad_write')
@@ -858,6 +914,8 @@ class MeMyselfParser(Parser):
             var = p[-1]
             typeV = DirFuncs.getVarType(var)
             if(typeV != None):
+                if(type(var) == str):
+                    var = DirFuncs.getVarDir(var)
                 Quadruples.add(QuadCont, 'READ', 0, 0, var)
                 QuadCont+=1
             else:
@@ -874,7 +932,7 @@ class MeMyselfParser(Parser):
             global QuadCont
             self.currentFunction = p[-1]
             self.currentScope = 'global'
-            DirFuncs.addFunction(self.currentFunction, 'main', self.currentScope)
+            DirFuncs.addFunction(self.currentFunction, 'main', self.currentScope, QuadCont)
             Quadruples.add(QuadCont, 'GOTO', 0, 0, '_')
             PSaltos.add(QuadCont)
             QuadCont+=1
@@ -918,17 +976,25 @@ class MeMyselfParser(Parser):
             # print('current Type:', self.currentType)
             self.currentFunction = p[-1]
             # print('current function: ', self.currentFunction)
-            DirFuncs.addFunction(self.currentFunction, self.currentType, 'module'+str(self.currentFunction))
+            DirFuncs.addFunction(self.currentFunction, self.currentType, 'module'+str(self.currentFunction), QuadCont)
         @_('')
         def funcs_4(self, p): #Agregar parametros a modulo
             global ParCont
-            self.currentType = PTypes.pop()
             DirFuncs.addParametros(self.currentFunction, ParCont ,self.currentType)
             ParCont+=1
         
         @_('')
         def funcs_cteI(self, p): #Agrega variable constante entera
             self.currentType = 'int'
+            global CtesBase
+            global CtesCont
+            #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
+            DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
+            CtesCont+=1
+            # print('funcs_2')
+        @_('')
+        def funcs_cteC(self, p): #Agrega variable constante entera
+            self.currentType = 'char'
             global CtesBase
             global CtesCont
             #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
@@ -972,49 +1038,108 @@ class MeMyselfParser(Parser):
             varR = DirFuncs.getVarDir('return'+self.currentFunction)
             typeR = DirFuncs.getVarType('return'+self.currentFunction)
             # DirFuncs.printFunction()
-            print(var, typeV, varR, typeR)
+            # print(var, typeV, varR, typeR)
             result_type = Cube.obtenerTipo(typeV, typeR, '=')
             if(result_type != 'error'):
+                if(type(var) == str):
+                    var = DirFuncs.getVarDir(var)
+                if(type(var) == str):
+                    varR = DirFuncs.getVarDir(varR)
                 Quadruples.add(QuadCont, '=', var, 0, varR)
                 QuadCont+=1
             else:
                 print('ERROR: TYPE MISMATCH')
                 exit()
-            print('funcs_r2')
+            # print('funcs_r2')
         
         @_('')
         def funcs_calls(self, p):
             self.currentFunction = p[-1]
             # print(DirFuncs.search(func))
-            if(DirFuncs.search(self.currentFunction)):
-                count = DirFuncs.getParCount(self.currentFunction)
-                PID.add(self.currentFunction)
-                PQTypes.add(DirFuncs.getVarType(self.currentFunction))
-                var = PID.pop()
-                typeV = PQTypes.pop()
-                for i in range(count):
-                    typeP = DirFuncs.getParType(self.currentFunction, i+1)
-                    PPar.add(typeP)
-                    print(typeP)
-                    PPar.print()
-            else:
-                print('ERROR: FUNCTION', func, 'NOT DECLARED')
-            print('funcs_calls')
+            if(not DirFuncs.search(self.currentFunction)):
+                print('ERROR: FUNCTION', self.currentFunction, 'NOT DECLARED')
+                exit()
+            # print('funcs_calls')
         
         @_('')
         def funcs_calls2(self, p):
             global QuadCont
-            count = DirFuncs.getParCount(self.currentFunction)
-            for i in range(count):
-                ParType = PPar.pop()
-                var = PID.pop()
-                typeV = DirFuncs.getVarType(var)
-                if(ParType != typeV):
-                    print('ERROR: TYPE OF PARAMETER INCORRECT. EXCPECTED', ParType, ',GIVEN', typeV)
-                    exit()
+            global ParK
+            global ParamPointer
+            Quadruples.add(QuadCont, 'ERA', 0 ,0, self.currentFunction)
+            QuadCont+=1
+            ParK = 1
+            # print(DirFuncs.getParType(self.currentFunction, ParK))
+            ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
+            # print(DirFuncs.getParType(self.currentFunction, ParK))
+            # print('funcs_calls2')
+        
+        @_('')
+        def funcs_calls3(self, p):
+            global QuadCont
+            global TempsBase
+            global TempsCont
+            global ParamPointer
+            global ParK
+            # print('PQTypes')
+            # PQTypes.print()
+            # print('PTypes')
+            # PTypes.print()
+            argument = PID.pop()
+            # print('argument', argument)
+            # PQTypes.add(DirFuncs.getVarType(argument))
+            argumentType = PQTypes.pop()
+            # print('ParK',ParK)
+            # print('Param pointer',ParamPointer)
+            # print('argument type',argumentType)
+            if(argumentType == ParamPointer):
+                if(type(argument) == str):
+                    argument = DirFuncs.getVarDir(argument)
+                Quadruples.add(QuadCont,'PARAM', argument, ParK, TempsBase+TempsCont)    
+                QuadCont+=1
+                TempsCont+=1
+            else:
+                print('ERROR: PARAM TYPE. EXPECTED:', ParamPointer, ', GIVEN:', argumentType)
+                exit()
+            # print('funcs_calls3')
+        
+        @_('')
+        def funcs_calls4(self, p):
+            global ParK
+            global ParamPointer
+            ParK+=1
+            try:
+                ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
+            except:
+                print('ERROR: WRONG NUMBER OF PARAMETERS')
+                exit()
+            else:
+                ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
                 
+            # print('funcs_calls4')
+        
+        @_('')
+        def funcs_calls5(self, p):
+            global ParK
+            global ParamPointer
+            try:
+                ParamPointer = DirFuncs.getParType(self.currentFunction, ParK+1)
+            except:
+                ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
+            else:
+                print('ERROR: WRONG NUMBER OF PARAMETERS')
+                exit()
+            # print('funcs_calls5')
             
-            print('funcs_calls2')
+        @_('')
+        def funcs_calls6(self, p):
+            global QuadCont
+            # print('CURRENT FUNCTION', self.currentFunction)
+            goTo = DirFuncs.getJump(self.currentFunction)
+            # print('GOTO', goTo)
+            Quadruples.add(QuadCont,'GOSUB', self.currentFunction, 0, goTo)    
+            QuadCont+=1
+            # print('funcs_calls6')
             
         @_('')
         def current_typeV(self, p):
@@ -1051,14 +1176,14 @@ if __name__ == '__main__':
     DirFuncs.printFunction()
     print('Cuadruplos')
     Quadruples.print()
-    # print('PID')
-    # PID.print()
-    # print('PTypes')
-    # PTypes.print()
-    # print('PQTypes')
-    # PQTypes.print()
-    # print('PPar')
-    # PPar.print()
+    print('PID')
+    PID.print()
+    print('PTypes')
+    PTypes.print()
+    print('PQTypes')
+    PQTypes.print()
+    print('PPar')
+    PPar.print()
 
 # if __name__ == '__main__':
     

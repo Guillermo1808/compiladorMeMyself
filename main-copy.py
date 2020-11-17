@@ -15,7 +15,7 @@ currentType = ''
 varType = ''
 VControl = ''
 DirFuncs = tablaFunciones() #CREATE DIR TABLE
-DirFuncs.addFunction('globales','ctes','global')
+DirFuncs.addFunction('globales','ctes','global',1)
 POper = stacks()
 PID = stacks()
 PPar = stacks()
@@ -44,7 +44,7 @@ QuadCont    = 1
 class MeMyselfLexer(Lexer):
         tokens = { PROGRAM, VAR, MODULE, VOID, INT, FLOAT, ASSIGN, CHAR, RELOP, 
                     IF, ELSE, FOR, TO, THEN, DO, WHILE, RETURN, PLUS, MAIN, TO, WRITE, READ, 
-                    MINUS, TIMES, DIVIDE, CTEINT, CTEFLOAT, 
+                    MINUS, TIMES, DIVIDE, CTEINT, CTEFLOAT, CTECHAR,  
                     LETRERO, ID, LOGICOS,
                     LINE, POINT, CIRCLE, ARC, PENUP, PENDOWN, COLOR, SIZE, CLEAR}
 
@@ -53,7 +53,7 @@ class MeMyselfLexer(Lexer):
 
         CTEFLOAT  = r'([0-9]+)(\.)([0-9]+)?'
         CTEINT    = r'[0-9]+'
-        # CTECHAR    = r'[\']([a-zA-Z])+[\']'
+        CTECHAR    = r'\'[a-zA-Z_]\''
         ID        = r'[a-zA-Z]([a-zA-Z]|[0-9_])*'
         LETRERO   = r'[\"]([a-zA-Z]*)+[\"]'
         MINUS     = r'[\-]'
@@ -102,7 +102,7 @@ class MeMyselfParser(Parser):
             self.names = { }
 
         #       PROGRAM
-        @_('PROGRAM ID funcs_1 ";" program2 program3 program4')
+        @_('PROGRAM ID ";" program2 program3 program4')
         def program(self, p):
             pass
         @_('vars program2', '')
@@ -111,7 +111,7 @@ class MeMyselfParser(Parser):
         @_('funcs', '')
         def program3(self, p):
             pass
-        @_('MAIN quad_f1 "(" ")" "{" estatutos "}"')
+        @_('MAIN "(" ")" "{" estatutos "}"')
         def program4(self, p):
             pass
 
@@ -124,20 +124,20 @@ class MeMyselfParser(Parser):
             pass
 
         #       FUNCV
-        @_('VOID current_typeV MODULE ID funcs_3 "(" parametros ")" ";" vars "{" estatutos "}"', '')
+        @_('VOID MODULE ID "(" parametros ")" ";" vars "{" estatutos "}"', '')
         def funcv(self, p):
             pass
 
         #       FUNCR
-        @_('tipov MODULE ID funcs_3 funcs_r "(" parametros ")" ";" vars "{" estatutos return0 "}"', '')
+        @_('tipov MODULE ID "(" parametros ")" ";" vars "{" estatutos return0 "}"', '')
         def funcr(self, p):
             pass
 
         #       LECTURA
-        @_('READ "(" ID quad_read lectura2 ")" ";"')
+        @_('READ "(" ID lectura2 ")" ";"')
         def lectura(self, p):
             pass
-        @_('"," ID quad_read lectura2', '')
+        @_('"," ID lectura2', '')
         def lectura2(self, p):
             pass
 
@@ -153,31 +153,31 @@ class MeMyselfParser(Parser):
             pass
 
         #       PRINT
-        @_('LETRERO quad_write printe2', 'exp quad_write printe2')
+        @_('LETRERO printe2', 'exp printe2')
         def printe(self, p):
             pass
-        @_('"," LETRERO quad_write printe2', '"," exp quad_write printe2', '')
+        @_('"," LETRERO printe2', '"," exp printe2', '')
         def printe2(self, p):
             pass
 
         #       DECISION
-        @_('IF "(" expresion ")" quad_if1 THEN decision2 decision3 quad_if2')
+        @_('IF "(" expresion ")" THEN decision2 decision3')
         def decision(self, p):
             pass
         @_('"{" estatutos "}"')
         def decision2(self, p):
             pass
-        @_('ELSE "{" quad_if3 estatutos "}"', '')
+        @_('ELSE "{" estatutos "}"', '')
         def decision3(self, p):
             pass
 
         #       DO
-        @_('WHILE quad_wd1 "(" expresion ")" quad_wd2 DO "{" estatutos "}" quad_wd3')
+        @_('WHILE "(" expresion ")" DO "{" estatutos "}"')
         def repeticiondo(self, p):
             pass
 
         #       FOR
-        @_('FOR ID quad_for1 ASSIGN exp quad_for2 TO exp quad_for3 DO "{" estatutos "}" quad_for4')
+        @_('FOR ID ASSIGN exp TO exp DO "{" estatutos "}"')
         def repeticionfor(self, p):
             PTypes.pop()
             PID.pop()
@@ -194,19 +194,20 @@ class MeMyselfParser(Parser):
             pass
         
         #       ASIGNACION
-        @_('ID quad_1 ASSIGN exp quad_a ";"')
+        @_('ID ASSIGN exp ";"', 'ID ASSIGN funcionD')
         def asignacion(self, p):
+            print('asignacion')
             pass
         
         
         #       FUNCION
-        @_('MODULE ID funcs_calls "(" funcionD2 ")" funcs_calls2 ";"')
+        @_('ID  "("  funcionD2 ")" ";"')
         def funcionD(self, p):
             pass
-        @_('exp', 'exp funcionD3','')
+        @_('exp  funcionD3','')
         def funcionD2(self, p):
             pass
-        @_('"," exp funcionD3','')
+        @_('"," funcionD2','')
         def funcionD3(self, p):
             pass
 
@@ -216,111 +217,111 @@ class MeMyselfParser(Parser):
             pass
         
         #       LINE
-        @_('LINE "(" exp "," exp ")" quad_line ";"')
+        @_('LINE "(" exp "," exp ")" ";"')
         def line(self, p):
             pass
 
         #       POINT
-        @_('POINT "(" ")" quad_point ";"')
+        @_('POINT "(" ")" ";"')
         def point(self, p):
             pass
 
         #       CIRCLE
-        @_('CIRCLE "(" exp ")" quad_circle ";"')
+        @_('CIRCLE "(" exp ")" ";"')
         def circle(self, p):
             pass
 
         #       ARC
-        @_('ARC "(" exp ")" quad_arc ";"')
+        @_('ARC "(" exp ")" ";"')
         def arc(self, p):
             pass
 
         #       PENUP
-        @_('PENUP "(" ")" quad_penup ";"')
+        @_('PENUP "(" ")" ";"')
         def penup(self, p):
             pass
 
         #       PENDOWN
-        @_('PENDOWN "(" ")" quad_pendown ";"')
+        @_('PENDOWN "(" ")" ";"')
         def pendown(self, p):
             pass
 
         #       COLOR
-        @_('COLOR "(" exp "," exp "," exp ")" quad_color ";"')
+        @_('COLOR "(" exp "," exp "," exp ")" ";"')
         def color(self, p):
             pass
 
         #       SIZE
-        @_('SIZE "(" exp ")" quad_size ";"')
+        @_('SIZE "(" exp ")" ";"')
         def size(self, p):
             pass
 
         #       CLEAR
-        @_('CLEAR "(" ")" quad_clear ";"')
+        @_('CLEAR "(" ")" ";"')
         def clear(self, p):
             pass
 
         #      EXPRESION
         # @_('comparar LOGICOS quad_19 comparar', 'comparar')
-        @_('comparar LOGICOS quad_10 comparar quad_11', 'comparar')
+        @_('comparar LOGICOS  comparar ', 'comparar')
         def expresion(self,p):
             pass
         
         #      COMPARAR
-        @_('exp RELOP quad_8 exp quad_9')
+        @_('exp RELOP exp ')
         def comparar(self,p):
             pass
 
         #       RETURN
-        @_('RETURN "(" exp ")" funcs_r2 ";"')
+        @_('RETURN "(" exp ")" ";"')
         def return0(self,p):
             pass
 
         #       EXP
-        @_('termino quad_4 exp2')
+        @_('termino exp2')
         def exp(self,p):
             pass
 
-        @_('PLUS quad_2 exp','MINUS quad_2 termino exp', '')
+        @_('PLUS exp','MINUS termino exp', '')
         def exp2(self,p):
             pass
         
         #       TERMINO
-        @_('factor quad_5 termino2')
+        @_('factor termino2')
         def termino(self,p):
             pass
         # @_('TIMES quad_3 factor termino2', 'DIVIDE quad_3 factor termino2','')
-        @_('TIMES quad_3 termino', 'DIVIDE quad_3 termino','')
+        @_('TIMES termino', 'DIVIDE termino','')
         def termino2(self,p):
             pass
 
         #       PARAMETROS
-        @_('tipov ID funcs_4 parametros2', '')
+        @_('tipov ID parametros2', '')
         def parametros(self,p):
             global ParCont
             ParCont = 1
             pass
         
-        @_('"," tipov ID funcs_4 parametros2','')
+        @_('"," tipov ID parametros2','')
         def parametros2(self,p):
             pass
 
         #       FACTOR
         #@_('"(" quad_6 expresion ")" quad_7','PLUS varcte',  'MINUS varcte', 'varcte')
-        @_('"(" quad_6 exp ")" quad_7','PLUS varcte',  'MINUS varcte', 'varcte')
+        @_('"(" exp ")"','PLUS varcte',  'MINUS varcte', 'varcte')
         def factor(self,p):
             pass
 
         #       VARCTE
-        @_('ID quad_1','CTEINT funcs_cteI quad_cteI','CTEFLOAT funcs_cteF quad_cteF','LETRERO funcs_cteL quad_let')
+        @_('ID','CTEINT','CTEFLOAT','CTECHAR','LETRERO')
         def varcte(self, p):
             pass
 
         #       VARS
-        @_('VAR tipov ":" ID funcs_2 vars2 ";"', '')
+        @_('VAR tipov ":" ID vars2 ";"', '')
         def vars(self, p):
             pass
-        @_('"," ID funcs_2_1 vars2', '')
+        @_('"," ID vars2', '')
         def vars2(self, p):
             pass
 
@@ -347,6 +348,13 @@ class MeMyselfParser(Parser):
             PID.add(cte)
             PQTypes.add('float')
             # print('quad_cteF')
+            
+        @_('')
+        def quad_cteC(self, p): # HACER PUSH A LOS STACKS CON CTE INTS
+            cte = p[-2]
+            PID.add(cte)
+            PQTypes.add('char')
+            print('quad_cteI')
         @_('')
         def quad_let(self, p): # HACER PUSH A LOS STACKS CON LETREROS
             print('--------------- ENTRA A LETRERO --------')
@@ -874,7 +882,7 @@ class MeMyselfParser(Parser):
             global QuadCont
             self.currentFunction = p[-1]
             self.currentScope = 'global'
-            DirFuncs.addFunction(self.currentFunction, 'main', self.currentScope)
+            DirFuncs.addFunction(self.currentFunction, 'main', self.currentScope, 1)
             Quadruples.add(QuadCont, 'GOTO', 0, 0, '_')
             PSaltos.add(QuadCont)
             QuadCont+=1
@@ -918,7 +926,7 @@ class MeMyselfParser(Parser):
             # print('current Type:', self.currentType)
             self.currentFunction = p[-1]
             # print('current function: ', self.currentFunction)
-            DirFuncs.addFunction(self.currentFunction, self.currentType, 'module'+str(self.currentFunction))
+            DirFuncs.addFunction(self.currentFunction, self.currentType, 'module'+str(self.currentFunction),1)
         @_('')
         def funcs_4(self, p): #Agregar parametros a modulo
             global ParCont
@@ -929,6 +937,15 @@ class MeMyselfParser(Parser):
         @_('')
         def funcs_cteI(self, p): #Agrega variable constante entera
             self.currentType = 'int'
+            global CtesBase
+            global CtesCont
+            #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
+            DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
+            CtesCont+=1
+            # print('funcs_2')
+        @_('')
+        def funcs_cteC(self, p): #Agrega variable constante entera
+            self.currentType = 'char'
             global CtesBase
             global CtesCont
             #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)

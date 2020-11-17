@@ -27,6 +27,9 @@ class stacks:
             return False
         else:
             return True
+        
+    def reverse(self):                      #INVIERTE LA TABLA
+        return self.stack.reverse()
     
     def size(self):
         return len(self.stack)

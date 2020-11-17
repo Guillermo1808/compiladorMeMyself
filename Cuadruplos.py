@@ -12,6 +12,7 @@ class cuadruplos:
         self.cuadruplo = { }
         
     def add(self, iteracion, operador, termino1, termino2, asignar):  #AGREGA UN CUADRUPLO AL DICCIONARIO
+        # print(iteracion, operador, termino1, termino2, asignar)
         self.cuadruplo[iteracion] = {
                 'operador': operador,
                 'termino1': termino1,
