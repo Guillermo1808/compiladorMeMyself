@@ -1,12 +1,13 @@
     # Guillermo Enrique Valles Villegas
     # A01561722
-    # MeMyself
+    # Compilador MeMyself
 
 from sly import Lexer, Parser
 from TablaFunciones import tablaFunciones
 from Cuadruplos import cuadruplos
 from Stacks import stacks
 from CuboSemantico import CuboSemantico
+from MemoriaVirtual import MaquinaVirtual
 
 # DECLARACION DE VARIABLES GLOBALES Y STACKS
 currentFunction = ''
@@ -27,6 +28,7 @@ PTypes = stacks()
 PQTypes = stacks()
 Cube = CuboSemantico()
 Quadruples = cuadruplos()
+
 
 # CONTADORES DE VARIABLES Y SUS BASES
 IntBase     = 10000
@@ -201,17 +203,6 @@ class MeMyselfParser(Parser):
         def asignacion(self, p):
             pass
         
-    
-        # #       FUNCION
-        # @_('ID funcs_calls "(" funcionD2 ")" funcs_calls3 ";"')
-        # def funcionD(self, p):
-        #     pass
-        # @_('exp funcs_calls2 ', 'exp funcs_calls2 funcionD3','')
-        # def funcionD2(self, p):
-        #     pass
-        # @_('"," exp funcs_calls2 funcionD3','')
-        # def funcionD3(self, p):
-        #     pass
         
         #       FUNCION
         @_('ID funcs_calls "(" funcs_calls2 funcionD2 funcs_calls5 ")" funcs_calls6 ";"')
@@ -1155,7 +1146,8 @@ if __name__ == '__main__':
 
     for line in file:
         masterline = masterline + line.strip()
-        
+    
+    # VirtualMachine = MaquinaVirtual()
     lexer = MeMyselfLexer()
     parser = MeMyselfParser()
     cuadruplo = cuadruplos()
@@ -1184,6 +1176,7 @@ if __name__ == '__main__':
     PQTypes.print()
     print('PPar')
     PPar.print()
+    # VirtualMachine.TempsBase
 
 # if __name__ == '__main__':
     
