@@ -35,8 +35,16 @@ class tablaFunciones:
             if self.funciones[fid]['variables'].search(id):
                 return self.funciones[fid]['variables'].getDir(id)
             #     return self.funciones[fid]['variables'].getType(id)
-    
-    
+        
+    def getParType(self, fid, num):                 # DEVUELVE EL TYPE DE PARAMETRO          
+        return self.funciones[fid]['parametros'].getType(num)
+            #     return self.funciones[fid]['variables'].getType(id)
+    def getParCount(self, fid):
+        if(fid in self.funciones.keys()):
+            count = self.funciones[fid]['parametros'].numPar()
+            if count > 0:
+                return count
+            
     # AGREGA LA FUNCION Y CREA SU TABLA
     def addFunction(self, fid, typeF, FScope):
         if fid in self.funciones.keys():
@@ -55,8 +63,9 @@ class tablaFunciones:
     def addVariable(self, fid, id, typeV, memory):
         #print('fid', fid, 'id',id,'type', typeV,'memory', memory)
         if(self.funciones[fid]['variables'].search(id)):
-            print('ERROR:', id, 'VARIABLE IS ALREADY DECLARED')
-            exit()
+            if(fid != 'globales'):
+                print('ERROR:', id, 'VARIABLE IS ALREADY DECLARED')
+                exit()
         else:
             self.funciones[fid]['variables'].add(id, typeV, memory)
     
@@ -88,6 +97,7 @@ class tablaFunciones:
 #     tablaFun.addFunction('suma', 'int', 'funsuma')
 #     tablaFun.addVariable('suma', 'smigle', 'char', 100)
 #     tablaFun.addVariable('suma', 'memo', 'char', 101)
+#     print(tablaFun.search('suma'))
 #     x = tablaFun.getVarType('memo')
 #     print(x)
 # #     tablaFun.addVariable('suma', 'float', 'lotr')

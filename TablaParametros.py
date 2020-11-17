@@ -20,7 +20,14 @@ class tablaParametros:
         self.parametros[parNum]= {
             'type': typeExpected,
         }
+    def numPar(self):
+        count = 0
+        for x in self.parametros.keys():
+            count+=1
+        return count
         
+    def getType(self, id):                      #DEVUELVE EL TIPO DEL PARAMETRO
+        return self.parametros[id]['type']
         
     def print(self):                    # IMPRIME LA TABLA
         if(self.parametros != {}):

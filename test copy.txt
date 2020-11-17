@@ -61,3 +61,26 @@ main(){
         }
     n = 1+578;
 }
+
+line(i,m);
+    point();
+    circle(y);
+    arc(y);
+    penup();
+    pendown();
+    color(i,m,n);
+    size(x);
+    clear();
+
+    program sumas;
+var int : i, m, n;
+var float: x, y;
+
+int module fact(int j, float x, int m); 
+var int : uno; 
+{
+    uno = i+m;
+    return(uno);
+}
+main(){
+    module fact(i, x, m);

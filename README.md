@@ -44,5 +44,6 @@ Las tablas de funciones y variables ya se llenan con lo que lee.
 \
 Los cuadruplos ya casi estan listos. Faltan algunas modificaciones para verificar que funcionen bien.\
 Se eliminó el error en el que no se podian tener varios estatutos seguidos.\
-Los cuadruplos fueron arreglados.
+Los cuadruplos fueron arreglados.\
+No se pueden agregar valores de funciones a variables.
 

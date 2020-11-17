@@ -1,18 +1,43 @@
 program sumas;
 var int : i, m, n;
+var char : a;
 var float: x, y;
 
+void module fact(int j); 
+var int : i;
+{
+    write(1, i);
+    m = m*m;
+
+}
+void module fact2(int j); 
+var char : o;
+{
+    write(1, a);
+    m = m*m;
+
+}
 main(){
-    for i = 0 to 3 do {
-        x = m/2;
-    } 
-    line(i*2,m+1);
+    m = 4*5;
+    i = m * (n + (i*i));
+    if(i > 3 & i < 10) then{
+    n = (1);
+    } else{
+    i = m * n;
+    }
+    x = x/y;
+    while(x < 3) do { 
+        y = x * 4;
+        }
+    n = 1+578;
+    module fact(m);
+    line(i,m);
     point();
-    circle(y/2);
-    arc(y*2/(4/3));
+    circle(y);
+    arc(y);
     penup();
     pendown();
-    color(i+3,m*2,n*2);
-    size(x*x*x);
+    color(i,m,n);
+    size(x);
     clear();
 }
