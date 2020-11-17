@@ -3,19 +3,7 @@ var int : i, m, n;
 var char : a;
 var float: x, y;
 
-void module fact(int j); 
-var int : i;
-{
-    write(1, 'i');
-    m = m*m;
-
-}
-int module fact2(int j); 
-var char : o;
-{
-    return(j);
-
-}
 main(){
-    fact2(i);
+    i = 4*2;
+    write(i, 9);
 }

@@ -27,7 +27,9 @@ class tablaVariables:
             'typeV': typeV,
             'memory': memory
         }
-        
+    
+    def initialValues(self):
+        return self.variables    
         
     def print(self):                    # IMPRIME LA TABLA
         if(self.variables != {}):

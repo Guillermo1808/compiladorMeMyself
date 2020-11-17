@@ -39,6 +39,8 @@ class cuadruplos:
             cuadList = list(self.cuadruplo[key].values())
             print(key, cuadList)
 
+    def getValues(self):
+        return self.cuadruplo
 # if __name__ == "__main__":
 #     cuadruplo = cuadruplos()
 #     cuadruplo.add(1, '+', 'int', 'int', 't1')

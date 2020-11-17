@@ -99,7 +99,20 @@ class tablaFunciones:
     
     def deleteFunction(self, fid):
         self.funciones[fid]['variables'] = {}
-        
+    
+    def getInitialValues(self):
+        # self.funciones['globales']['variables'].print()
+        resultado = self.funciones['globales']['variables'].initialValues()
+        # print(type(resultado))
+        return resultado
+    
+    def getGlobalVarsValues(self):
+        # self.funciones['globales']['variables'].print()
+        for keys in self.funciones:
+            if(self.funciones[keys]['FScope'] == 'global'):
+                resultado = self.funciones[keys]['variables'].initialValues()
+        # print(type(resultado))
+        return resultado
 
 # if __name__ == "__main__":
 #     tablaFun = tablaFunciones()

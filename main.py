@@ -1147,7 +1147,6 @@ if __name__ == '__main__':
     for line in file:
         masterline = masterline + line.strip()
     
-    # VirtualMachine = MaquinaVirtual()
     lexer = MeMyselfLexer()
     parser = MeMyselfParser()
     cuadruplo = cuadruplos()
@@ -1176,7 +1175,8 @@ if __name__ == '__main__':
     PQTypes.print()
     print('PPar')
     PPar.print()
-    # VirtualMachine.TempsBase
+    VirtualMachine = MaquinaVirtual(Quadruples, DirFuncs, TempsCont)
+    VirtualMachine.main()
 
 # if __name__ == '__main__':
     
