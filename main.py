@@ -545,7 +545,7 @@ class MeMyselfParser(Parser):
                         if(type(right_operand) == str):
                             right_operand = DirFuncs.getVarDir(right_operand)
                         Quadruples.add(QuadCont, operator, left_operand, right_operand, result)
-                        PTypes.add(result_Type)
+                        PQTypes.add(result_Type)
                         PID.add(result)
                         QuadCont+=1
                         #1 Quadruples.print()
@@ -597,7 +597,13 @@ class MeMyselfParser(Parser):
             global QuadCont
             # PTypes.print()
             # PSaltos.print()
-            exp_type = PTypes.pop()
+            # print('pqtypes')
+            # PQTypes.print()
+            # print('pid')
+            # PID.print()
+            # print('ptypes')
+            # PTypes.print()
+            exp_type = PQTypes.pop()
             if(exp_type != 'int'):
                 print('ERROR: TYPE MISMATCH')
                 exit()
@@ -699,7 +705,7 @@ class MeMyselfParser(Parser):
                     # TempsCont+=1
                     # print(exp, VControl)
                     exp_dir = DirFuncs.getVarDir(exp)
-                    VControl_dir = DirFuncs.getVarDir(right_operand)
+                    VControl_dir = DirFuncs.getVarDir(VControl)
                     Quadruples.add(QuadCont, '=', exp_dir, 0, VControl_dir)
                     # Quadruples.print()
                     # print('----')
@@ -755,12 +761,18 @@ class MeMyselfParser(Parser):
             global VControl
             global TempsCont
             global TempsBase
-            
-            result = TempsBase + TempsCont
-            TempsCont+=1
+            global CtesBase
+            global CtesCont
+            # print('VControl',VControl)
+            if(not DirFuncs.searchVar('globales', '1')):
+                DirFuncs.addVariable('globales','1','int',CtesCont+CtesBase)
+                CtesCont+=1
             if(type(VControl) == str):
                     VControl = DirFuncs.getVarDir(VControl)
-            Quadruples.add(QuadCont, '+', VControl, 1, result)
+            print('cuaduplo added + at', QuadCont)
+            uno = DirFuncs.getVarDir('1')
+            Quadruples.add(QuadCont, '+', VControl, uno, VControl)
+            QuadCont+=1
             fin = PSaltos.pop()
             ret = PSaltos.pop()
             # print(fin, ret)
@@ -980,8 +992,9 @@ class MeMyselfParser(Parser):
             global CtesBase
             global CtesCont
             #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
-            DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
-            CtesCont+=1
+            if(not DirFuncs.searchVar('globales', p[-1])):
+                DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
+                CtesCont+=1
             # print('funcs_2')
         @_('')
         def funcs_cteC(self, p): #Agrega variable constante entera
@@ -989,8 +1002,9 @@ class MeMyselfParser(Parser):
             global CtesBase
             global CtesCont
             #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
-            DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
-            CtesCont+=1
+            if(not not DirFuncs.searchVar('globales', p[-1])):
+                DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
+                CtesCont+=1
             # print('funcs_2')
         @_('')
         def funcs_cteF(self, p): #Agrega variable constante entera
@@ -998,8 +1012,9 @@ class MeMyselfParser(Parser):
             global CtesBase
             global CtesCont
             #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
-            DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
-            CtesCont+=1
+            if(not DirFuncs.searchVar('globales', p[-1])):
+                DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
+                CtesCont+=1
             # print('funcs_2')
         @_('')
         def funcs_cteL(self, p): #Agrega variable constante entera
@@ -1008,8 +1023,9 @@ class MeMyselfParser(Parser):
             global CtesBase
             global CtesCont
             #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
-            DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
-            CtesCont+=1
+            if(not not DirFuncs.searchVar('globales', p[-1])):
+                DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
+                CtesCont+=1
             # print('funcs_2')
                        
         @_('')
@@ -1177,38 +1193,3 @@ if __name__ == '__main__':
     PPar.print()
     VirtualMachine = MaquinaVirtual(Quadruples, DirFuncs, TempsCont)
     VirtualMachine.main()
-
-# if __name__ == '__main__':
-    
-#     lexer = MeMyselfLexer()
-#     parser = MeMyselfParser()
-#     cuadruplo = cuadruplos()
-#     while True:
-#          try:
-#              text = input('---> ')
-#              parser.parse(lexer.tokenize(text))
-#              for tok in lexer.tokenize(text):
-#                  print(tok)
-#          except EOFError:
-#              break
-    
-# if __name__ == '__main__':
-#     file = open("test.txt", 'r')
-#     text = ""
-#     for line in file:
-#         fullLine = text + line.strip()
-        
-#     print(text)
-#     lexer = MeMyselfLexer()
-#     parser = MeMyselfParser()
-#     result = parser.parse(lexer.tokenize(text))
-#     print(result)
-#     # while True:
-#     #      try:
-#     #          #text = input('---> ')
-#     #          parser.parse(lexer.tokenize(text))
-#     #          for tok in lexer.tokenize(text):
-#     #              print(tok)
-#     #      except EOFError:
-#     #          break
-#     file.close()

@@ -69,7 +69,10 @@ class tablaFunciones:
                 'variables': tablaVariables(),
                 'parametros': tablaParametros()
             }
-        
+    
+    # AGREGA VARIABLES A LA TABLA
+    def searchVar(self, fid, id):
+        return self.funciones[fid]['variables'].search(id)
         
         
     # AGREGA VARIABLES A LA TABLA

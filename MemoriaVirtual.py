@@ -4,7 +4,6 @@
 
 from TablaFunciones import tablaFunciones
 from Cuadruplos import cuadruplos
-from Stacks import stacks
 import turtle
 import sys
 
@@ -29,6 +28,7 @@ class MaquinaVirtual:
         self.DirFunc = funcionesD
         self.Quad = self.cuadruplosF.getValues()
         self.Temporales = cantTemps
+        
     def initialValues(self):
         print('---- INITIAL VALUES ----')
         valores = self.DirFunc.getInitialValues()
@@ -87,7 +87,7 @@ class MaquinaVirtual:
         
     def readQuadruples(self, iteration):
         # print('---- READ QUADS ----')
-        # print(self.Quad[iteration])
+        # print(iteration,self.Quad[iteration])
         operador = self.Quad[iteration]['operador']
         terminoL = self.Quad[iteration]['termino1']
         terminoR = self.Quad[iteration]['termino2']
@@ -108,6 +108,8 @@ class MaquinaVirtual:
             self.arrTemps[asignar-self.TempsBase] = terminoL
             
         self.CurrentIteration+=1
+        # print(self.CurrentIteration)
+        # print('ASSIGN END')
                 
     def addition(self, operador, terminoL, terminoR, asignar):
         # print('ADDITION')
@@ -171,7 +173,16 @@ class MaquinaVirtual:
         # print('GOTO')
         self.CurrentIteration = asignar
         # print('CURRENT ITERATION:', self.CurrentIteration)
-        self.readQuadruples(asignar)
+        # self.readQuadruples(asignar)
+    
+    def gotof(self,operador, terminoL, terminoR, asignar):
+        # print('GOTOF')
+        terminoL = self.getValue(terminoL)
+        # print('valor', terminoL)
+        if(terminoL != 1):
+            self.CurrentIteration = asignar
+        else:
+            self.CurrentIteration+=1
     
     def write(self,asignar):
         # print('WRITE')
@@ -247,11 +258,96 @@ class MaquinaVirtual:
         print('CLEAR')
         self.t.clear()
         self.CurrentIteration+=1
-    #   x       x       x             x         x       x       x       x                   
-    # 'line','point','circle','arc','penup','pendown','color','size','clear', 'read', 'write'
+    
+    def equal(self,operador, terminoL, terminoR, direccion):
+        # print('EQUAL')
+        valorL = self.getValue(terminoL)
+        valorR = self.getValue(terminoR)
+        if(valorL == valorR):
+            self.arrTemps[direccion-self.TempsBase] = 1
+        else:
+            self.arrTemps[direccion-self.TempsBase] = 2
+        self.CurrentIteration+=1
+    
+    def different(self,operador, terminoL, terminoR, direccion):
+        # print('EQUAL')
+        valorL = self.getValue(terminoL)
+        valorR = self.getValue(terminoR)
+        if(valorL != valorR):
+            self.arrTemps[direccion-self.TempsBase] = 1
+        else:
+            self.arrTemps[direccion-self.TempsBase] = 2
+        self.CurrentIteration+=1
+        
+    def lte(self,operador, terminoL, terminoR, direccion):
+        # print('EQUAL')
+        valorL = self.getValue(terminoL)
+        valorR = self.getValue(terminoR)
+        if(valorL <= valorR):
+            self.arrTemps[direccion-self.TempsBase] = 1
+        else:
+            self.arrTemps[direccion-self.TempsBase] = 2
+        self.CurrentIteration+=1
+     
+    def lt(self,operador, terminoL, terminoR, direccion):
+        # print('ENTRA LT')
+        valorL = self.getValue(terminoL)
+        print(terminoR)
+        valorR = self.getValue(terminoR)
+        # print('comparacion ',valorL, valorR)
+        if(valorL < valorR):
+            self.arrTemps[direccion-self.TempsBase] = 1
+        else:
+            self.arrTemps[direccion-self.TempsBase] = 2
+        self.CurrentIteration+=1
+        # print('SALE LT')
+    
+    def gte(self,operador, terminoL, terminoR, direccion):
+        # print('EQUAL')
+        valorL = self.getValue(terminoL)
+        valorR = self.getValue(terminoR)
+        if(valorL >= valorR):
+            self.arrTemps[direccion-self.TempsBase] = 1
+        else:
+            self.arrTemps[direccion-self.TempsBase] = 2
+        self.CurrentIteration+=1
+    
+    def gt(self,operador, terminoL, terminoR, direccion):
+        # print('EQUAL')
+        print('valorL', terminoL)
+        valorL = self.getValue(terminoL)
+        print('valorR', terminoR)
+        valorR = self.getValue(terminoR)
+        if(valorL > valorR):
+            self.arrTemps[direccion-self.TempsBase] = 1
+        else:
+            self.arrTemps[direccion-self.TempsBase] = 2
+        self.CurrentIteration+=1
+    
+    def andF(self,operador, terminoL, terminoR, direccion):
+        # print('EQUAL')
+        valorL = self.getValue(terminoL)
+        valorR = self.getValue(terminoR)
+        if(valorL == 1 and valorR == 1):
+            self.arrTemps[direccion-self.TempsBase] = 1
+        else:
+            self.arrTemps[direccion-self.TempsBase] = 2
+        self.CurrentIteration+=1
+    
+    def orF(self,operador, terminoL, terminoR, direccion):
+        # print('EQUAL')
+        valorL = self.getValue(terminoL)
+        valorR = self.getValue(terminoR)
+        if(valorL == 1 or valorR == 1):
+            self.arrTemps[direccion-self.TempsBase] = 1
+        else:
+            self.arrTemps[direccion-self.TempsBase] = 2
+        self.CurrentIteration+=1
+    
     def switch_case(self, operador, terminoL, terminoR, asignar):
         cases = {
             'GOTO': lambda: self.goto(asignar),
+            'GOTOF': lambda: self.gotof(operador, terminoL, terminoR, asignar),
             'WRITE': lambda: self.write(asignar),
             'READ': lambda: self.read(operador,terminoL,terminoR,asignar),
             '=': lambda: self.assign(operador,terminoL,terminoR,asignar),
@@ -268,6 +364,14 @@ class MaquinaVirtual:
             'COLOR': lambda: self.color(operador,terminoL,terminoR,asignar),
             'SIZE': lambda: self.size(operador,terminoL,terminoR,asignar),
             'CLEAR': lambda: self.clear(operador,terminoL,terminoR,asignar),
+            '!=': lambda: self.different(operador,terminoL,terminoR,asignar),
+            '==': lambda: self.equal(operador,terminoL,terminoR,asignar),
+            '<=': lambda: self.lte(operador,terminoL,terminoR,asignar),
+            '>=': lambda: self.gte(operador,terminoL,terminoR,asignar),
+            '<': lambda: self.lt(operador,terminoL,terminoR,asignar),
+            '>': lambda: self.gt(operador,terminoL,terminoR,asignar),
+            '&': lambda: self.andF(operador,terminoL,terminoR,asignar),
+            '|': lambda: self.orF(operador,terminoL,terminoR,asignar),
         }
         cases.get(operador, lambda: print("Didn't match a case"))()
                 
@@ -277,11 +381,12 @@ class MaquinaVirtual:
         
             
         self.initialValues()
+        print('CONSTANTES:', self.arrCtes)
         size = len(self.Quad)
         # print('--- size -----',size) 
         print('START READING QUADRUPLES')
-        for x in range(size):
-            # print('ci:',self.CurrentIteration, 'size', size)
-            if(self.CurrentIteration <= size):
-                self.readQuadruples(self.CurrentIteration)
+        while(self.CurrentIteration <= size):
+            
+            self.readQuadruples(self.CurrentIteration)
+            
         turtle.done()

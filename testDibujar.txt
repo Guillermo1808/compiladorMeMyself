@@ -1,0 +1,35 @@
+program sumas;
+var int : i, m, n;
+var float: x, y;
+main(){
+    i = 40;
+    m = 100;
+    y = 40.4;
+    n = 200;
+    x = 3.2;
+    line(i,m);
+    point();
+    color(i,m,n);
+    circle(y);
+    line(-23, 2);
+    arc(y);
+    size(x);
+    penup();
+    line(-23, 2);
+    pendown();
+    point();
+    color(i,m,n);
+    line(n,m);
+    circle(x);
+    clear();
+}
+
+program sumas;
+var int : i, m, n;
+main(){
+    n = 4;
+    for i = 0 to 3 do { 
+        m = m + n*n;
+    }
+    write(m);
+}
