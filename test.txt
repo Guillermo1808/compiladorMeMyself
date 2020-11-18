@@ -1,9 +1,19 @@
 program sumas;
 var int : i, m, n;
-var char : a;
 var float: x, y;
-
 main(){
-    i = 4*2;
-    write(i, 9);
+    i = 40;
+    m = 100;
+    y = 40.4;
+    n = 200;
+    x = 3.2;
+    line(i,m);
+    point();
+    circle(y);
+    arc(y);
+    penup();
+    pendown();
+    color(i,m,n);
+    size(x);
+    clear();
 }

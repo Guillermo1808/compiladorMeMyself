@@ -5,6 +5,7 @@
 from TablaFunciones import tablaFunciones
 from Cuadruplos import cuadruplos
 from Stacks import stacks
+import turtle
 import sys
 
 class MaquinaVirtual: 
@@ -19,6 +20,7 @@ class MaquinaVirtual:
     TempsBase   = 20000
     CtesBase    = 22000
     CurrentIteration = 1
+    t = turtle.Turtle()
     
     def __init__(self, cuadruplosD, funcionesD, cantTemps):
         self.cuadruplosF = cuadruplos()
@@ -35,10 +37,16 @@ class MaquinaVirtual:
             var = keys
             typeV = valores[keys]['typeV']
             if(typeV == 'int'):
-                var = int(var)
+                try:
+                    var = int(var)
+                except:
+                    var = 0
                 self.arrCtes.append(var)
             if(typeV == 'float'):
-                var = float(var)
+                try:
+                    var = float(var)
+                except:
+                    var = 0
                 self.arrCtes.append(var)
         # print(self.arrCtes)
         valoresVars = self.DirFunc.getGlobalVarsValues()
@@ -169,28 +177,111 @@ class MaquinaVirtual:
         # print('WRITE')
         print(self.getValue(asignar))
         self.CurrentIteration+=1
+    
+    def read(self,operador, terminoL, terminoR, direccion):
+        print('READ')
+        var = input()
+        if(direccion >= 10000 and direccion <= 14999):
+            # print('int')
+            var = int(var)
+            self.arrInt[direccion-self.IntBase] = var
+        if(direccion >= 15000 and direccion <= 17999):
+            # print('floats')
+            var = float(var)
+            self.arrFloats[direccion-self.FloatBase] = var
+        if(direccion >= 18000 and direccion <= 19999):
+            # print('chars')
+            self.arrChars[direccion-self.CharsBase] = var
+        self.CurrentIteration+=1
+    
+    def line(self, operador, terminoL, terminoR, asignar):
+        print('LINE')
+        terminoR = self.getValue(terminoR)
+        asignar = self.getValue(asignar)
+        self.t.goto(terminoR,asignar)
+        self.CurrentIteration+=1
         
+    def point(self, operador, terminoL, terminoR, asignar):
+        print('POINT')
+        self.t.dot(5)
+        self.CurrentIteration+=1
+        
+    def circle(self, operador, terminoL, terminoR, asignar):
+        print('CIRCLE')
+        asignar = self.getValue(asignar)
+        self.t.circle(asignar)
+        self.CurrentIteration+=1
+    
+    def arc(self, operador, terminoL, terminoR, asignar):
+        print('ARC')
+        asignar = self.getValue(asignar)
+        self.t.circle(asignar, 180)
+        self.CurrentIteration+=1
+    
+    def penup(self,operador, terminoL, terminoR, asignar):
+        print('PENUP')
+        self.t.penup()
+        self.CurrentIteration+=1
+        
+    def pendown(self,operador, terminoL, terminoR, asignar):
+        print('PENDOWN')
+        self.t.pendown()
+        self.CurrentIteration+=1 
+    
+    def color(self,operador, terminoL, terminoR, asignar):
+        print('COLOR')
+        asignar = self.getValue(asignar)
+        terminoR = self.getValue(terminoR)
+        terminoL = self.getValue(terminoL)
+        self.t.screen.colormode(255)
+        self.t.color(terminoL,terminoR,asignar)
+        self.CurrentIteration+=1
+    
+    def size(self,operador, terminoL, terminoR, asignar):
+        print('SIZE')
+        asignar = self.getValue(asignar)
+        self.t.pensize(asignar)
+        self.CurrentIteration+=1
+    
+    def clear(self,operador, terminoL, terminoR, asignar):
+        print('CLEAR')
+        self.t.clear()
+        self.CurrentIteration+=1
+    #   x       x       x             x         x       x       x       x                   
+    # 'line','point','circle','arc','penup','pendown','color','size','clear', 'read', 'write'
     def switch_case(self, operador, terminoL, terminoR, asignar):
         cases = {
             'GOTO': lambda: self.goto(asignar),
             'WRITE': lambda: self.write(asignar),
+            'READ': lambda: self.read(operador,terminoL,terminoR,asignar),
             '=': lambda: self.assign(operador,terminoL,terminoR,asignar),
             '+': lambda: self.addition(operador,terminoL,terminoR,asignar),
             '-': lambda: self.substraction(operador,terminoL,terminoR,asignar),
             '*': lambda: self.times(operador,terminoL,terminoR,asignar),
             '/': lambda: self.divide(operador,terminoL,terminoR,asignar),
+            'LINE': lambda: self.line(operador,terminoL,terminoR,asignar),
+            'POINT': lambda: self.point(operador,terminoL,terminoR,asignar),
+            'CIRCLE': lambda: self.circle(operador,terminoL,terminoR,asignar),
+            'ARC': lambda: self.arc(operador,terminoL,terminoR,asignar),
+            'PENUP': lambda: self.penup(operador,terminoL,terminoR,asignar),
+            'PENDOWN': lambda: self.pendown(operador,terminoL,terminoR,asignar),
+            'COLOR': lambda: self.color(operador,terminoL,terminoR,asignar),
+            'SIZE': lambda: self.size(operador,terminoL,terminoR,asignar),
+            'CLEAR': lambda: self.clear(operador,terminoL,terminoR,asignar),
         }
         cases.get(operador, lambda: print("Didn't match a case"))()
                 
     def main(self):
+        turtle.title("Compiler MeMyself")
+        self.t.getscreen()
+        
+            
         self.initialValues()
         size = len(self.Quad)
         # print('--- size -----',size) 
         print('START READING QUADRUPLES')
         for x in range(size):
-            try:
+            # print('ci:',self.CurrentIteration, 'size', size)
+            if(self.CurrentIteration <= size):
                 self.readQuadruples(self.CurrentIteration)
-            except:
-                pass
-            else:
-                self.readQuadruples(self.CurrentIteration)
+        turtle.done()
