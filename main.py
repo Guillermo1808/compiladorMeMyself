@@ -129,12 +129,12 @@ class MeMyselfParser(Parser):
             pass
 
         #       FUNCV
-        @_('VOID current_typeV MODULE ID funcs_3 "(" parametros ")" ";" vars "{" estatutos "}"', '')
+        @_('VOID current_typeV MODULE ID funcs_3 "(" parametros ")" ";" vars "{" estatutos "}" funcs_calls7 ', '')
         def funcv(self, p):
             pass
 
         #       FUNCR
-        @_('tipov MODULE ID funcs_3 funcs_r "(" parametros ")" ";" vars "{" estatutos return0 "}"', '')
+        @_('tipov MODULE ID funcs_3 funcs_r "(" parametros ")" ";" vars "{" estatutos return0 "}" funcs_calls7 ', '')
         def funcr(self, p):
             pass
 
@@ -199,7 +199,7 @@ class MeMyselfParser(Parser):
             pass
         
         #       ASIGNACION
-        @_('ID quad_1 ASSIGN exp quad_a ";"', 'ID quad_1 ASSIGN funcionD')
+        @_('ID quad_1 ASSIGN exp quad_a ";"', 'ID quad_1 ASSIGN funcionD quad_a')
         def asignacion(self, p):
             pass
         
@@ -1062,6 +1062,11 @@ class MeMyselfParser(Parser):
         @_('')
         def funcs_calls(self, p):
             self.currentFunction = p[-1]
+            var = 'return'+p[-1]
+            PID.add(var)
+            PID.print()
+            tipo = DirFuncs.getVarType(var)
+            PQTypes.add(tipo)
             # print(DirFuncs.search(func))
             if(not DirFuncs.search(self.currentFunction)):
                 print('ERROR: FUNCTION', self.currentFunction, 'NOT DECLARED')
@@ -1145,6 +1150,15 @@ class MeMyselfParser(Parser):
             goTo = DirFuncs.getJump(self.currentFunction)
             # print('GOTO', goTo)
             Quadruples.add(QuadCont,'GOSUB', self.currentFunction, 0, goTo)    
+            QuadCont+=1
+            # print('funcs_calls6')
+        
+        @_('')
+        def funcs_calls7(self, p):
+            global QuadCont
+            # print('CURRENT FUNCTION', self.currentFunction)
+            # print('GOTO', goTo)
+            Quadruples.add(QuadCont,'END', 0, 0, 0)    
             QuadCont+=1
             # print('funcs_calls6')
             

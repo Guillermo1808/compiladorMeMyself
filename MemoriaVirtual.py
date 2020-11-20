@@ -19,6 +19,7 @@ class MaquinaVirtual:
     TempsBase   = 20000
     CtesBase    = 22000
     CurrentIteration = 1
+    gosub = 0
     t = turtle.Turtle()
     
     def __init__(self, cuadruplosD, funcionesD, cantTemps):
@@ -97,6 +98,7 @@ class MaquinaVirtual:
     
     def assign(self, operador, terminoL, terminoR, asignar):
         # print('ASSIGN')
+        # print(operador, terminoL, terminoR, asignar)
         terminoL = self.getValue(terminoL)
         if(asignar >= 10000 and asignar <= 14999):
             self.arrInt[asignar-self.IntBase]= terminoL
@@ -106,6 +108,8 @@ class MaquinaVirtual:
             self.arrChars[asignar-self.CharsBase]= terminoL
         if(asignar >= 20000 and asignar <= 21999):
             self.arrTemps[asignar-self.TempsBase] = terminoL
+        if(asignar >= 22000 and asignar <= 23999):
+            self.arrCtes[asignar-self.CtesBase] = terminoL
             
         self.CurrentIteration+=1
         # print(self.CurrentIteration)
@@ -190,7 +194,7 @@ class MaquinaVirtual:
         self.CurrentIteration+=1
     
     def read(self,operador, terminoL, terminoR, direccion):
-        print('READ')
+        # print('READ')
         var = input()
         if(direccion >= 10000 and direccion <= 14999):
             # print('int')
@@ -292,7 +296,7 @@ class MaquinaVirtual:
     def lt(self,operador, terminoL, terminoR, direccion):
         # print('ENTRA LT')
         valorL = self.getValue(terminoL)
-        print(terminoR)
+        # print(terminoR)
         valorR = self.getValue(terminoR)
         # print('comparacion ',valorL, valorR)
         if(valorL < valorR):
@@ -314,9 +318,9 @@ class MaquinaVirtual:
     
     def gt(self,operador, terminoL, terminoR, direccion):
         # print('EQUAL')
-        print('valorL', terminoL)
+        # print('valorL', terminoL)
         valorL = self.getValue(terminoL)
-        print('valorR', terminoR)
+        # print('valorR', terminoR)
         valorR = self.getValue(terminoR)
         if(valorL > valorR):
             self.arrTemps[direccion-self.TempsBase] = 1
@@ -344,6 +348,35 @@ class MaquinaVirtual:
             self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
     
+    def eraF(self,operador, terminoL, terminoR, direccion):
+        # print('EQUAL')
+        self.CurrentIteration+=1
+    
+    def paramF(self,operador, terminoL, terminoR, direccion):
+        # print('EQUAL')
+        value = self.getValue(terminoL)
+        value = type(value)
+        if(value == int):
+            self.arrInt.append(0)
+        if(value == float):
+            # print('floats')
+            self.arrFloats.append(0)
+        # if(direccion >= 18000 and direccion <= 19999):
+        #     # print('chars')
+        #     self.arrChars[direccion-self.CharsBase] = var
+        self.CurrentIteration+=1
+        
+    def gosubF(self,operador, terminoL, terminoR, direccion):
+        # print('EQUAL')
+        
+        self.gosub = self.CurrentIteration
+        self.CurrentIteration = direccion
+
+    def endF(self,operador, terminoL, terminoR, direccion):
+        # print('EQUAL')
+        self.CurrentIteration = self.gosub
+        self.CurrentIteration+=1
+
     def switch_case(self, operador, terminoL, terminoR, asignar):
         cases = {
             'GOTO': lambda: self.goto(asignar),
@@ -372,8 +405,12 @@ class MaquinaVirtual:
             '>': lambda: self.gt(operador,terminoL,terminoR,asignar),
             '&': lambda: self.andF(operador,terminoL,terminoR,asignar),
             '|': lambda: self.orF(operador,terminoL,terminoR,asignar),
+            'ERA': lambda: self.eraF(operador,terminoL,terminoR,asignar),
+            'PARAM': lambda: self.paramF(operador,terminoL,terminoR,asignar),
+            'GOSUB': lambda: self.gosubF(operador,terminoL,terminoR,asignar),
+            'END': lambda: self.endF(operador,terminoL,terminoR,asignar),
         }
-        cases.get(operador, lambda: print("Didn't match a case"))()
+        cases.get(operador, lambda: print("Didn't match a case:"))()
                 
     def main(self):
         turtle.title("Compiler MeMyself")
@@ -386,7 +423,11 @@ class MaquinaVirtual:
         # print('--- size -----',size) 
         print('START READING QUADRUPLES')
         while(self.CurrentIteration <= size):
-            
+            # print('iteracion:',self.CurrentIteration)
             self.readQuadruples(self.CurrentIteration)
-            
+        
+        # print('int',self.arrInt)
+        # print('float',self.arrFloats)
+        # print('temps',self.arrTemps)
+        # print('ctes',self.arrCtes)
         turtle.done()

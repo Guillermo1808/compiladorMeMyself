@@ -1,9 +1,12 @@
+
+
 program fibbo;
-var int : n, first,second,next,c,s;
+var int : n, first,second,next,c;
 main(){
     first = 0;
     second = 1;
-    n = 14;
+    read(n);
+    write(n);
     for c = 0 to n do {
         if(c<=1) then{
             next = c;
@@ -12,7 +15,6 @@ main(){
             first = second;
             second = next;
         }
-        size(3);
-        arc(next);
+        write(next);
     }
 }

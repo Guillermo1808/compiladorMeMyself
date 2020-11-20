@@ -99,3 +99,29 @@ var float : uno;
 main(){
     
 }
+
+program sphere;
+var int : x, n;
+var int : y;
+int module fact(int j);
+{
+    j = 10;
+    if(j > 3) then {
+        j = j *10;
+    }
+    else{
+        j = j * 100;
+    }
+    return(j);
+}
+
+void module print();
+{
+    write(1);
+    }
+
+main(){
+    x = fact(3);
+    x = x +1;
+    write(x);
+}
