@@ -49,6 +49,15 @@ class MaquinaVirtual:
                 except:
                     var = 0
                 self.arrCtes.append(var)
+            if(typeV == 'char'):
+                lenght = len(var)-1
+                var = var[1:lenght]
+                self.arrCtes.append(var)
+            if(typeV == 'letrero'):
+                lenght = len(var)-1
+                var = var[1:lenght]
+                self.arrCtes.append(var)
+                
         # print(self.arrCtes)
         valoresVars = self.DirFunc.getGlobalVarsValues()
         # print(valoresVars)
@@ -430,4 +439,4 @@ class MaquinaVirtual:
         # print('float',self.arrFloats)
         # print('temps',self.arrTemps)
         # print('ctes',self.arrCtes)
-        turtle.done()
+        # turtle.done()

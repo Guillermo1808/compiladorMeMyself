@@ -1,18 +1,10 @@
 program fibbo;
-var int : n, first,second,next,c,s;
+var int : x,y;
+var char : c;
 main(){
-    first = 0;
-    second = 1;
-    n = 14;
-    for c = 0 to n do {
-        if(c<=1) then{
-            next = c;
-        }else{
-            next = first + second;
-            first = second;
-            second = next;
-        }
-        size(3);
-        arc(next);
-    }
+    c = 'a';
+    x = -2;
+    y = 5;
+    x = 2*((x-y)+5);
+    write(c, "memo", x);
 }

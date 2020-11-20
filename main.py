@@ -58,9 +58,9 @@ class MeMyselfLexer(Lexer):
 
         CTEFLOAT  = r'([0-9]+)(\.)([0-9]+)?'
         CTEINT    = r'[0-9]+'
+        LETRERO   = r'[\"]([a-zA-Z]*)+[\"]'
         CTECHAR    = r'\'[a-zA-Z_]\''
         ID        = r'[a-zA-Z]([a-zA-Z]|[0-9_])*'
-        LETRERO   = r'[\"]([a-zA-Z]*)+[\"]'
         MINUS     = r'[\-]'
         PLUS      = r'[\+]'
         TIMES     = r'[\*]'
@@ -158,10 +158,10 @@ class MeMyselfParser(Parser):
             pass
 
         #       PRINT
-        @_('LETRERO quad_write printe2', 'exp quad_write printe2')
+        @_('LETRERO funcs_cteL quad_let quad_writeL  printe2', 'exp quad_write printe2')
         def printe(self, p):
             pass
-        @_('"," LETRERO quad_write printe2', '"," exp quad_write printe2', '')
+        @_('"," LETRERO funcs_cteL quad_let quad_writeL  printe2', '"," exp quad_write printe2', '')
         def printe2(self, p):
             pass
 
@@ -286,7 +286,7 @@ class MeMyselfParser(Parser):
         def exp(self,p):
             pass
 
-        @_('PLUS quad_2 exp','MINUS quad_2 termino exp', '')
+        @_('PLUS quad_2 exp','MINUS quad_2 exp', '')
         def exp2(self,p):
             pass
         
@@ -317,7 +317,7 @@ class MeMyselfParser(Parser):
             pass
 
         #       VARCTE
-        @_('ID quad_1','CTEINT funcs_cteI quad_cteI','CTEFLOAT funcs_cteF quad_cteF','CTECHAR funcs_cteC quad_cteF','LETRERO funcs_cteL quad_let')
+        @_('ID quad_1','CTEINT funcs_cteI quad_cteI','CTEFLOAT funcs_cteF quad_cteF','CTECHAR funcs_cteC quad_cteC','LETRERO funcs_cteL quad_let')
         def varcte(self, p):
             pass
 
@@ -327,6 +327,14 @@ class MeMyselfParser(Parser):
             pass
         @_('"," ID funcs_2_1 vars2', '')
         def vars2(self, p):
+            pass
+        
+        #       VARS
+        @_('VAR tipov ":" ID funcs_2 vars2 ";"', '')
+        def vDim(self, p):
+            pass
+        @_('"," ID funcs_2_1 vars2', '')
+        def vDim2(self, p):
             pass
 
         #       TIPOV
@@ -343,6 +351,8 @@ class MeMyselfParser(Parser):
         @_('')
         def quad_cteI(self, p): # HACER PUSH A LOS STACKS CON CTE INTS
             cte = p[-2]
+            if(p[-3] == '-'):
+                cte = '-'+cte
             PID.add(cte)
             PQTypes.add('int')
             # print('quad_cteI')
@@ -358,7 +368,7 @@ class MeMyselfParser(Parser):
             cte = p[-2]
             PID.add(cte)
             PQTypes.add('char')
-            print('quad_cteI')
+            # print('quad_cteI')
         @_('')
         def quad_let(self, p): # HACER PUSH A LOS STACKS CON LETREROS
             print('--------------- ENTRA A LETRERO --------')
@@ -380,6 +390,7 @@ class MeMyselfParser(Parser):
             # print('quad_1')
         @_('')
         def quad_2(self, p): #AGREGAR + o - AL POper 
+            print(p[-1])
             POper.add(p[-1])
             # POper.print()
             # print('quad_2')
@@ -393,7 +404,7 @@ class MeMyselfParser(Parser):
             global QuadCont
             global TempsCont
             global TempsBase
-            # POper.print()
+            POper.print()
             # PID.print()
             if ((POper.empty() == False) and (PID.size() >= 2)):
                 # print('entra al primer if')
@@ -559,6 +570,7 @@ class MeMyselfParser(Parser):
             # PID.print()
             # PQTypes.print()
             # if ((PID.size() >= 2)):
+            PID.print()
             right_operand = PID.pop()
             right_type = PQTypes.pop()
             left_operand = PID.pop()
@@ -910,6 +922,17 @@ class MeMyselfParser(Parser):
             Quadruples.add(QuadCont, 'WRITE', 0, 0, var)
             QuadCont+=1
             # print('quad_write')
+        
+        @_('')
+        def quad_writeL(self, p):
+            global QuadCont
+            typeV = PQTypes.pop()
+            var = PID.pop()
+            if(type(var) == str):
+                var = DirFuncs.getVarDir(var)
+            Quadruples.add(QuadCont, 'WRITE', 0, 0, var)
+            QuadCont+=1
+            # print('quad_write')
             
         @_('')
         def quad_read(self, p):
@@ -991,9 +1014,12 @@ class MeMyselfParser(Parser):
             self.currentType = 'int'
             global CtesBase
             global CtesCont
+            var = p[-1]
+            if(p[-2] == '-'):
+                var = '-'+var
             #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
-            if(not DirFuncs.searchVar('globales', p[-1])):
-                DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
+            if(not DirFuncs.searchVar('globales', var)):
+                DirFuncs.addVariable('globales', var, self.currentType, CtesCont+CtesBase)
                 CtesCont+=1
             # print('funcs_2')
         @_('')
@@ -1002,7 +1028,7 @@ class MeMyselfParser(Parser):
             global CtesBase
             global CtesCont
             #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
-            if(not not DirFuncs.searchVar('globales', p[-1])):
+            if(not DirFuncs.searchVar('globales', p[-1])):
                 DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
                 CtesCont+=1
             # print('funcs_2')
@@ -1023,7 +1049,7 @@ class MeMyselfParser(Parser):
             global CtesBase
             global CtesCont
             #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
-            if(not not DirFuncs.searchVar('globales', p[-1])):
+            if(not DirFuncs.searchVar('globales', p[-1])):
                 DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
                 CtesCont+=1
             # print('funcs_2')
