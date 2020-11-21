@@ -48,10 +48,14 @@ Los cuadruplos fueron arreglados.\
 No se pueden agregar valores de funciones a variables.
 
 ## AVANCE 7
-- [x] Maquina Virtual Funcional Para Cuadruplos Simples.
-- [ ] Maquina Virtual Funcional Para Cuadruplos De Funciones.
-- [x] Maquina Virtual Funcinal Para Cuadruplos Condicionales.
-- [x] Maquina Virtual Ejecuta Codigo Grafico
+- [x] Maquina Virtual - Funcional Para Cuadruplos Simples.
+- [x] Maquina Virtual - Funcional Para Cuadruplos De Funciones.
+- [x] Maquina Virtual - Funcinal Para Cuadruplos Condicionales.
+- [x] Maquina Virtual - Ejecuta Codigo Grafico
+- [ ] Maquina Virtual - Funciones Recursivas
+- [ ] Arreglos de Variables
+- [ ] Maquina Virtual - Arreglos
 
 La maquina virtual ya analiza los cuadruplos y toma decisiones para ejecutarlos.\
-Solo falta que ejecute funciones.
+Solo falta que ejecute funciones.\
+Se arreglo el problema donde no se podian hacer restas ni imprimir letereros. 

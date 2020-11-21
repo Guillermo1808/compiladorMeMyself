@@ -26,7 +26,6 @@ PSaltos = stacks()
 PArreglos = stacks()
 PTypes = stacks()
 PQTypes = stacks()
-PDim = stacks()
 Cube = CuboSemantico()
 Quadruples = cuadruplos()
 
@@ -45,13 +44,6 @@ CtesCont    = 0
 ParCont     = 1
 ParK        = 0
 QuadCont    = 1
-LIM1        = 1
-LIM2        = 1
-R           = 1
-M1          = 1
-M2          = 0
-sizeA       = 1
-DIM         = 1
 
 
 class MeMyselfLexer(Lexer):
@@ -59,10 +51,10 @@ class MeMyselfLexer(Lexer):
                     IF, ELSE, FOR, TO, THEN, DO, WHILE, RETURN, PLUS, MAIN, TO, WRITE, READ, 
                     MINUS, TIMES, DIVIDE, CTEINT, CTEFLOAT, CTECHAR,  
                     LETRERO, ID, LOGICOS,
-                    LINE, POINT, CIRCLE, ARC, PENUP, PENDOWN, COLOR, SIZE, CLEAR, CALL}
+                    LINE, POINT, CIRCLE, ARC, PENUP, PENDOWN, COLOR, SIZE, CLEAR}
 
         ignore = ' \t'
-        literals = { ';', ':', '(', ')', '{', '}', '[', ']',',', '"'}
+        literals = { ';', ':', '(', ')', '{', '}',',', '"'}
 
         CTEFLOAT  = r'([0-9]+)(\.)([0-9]+)?'
         CTEINT    = r'[0-9]+'
@@ -82,7 +74,6 @@ class MeMyselfLexer(Lexer):
         ID['var'] = VAR
         ID['module'] = MODULE
         ID['void'] = VOID
-        ID['call'] = CALL
         ID['int'] = INT
         ID['float'] = FLOAT
         ID['char'] = CHAR
@@ -203,25 +194,15 @@ class MeMyselfParser(Parser):
             pass
 
         #       ESTATUTO
-        @_('funcionC estatuto', 'asignacion estatuto', 'lectura estatuto', 'escritura estatuto', 'decision estatuto', 'repeticiondo estatuto', 'repeticionfor estatuto', 'exp estatuto', 'especiales estatuto', '')
+        @_('funcionD estatuto', 'asignacion estatuto', 'lectura estatuto', 'escritura estatuto', 'decision estatuto', 'repeticiondo estatuto', 'repeticionfor estatuto', 'exp estatuto', 'especiales estatuto', '')
         def estatuto(self, p):
             pass
         
-        #       FUNCION CALL
-        @_('CALL ID funcs_calls "(" funcs_calls2 funcionC2 funcs_calls5 ")" funcs_calls6 ";"')
-        def funcionC(self, p):
-            pass
-        @_('exp funcs_calls3 funcionC3','')
-        def funcionC2(self, p):
-            pass
-        @_('"," funcs_calls4 funcionC2','')
-        def funcionC3(self, p):
-            pass
-        
         #       ASIGNACION
-        @_('ID ASSIGN quad_1a exp quad_a ";"', 'ID ASSIGN quad_1a funcionD quad_a')
+        @_('ID quad_1 ASSIGN exp quad_a ";"', 'ID quad_1 ASSIGN funcionD quad_a')
         def asignacion(self, p):
             pass
+        
         
         #       FUNCION
         @_('ID funcs_calls "(" funcs_calls2 funcionD2 funcs_calls5 ")" funcs_calls6 ";"')
@@ -233,7 +214,6 @@ class MeMyselfParser(Parser):
         @_('"," funcs_calls4 funcionD2','')
         def funcionD3(self, p):
             pass
-        
 
         #       ESPECIALES
         @_('line','point','circle','arc','penup','pendown','color','size','clear')
@@ -332,51 +312,29 @@ class MeMyselfParser(Parser):
 
         #       FACTOR
         #@_('"(" quad_6 expresion ")" quad_7','PLUS varcte',  'MINUS varcte', 'varcte')
-        @_('"(" quad_6 exp ")" quad_7','PLUS varcte',  'MINUS varcte','varcte')
+        @_('"(" quad_6 exp ")" quad_7','PLUS varcte',  'MINUS varcte', 'varcte')
         def factor(self,p):
             pass
 
         #       VARCTE
-        @_('funcionD', 'array','ID quad_1','CTEINT funcs_cteI quad_cteI','CTEFLOAT funcs_cteF quad_cteF','CTECHAR funcs_cteC quad_cteC','LETRERO funcs_cteL quad_let')
+        @_('ID quad_1','CTEINT funcs_cteI quad_cteI','CTEFLOAT funcs_cteF quad_cteF','CTECHAR funcs_cteC quad_cteC','LETRERO funcs_cteL quad_let')
         def varcte(self, p):
             pass
-        
-        #     LLAMADA A VARIABLE EN ARREGLO
-        @_('ID quad_array1 "[" quad_array2 exp quad_array3 array2 "]" quad_array5' )
-        def array(self, p):
-            pass
-        
-        @_('"," quad_array4 exp', '')
-        def array2(self, p):
-            pass
-        
-        
+
         #       VARS
-        @_('varsN', 'varsD')
+        @_('VAR tipov ":" ID funcs_2 vars2 ";"', '')
         def vars(self, p):
             pass
-        
-        #       VARS NORMALES
-        @_('VAR tipov ":" ID funcs_2 varsN2 ";"', '')
-        def varsN(self, p):
-            pass
-        @_('"," ID funcs_2_1 varsN2', '')
-        def varsN2(self, p):
+        @_('"," ID funcs_2_1 vars2', '')
+        def vars2(self, p):
             pass
         
-        # #       VARS
-        # @_('VAR tipov ":" ID funcs_2A "[" varsD2 "]" funcs_5A ";"') 
-        # def varsD(self, p):
-        #     pass
-        # @_('exp funcs_3A', 'exp funcs_3A "," exp funcs_4A')
-        # def varsD2(self, p):
-        #     pass
-        #       VARS ARREGLOS
-        @_('VAR tipov ":" ID funcs_2A "[" CTEINT funcs_3A varsD2 "]" funcs_5A ";"') 
-        def varsD(self, p):
+        #       VARS
+        @_('VAR tipov ":" ID funcs_2 vars2 ";"', '')
+        def vDim(self, p):
             pass
-        @_('"," CTEINT funcs_4A', '')
-        def varsD2(self, p):
+        @_('"," ID funcs_2_1 vars2', '')
+        def vDim2(self, p):
             pass
 
         #       TIPOV
@@ -413,34 +371,17 @@ class MeMyselfParser(Parser):
             # print('quad_cteI')
         @_('')
         def quad_let(self, p): # HACER PUSH A LOS STACKS CON LETREROS
-            # print('--------------- ENTRA A LETRERO --------')
+            print('--------------- ENTRA A LETRERO --------')
             cte = p[-2]
             PID.add(cte)
             PQTypes.add('letrero')
-            # print('quad_cteS')
+            print('quad_cteS')
         @_('')
         def quad_1(self, p): # HACER PUSH A LOS STACKS CON EL ID DE LA VARIABLE Y SU TIPO
             PID.add(p[-1])
             tipo = DirFuncs.getVarType(p[-1])
             if tipo == None:
-                print('ERROR: VARIABLE ERROR', p[-1], 'NOT DECLARED')
-                exit()
-            else:
-                PQTypes.add(tipo)
-            # PID.print()
-            # PQTypes.print()
-            # print('quad_1')
-            
-        @_('')
-        def quad_1a(self, p): # HACER PUSH A LOS STACKS CON EL ID DE LA VARIABLE Y SU TIPO
-            print('ENTRA A QUAD 1A')
-            PID.print()
-            PID.add(p[-2])
-            PID.print()
-
-            tipo = DirFuncs.getVarType(p[-2])
-            if tipo == None:
-                print('ERROR: VARIABLE', p[-2], 'NOT DECLARED')
+                print('ERROR: VARIABLE', p[-1], 'NOT DECLARED')
                 exit()
             else:
                 PQTypes.add(tipo)
@@ -463,7 +404,7 @@ class MeMyselfParser(Parser):
             global QuadCont
             global TempsCont
             global TempsBase
-            # POper.print()
+            POper.print()
             # PID.print()
             if ((POper.empty() == False) and (PID.size() >= 2)):
                 # print('entra al primer if')
@@ -629,7 +570,7 @@ class MeMyselfParser(Parser):
             # PID.print()
             # PQTypes.print()
             # if ((PID.size() >= 2)):
-            # PID.print()
+            PID.print()
             right_operand = PID.pop()
             right_type = PQTypes.pop()
             left_operand = PID.pop()
@@ -840,7 +781,7 @@ class MeMyselfParser(Parser):
                 CtesCont+=1
             if(type(VControl) == str):
                     VControl = DirFuncs.getVarDir(VControl)
-            # print('cuaduplo added + at', QuadCont)
+            print('cuaduplo added + at', QuadCont)
             uno = DirFuncs.getVarDir('1')
             Quadruples.add(QuadCont, '+', VControl, uno, VControl)
             QuadCont+=1
@@ -1039,79 +980,6 @@ class MeMyselfParser(Parser):
                 DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, CharsBase+CharsCont)
                 CharsCont+=1
             # print('funcs_2')
-        
-        @_('')
-        def funcs_2A(self, p): #Agrega Variable
-            self.currentType = PTypes.pop()
-                        
-            # print('funcs_2')
-        
-        @_('')
-        def funcs_3A(self, p): #Agrega Variable
-            global LIM1
-            global LIM2
-            global M1
-            global M2
-            global R
-            global sizeA
-            LIM1 = p[-1]
-            LIM1 = int(LIM1)
-            R = LIM1+1
-            
-        @_('')
-        def funcs_4A(self, p): #Agrega Variable
-            global LIM1
-            global LIM2
-            global M1
-            global M2
-            global R
-            global sizeA
-            LIM2 = p[-1]
-            LIM2 = int(LIM2)
-            R = R*(LIM2+1)
-        
-        @_('')
-        def funcs_5A(self, p): #Agrega Variable
-            global LIM1
-            global LIM2
-            global M1
-            global M2
-            global R
-            global sizeA
-            global IntBase
-            global IntCont
-            global FloatBase
-            global FloatCont
-            global CharsBase
-            global CharsCont
-            # print('M1', M1, 'M2', M2, 'R', R,' LIM1', LIM1, 'LIM2', LIM2)
-            M1 = R/(LIM1+1)
-            M1 = int(M1)
-            sizeA = LIM1+1
-            if(M1 != 1):
-                M2 = M1/(LIM2+1)
-                M2 = int(M2)
-                sizeA = LIM1*LIM2
-                if(M2 != 1):
-                    print('ERROR CON M2')
-                    exit()
-            
-            if(self.currentType == 'int'):
-                DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, IntBase+IntCont,sizeA,M1, M2)
-                IntCont+=sizeA
-            if(self.currentType == 'float'):
-                DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, FloatBase+FloatCont,sizeA,M1, M2)
-                FloatCont+=sizeA
-            if(self.currentType == 'char'):
-                DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, CharsBase+CharsCont,sizeA,M1, M2)
-                CharsCont+=sizeA
-            M1 = 1
-            M2 = 0
-            R = 1
-            LIM1 = 1
-            LIM2 = 1
-            sizeA = 1
-            
         @_('')
         def funcs_2_1(self, p): #Agrega Variable
             global IntCont
@@ -1138,7 +1006,6 @@ class MeMyselfParser(Parser):
         @_('')
         def funcs_4(self, p): #Agregar parametros a modulo
             global ParCont
-            # DirFuncs.getVarDir()
             DirFuncs.addParametros(self.currentFunction, ParCont ,self.currentType)
             ParCont+=1
         
@@ -1177,7 +1044,7 @@ class MeMyselfParser(Parser):
             # print('funcs_2')
         @_('')
         def funcs_cteL(self, p): #Agrega variable constante entera
-            # print('--------------- ENTRA A LETRERO FUNCS --------')
+            print('--------------- ENTRA A LETRERO FUNCS --------')
             self.currentType = 'letrero'
             global CtesBase
             global CtesCont
@@ -1220,7 +1087,6 @@ class MeMyselfParser(Parser):
         
         @_('')
         def funcs_calls(self, p):
-            print('ENTRA A FUNCS CALLS')
             self.currentFunction = p[-1]
             var = 'return'+p[-1]
             PID.add(var)
@@ -1235,90 +1101,76 @@ class MeMyselfParser(Parser):
         
         @_('')
         def funcs_calls2(self, p):
-            print('ENTRA A FUNCS CALLS2')
             global QuadCont
             global ParK
             global ParamPointer
             Quadruples.add(QuadCont, 'ERA', 0 ,0, self.currentFunction)
             QuadCont+=1
-            
+            ParK = 1
             # print(DirFuncs.getParType(self.currentFunction, ParK))
-            try:
-                ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
-            except:
-                ParK = 0
-            else:
-                ParK = 1
-                ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
+            ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
             # print(DirFuncs.getParType(self.currentFunction, ParK))
             # print('funcs_calls2')
         
         @_('')
         def funcs_calls3(self, p):
-            print('ENTRA A FUNCS CALLS3')
             global QuadCont
             global TempsBase
             global TempsCont
             global ParamPointer
             global ParK
-            if(ParK != 0):
             # print('PQTypes')
             # PQTypes.print()
             # print('PTypes')
             # PTypes.print()
-                argument = PID.pop()
-                # print('argument', argument)
-                # PQTypes.add(DirFuncs.getVarType(argument))
-                argumentType = PQTypes.pop()
-                # print('ParK',ParK)
-                # print('Param pointer',ParamPointer)
-                # print('argument type',argumentType)
-                if(argumentType == ParamPointer):
-                    if(type(argument) == str):
-                        argument = DirFuncs.getVarDir(argument)
-                    Quadruples.add(QuadCont,'PARAM', argument, ParK, TempsBase+TempsCont)    
-                    QuadCont+=1
-                    TempsCont+=1
-                else:
-                    print('ERROR: PARAM TYPE. EXPECTED:', ParamPointer, ', GIVEN:', argumentType)
-                    exit()
+            argument = PID.pop()
+            # print('argument', argument)
+            # PQTypes.add(DirFuncs.getVarType(argument))
+            argumentType = PQTypes.pop()
+            # print('ParK',ParK)
+            # print('Param pointer',ParamPointer)
+            # print('argument type',argumentType)
+            if(argumentType == ParamPointer):
+                if(type(argument) == str):
+                    argument = DirFuncs.getVarDir(argument)
+                Quadruples.add(QuadCont,'PARAM', argument, ParK, TempsBase+TempsCont)    
+                QuadCont+=1
+                TempsCont+=1
+            else:
+                print('ERROR: PARAM TYPE. EXPECTED:', ParamPointer, ', GIVEN:', argumentType)
+                exit()
             # print('funcs_calls3')
         
         @_('')
         def funcs_calls4(self, p):
-            print('ENTRA A FUNCS CALLS4')
             global ParK
             global ParamPointer
-            if(ParK != 0):
-                ParK+=1
-                try:
-                    ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
-                except:
-                    print('ERROR: WRONG NUMBER OF PARAMETERS')
-                    exit()
-                else:
-                    ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
+            ParK+=1
+            try:
+                ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
+            except:
+                print('ERROR: WRONG NUMBER OF PARAMETERS')
+                exit()
+            else:
+                ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
                 
             # print('funcs_calls4')
         
         @_('')
         def funcs_calls5(self, p):
-            print('ENTRA A FUNCS CALLS5')
             global ParK
             global ParamPointer
-            if(ParK != 0):
-                try:
-                    ParamPointer = DirFuncs.getParType(self.currentFunction, ParK+1)
-                except:
-                    ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
-                else:
-                    print('ERROR: WRONG NUMBER OF PARAMETERS')
-                    exit()
+            try:
+                ParamPointer = DirFuncs.getParType(self.currentFunction, ParK+1)
+            except:
+                ParamPointer = DirFuncs.getParType(self.currentFunction, ParK)
+            else:
+                print('ERROR: WRONG NUMBER OF PARAMETERS')
+                exit()
             # print('funcs_calls5')
             
         @_('')
         def funcs_calls6(self, p):
-            print('ENTRA A FUNCS CALLS6')
             global QuadCont
             # print('CURRENT FUNCTION', self.currentFunction)
             goTo = DirFuncs.getJump(self.currentFunction)
@@ -1329,47 +1181,11 @@ class MeMyselfParser(Parser):
         
         @_('')
         def funcs_calls7(self, p):
-            print('ENTRA A FUNCS CALLS7')
             global QuadCont
             # print('CURRENT FUNCTION', self.currentFunction)
             # print('GOTO', goTo)
             Quadruples.add(QuadCont,'END', 0, 0, 0)    
             QuadCont+=1
-            # print('funcs_calls6')
-        
-        @_('')
-        def quad_array1(self, p):
-            var = p[-1]
-            PID.add(var)
-            typeV = DirFuncs.getVarType(var)
-            PQTypes.add(typeV)
-            # print('funcs_calls6')
-        @_('')
-        def quad_array2(self, p):
-            global DIM 
-            ID = PID.pop()
-            typeV = PQTypes.pop()
-            if(DirFuncs.checkIfArray('fibbo', ID)):
-               DIM = 1
-               PDim.add(id)
-               PDim.add(DIM) 
-            else:
-                print('ERROR: VAR', ID, 'NOT DECLARED AS ARRAY')
-                exit()
-            
-            
-            # print('funcs_calls6')
-        @_('')
-        def quad_array3(self, p):
-            
-            # print('funcs_calls6')
-        @_('')
-        def quad_array4(self, p):
-            
-            # print('funcs_calls6')
-        @_('')
-        def quad_array5(self, p):
-            
             # print('funcs_calls6')
             
         @_('')

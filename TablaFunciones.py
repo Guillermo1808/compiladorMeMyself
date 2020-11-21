@@ -12,10 +12,7 @@ import sys
 
 class tablaFunciones:
     def __init__(self):
-        self.funciones = { }
-        
-        
-        
+        self.funciones = { }   
                                                 
     def search(self, fid):              # DEVUELVE TRUE OR FALSE SI LA VARIABLE EXISTE
         return fid in self.funciones
@@ -85,8 +82,21 @@ class tablaFunciones:
         else:
             self.funciones[fid]['variables'].add(id, typeV, memory)
     
+    # AGREGA ARREGLOS A LA TABLA
+    def addArray(self, fid, id, typeV, memory, size, m1, m2):
+        #print('fid', fid, 'id',id,'type', typeV,'memory', memory)
+        if(self.funciones[fid]['variables'].search(id)):
+            if(fid != 'globales'):
+                print('ERROR:', id, 'VARIABLE IS ALREADY DECLARED')
+                exit()
+        else:
+            self.funciones[fid]['variables'].addArr(id, typeV, memory, size, m1, m2)
+    
     def addParametros(self, fid, ParCont, typeP):
         self.funciones[fid]['parametros'].add(ParCont, typeP)
+    
+    def checkIfArray(self, fid, id):
+        return self.funciones[fid]['variables'].checkArray(id)
         
         
     # IMPRIME LA TABLA DE FUNCIONES

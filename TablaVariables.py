@@ -28,13 +28,32 @@ class tablaVariables:
             'memory': memory
         }
     
+    def addArr(self, id, typeV, memory, size, m1, m2):            # AGREGA EL ARREGLO Y TIPO A LA TABLA
+        self.variables[id] = {
+            'typeV': typeV,
+            'memory': memory,
+            'size': size,
+            'm1': m1,
+            'm2': m2
+        }
+    def checkArray(self, id):            # AGREGA EL ARREGLO Y TIPO A LA TABLA
+        if 'size' in self.variables[id].keys():
+            return True
+        else:
+            return False      
+    
     def initialValues(self):
         return self.variables    
         
     def print(self):                    # IMPRIME LA TABLA
+        # for key in self.variables:
         if(self.variables != {}):
             print('VARIABLES:')
             print(self.variables)
+                # print(self.variables[key]['tabla'])
+                # if(self.variables[key]['tabla'] != {}):
+                #     self.variables[key]['tabla']
+            
 
 
 # if __name__ == "__main__":

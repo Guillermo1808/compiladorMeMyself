@@ -1,10 +1,23 @@
 program fibbo;
-var int : x,y;
-var char : c;
+var int : x,y,z;
+var int : a[9];
+var int : b[5,7];
+var float : r;
+int module uno();
+var int : x;
+{
+    write(x);
+    return(2);
+}
+
+void module imprime(int k);
+{
+    write("imprime");
+}
 main(){
-    c = 'a';
-    x = -2;
-    y = 5;
-    x = 2*((x-y)+5);
-    write(c, "memo", x);
+    x = a[1];
+    y = 2;
+    x = uno();
+    write(x);
+    call imprime(y);
 }
