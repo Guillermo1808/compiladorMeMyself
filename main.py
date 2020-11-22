@@ -1362,15 +1362,15 @@ class MeMyselfParser(Parser):
         @_('')
         def quad_array3(self, p):
             
-            # print('funcs_calls6')
+            print('funcs_calls6')
         @_('')
         def quad_array4(self, p):
             
-            # print('funcs_calls6')
+            print('funcs_calls6')
         @_('')
         def quad_array5(self, p):
             
-            # print('funcs_calls6')
+            print('funcs_calls6')
             
         @_('')
         def current_typeV(self, p):

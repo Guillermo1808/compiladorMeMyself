@@ -15,9 +15,10 @@ void module imprime(int k);
     write("imprime");
 }
 main(){
-    x = a[1];
-    y = 2;
-    x = uno();
-    write(x);
-    call imprime(y);
+    x = 1;
+
+    while(x < 20) do {
+        circle(x*2);
+        x = x +1;
+    }
 }

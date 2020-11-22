@@ -53,9 +53,19 @@ No se pueden agregar valores de funciones a variables.
 - [x] Maquina Virtual - Funcinal Para Cuadruplos Condicionales.
 - [x] Maquina Virtual - Ejecuta Codigo Grafico
 - [ ] Maquina Virtual - Funciones Recursivas
-- [ ] Arreglos de Variables
+- [x] Estructura de Arreglos de Variables
+- [ ] Cuadruplos de Arreglos de Variables
 - [ ] Maquina Virtual - Arreglos
 
 La maquina virtual ya analiza los cuadruplos y toma decisiones para ejecutarlos.\
 Solo falta que ejecute funciones.\
 Se arreglo el problema donde no se podian hacer restas ni imprimir letereros. 
+La estructura de los arreglos ya es aceptada, tanto para declararlos como para llamar a un valor dentro de uno.\
+Las "tablas" de dimensiones de arreglos ya se crea con resultados (M1, M2, R).\
+Faltan los cuadruplos para los arreglos.
+
+## DOCUMENTACION
+
+- [ ] Documentación Completa.
+- [ ] Codigo con comentarios.
+- [x] Esqueleto de Documentación.
