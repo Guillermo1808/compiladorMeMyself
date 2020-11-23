@@ -13,11 +13,20 @@ class MaquinaVirtual:
     arrChars = []
     arrTemps = []
     arrCtes = []
+    
+    functions = {}
+
+    IntBaseF     = 11000
+    FloatBaseF   = 16000
+    CharsBaseF   = 19000
+    TempsBaseF   = 21000
+    
     IntBase     = 10000
     FloatBase   = 15000
     CharsBase   = 18000
     TempsBase   = 20000
     CtesBase    = 22000
+    CurrentFunction = 0
     CurrentIteration = 1
     gosub = 0
     t = turtle.Turtle()
@@ -29,6 +38,26 @@ class MaquinaVirtual:
         self.DirFunc = funcionesD
         self.Quad = self.cuadruplosF.getValues()
         self.Temporales = cantTemps
+        
+    def initialFunctionValues(self, fid):
+        valores = self.DirFunc.getFunctionInitialValues(fid)
+        # print(valores)
+        self.functions[self.CurrentFunction] = {
+            0: [],
+            1: [],
+            2: [],
+            3: []
+        }
+        for x in range(valores[0]):
+            self.functions[self.CurrentFunction][0].append(0)
+        for x in range(valores[1]):
+            self.functions[self.CurrentFunction][1].append(0)
+        for x in range(valores[2]):
+            self.functions[self.CurrentFunction][2].append(0)
+        for x in range(valores[3]):
+            self.functions[self.CurrentFunction][3].append(0)
+        # print(self.functions)
+        
         
     def initialValues(self):
         print('---- INITIAL VALUES ----')
@@ -63,16 +92,20 @@ class MaquinaVirtual:
         # print(valoresVars)
         for keys in valoresVars:
             direccion = valoresVars[keys]['memory']
-            if(direccion >= 10000 and direccion <= 14999):
+            if(direccion >= 10000 and direccion <= 11000):
                 # print('int')
-                self.arrInt.append(0)
-            if(direccion >= 15000 and direccion <= 17999):
+                if 'size' in valoresVars[keys].keys():
+                    for x in range(valoresVars[keys]['size']):
+                        self.arrInt.append(0)
+                else:
+                    self.arrInt.append(0)
+            if(direccion >= 15000 and direccion <= 16000):
                 # print('floats')
                 self.arrFloats.append(0)
-            if(direccion >= 18000 and direccion <= 19999):
+            if(direccion >= 18000 and direccion <= 19000):
                 # print('chars')
                 self.arrChars.append(0)
-            # if(direccion >= 20000 and direccion <= 21999):
+            # if(direccion >= 20000 and direccion <= 21000):
             #     print('temps')
             #     self.arrTemps[direccion-self.TempsBase] = 0
             # if(direccion >= 22000 and direccion <= 23999):
@@ -84,16 +117,32 @@ class MaquinaVirtual:
         # print('TEMPS', self.arrTemps)
     
     def getValue(self,direccion):
-        if(direccion >= 10000 and direccion <= 14999):
-            return self.arrInt[direccion-self.IntBase]
-        if(direccion >= 15000 and direccion <= 17999):
-            return self.arrFloats[direccion-self.FloatBase]
-        if(direccion >= 18000 and direccion <= 19999):
-            return self.arrChars[direccion-self.CharsBase]
-        if(direccion >= 20000 and direccion <= 21999):
-            return self.arrTemps[direccion-self.TempsBase]
-        if(direccion >= 22000 and direccion <= 23999):
-            return self.arrCtes[direccion-self.CtesBase]
+        # print(direccion)
+        if(type(direccion) == str):
+            direccion = int(direccion)
+            return direccion
+        else:
+            if(direccion >= 10000 and direccion < 11000):
+                return self.arrInt[direccion-self.IntBase]
+            if(direccion >= 15000 and direccion < 16000):
+                return self.arrFloats[direccion-self.FloatBase]
+            if(direccion >= 18000 and direccion < 19000):
+                return self.arrChars[direccion-self.CharsBase]
+            if(direccion >= 20000 and direccion < 21000):
+                return self.arrTemps[direccion-self.TempsBase]
+            if(direccion >= 22000 and direccion <= 23999):
+                return self.arrCtes[direccion-self.CtesBase]
+            
+            if(direccion >= 11000 and direccion <= 14999):
+                return self.functions[self.CurrentFunction][0][direccion-self.IntBaseF]
+            if(direccion >= 16000 and direccion <= 17999):
+                return self.functions[self.CurrentFunction][1][direccion-self.FloatBaseF]
+            if(direccion >= 19000 and direccion <= 19999):
+                return self.functions[self.CurrentFunction][2][direccion-self.CharsBaseF]
+            if(direccion >= 21000 and direccion <= 21999):
+                return self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF]
+            # if(direccion >= 20000 and direccion <= 21000):
+            #     return self.arrTemps[direccion-self.TempsBase]
         
     def readQuadruples(self, iteration):
         # print('---- READ QUADS ----')
@@ -109,16 +158,25 @@ class MaquinaVirtual:
         # print('ASSIGN')
         # print(operador, terminoL, terminoR, asignar)
         terminoL = self.getValue(terminoL)
-        if(asignar >= 10000 and asignar <= 14999):
+        if(asignar >= 10000 and asignar < 11000):
             self.arrInt[asignar-self.IntBase]= terminoL
-        if(asignar >= 15000 and asignar <= 17999):
+        if(asignar >= 15000 and asignar < 16000):
             self.arrFloats[asignar-self.FloatBase]= terminoL
-        if(asignar >= 18000 and asignar <= 19999):
+        if(asignar >= 18000 and asignar < 19000):
             self.arrChars[asignar-self.CharsBase]= terminoL
-        if(asignar >= 20000 and asignar <= 21999):
+        if(asignar >= 20000 and asignar < 21000):
             self.arrTemps[asignar-self.TempsBase] = terminoL
-        if(asignar >= 22000 and asignar <= 23999):
+        if(asignar >= 22000 and asignar < 23999):
             self.arrCtes[asignar-self.CtesBase] = terminoL
+        
+        if(asignar >= 11000 and asignar <= 14999):
+            self.functions[self.CurrentFunction][0][asignar-self.IntBaseF] = terminoL
+        if(asignar >= 16000 and asignar <= 17999):
+            self.functions[self.CurrentFunction][1][asignar-self.FloatBaseF] = terminoL
+        if(asignar >= 19000 and asignar <= 19999):
+            self.functions[self.CurrentFunction][2][asignar-self.CharsBaseF] = terminoL
+        if(asignar >= 21000 and asignar <= 21999):
+            self.functions[self.CurrentFunction][3][asignar-self.TempsBaseF] = terminoL
             
         self.CurrentIteration+=1
         # print(self.CurrentIteration)
@@ -129,12 +187,21 @@ class MaquinaVirtual:
         terminoL = self.getValue(terminoL)
         terminoR = self.getValue(terminoR)
         # print('varlor L: ',terminoL,'varlor R: ',terminoR)
-        if(asignar >= 10000 and asignar <= 14999):
+        if(asignar >= 10000 and asignar < 11000):
             self.arrInt[asignar-self.IntBase]= terminoL+terminoR
-        if(asignar >= 15000 and asignar <= 17999):
+        if(asignar >= 15000 and asignar < 16000):
             self.arrFloats[asignar-self.FloatBase]= terminoL+terminoR
-        if(asignar >= 20000 and asignar <= 21999):
+        if(asignar >= 20000 and asignar < 21000):
             self.arrTemps[asignar-self.TempsBase] = terminoL+terminoR
+        
+        if(asignar >= 11000 and asignar <= 14999):
+            self.functions[self.CurrentFunction][0][asignar-self.IntBaseF] = terminoL+terminoR
+        if(asignar >= 16000 and asignar <= 17999):
+            self.functions[self.CurrentFunction][1][asignar-self.FloatBaseF] = terminoL+terminoR
+        if(asignar >= 19000 and asignar <= 19999):
+            self.functions[self.CurrentFunction][2][asignar-self.CharsBaseF] = terminoL+terminoR
+        if(asignar >= 21000 and asignar <= 21999):
+            self.functions[self.CurrentFunction][3][asignar-self.TempsBaseF] = terminoL+terminoR
             
         self.CurrentIteration+=1
 
@@ -144,27 +211,46 @@ class MaquinaVirtual:
         terminoL = self.getValue(terminoL)
         terminoR = self.getValue(terminoR)
         # print('varlor L: ',terminoL,'varlor R: ',terminoR)
-        if(asignar >= 10000 and asignar <= 14999):
+        if(asignar >= 10000 and asignar < 11000):
             self.arrInt[asignar-self.IntBase]= terminoL-terminoR
-        if(asignar >= 15000 and asignar <= 17999):
+        if(asignar >= 15000 and asignar < 16000):
             self.arrFloats[asignar-self.FloatBase]= terminoL-terminoR
-        if(asignar >= 20000 and asignar <= 21999):
-            self.arrTemps[asignar-self.TempsBase] = terminoL-terminoR 
+        if(asignar >= 20000 and asignar < 21000):
+            self.arrTemps[asignar-self.TempsBase] = terminoL-terminoR
+        
+        if(asignar >= 11000 and asignar <= 14999):
+            self.functions[self.CurrentFunction][0][asignar-self.IntBaseF] = terminoL-terminoR
+        if(asignar >= 16000 and asignar <= 17999):
+            self.functions[self.CurrentFunction][1][asignar-self.FloatBaseF] = terminoL-terminoR
+        if(asignar >= 19000 and asignar <= 19999):
+            self.functions[self.CurrentFunction][2][asignar-self.CharsBaseF] = terminoL-terminoR 
+        if(asignar >= 21000 and asignar <= 21999):
+            self.functions[self.CurrentFunction][3][asignar-self.TempsBaseF] = terminoL-terminoR
                
         self.CurrentIteration+=1
         
     def times(self, operador, terminoL, terminoR, asignar):
         # print('TIMES')
+        
         terminoL = self.getValue(terminoL)
         terminoR = self.getValue(terminoR)
         # print('varlor L: ',terminoL,'varlor R: ',terminoR)
-        if(asignar >= 10000 and asignar <= 14999):
+        if(asignar >= 10000 and asignar < 11000):
             self.arrInt[asignar-self.IntBase]= terminoL*terminoR
-        if(asignar >= 15000 and asignar <= 17999):
+        if(asignar >= 15000 and asignar < 16000):
             self.arrFloats[asignar-self.FloatBase]= terminoL*terminoR
-        if(asignar >= 20000 and asignar <= 21999):
+        if(asignar >= 20000 and asignar < 21000):
             self.arrTemps[asignar-self.TempsBase] = terminoL*terminoR
-                
+        
+        if(asignar >= 11000 and asignar <= 14999):
+            self.functions[self.CurrentFunction][0][asignar-self.IntBaseF] = terminoL*terminoR
+        if(asignar >= 16000 and asignar <= 17999):
+            self.functions[self.CurrentFunction][1][asignar-self.FloatBaseF] = terminoL*terminoR
+        if(asignar >= 19000 and asignar <= 19999):
+            self.functions[self.CurrentFunction][2][asignar-self.CharsBaseF] = terminoL*terminoR
+        if(asignar >= 21000 and asignar <= 21999):
+            self.functions[self.CurrentFunction][3][asignar-self.TempsBaseF] = terminoL*terminoR
+              
         self.CurrentIteration+=1
         
         
@@ -173,13 +259,22 @@ class MaquinaVirtual:
         terminoL = self.getValue(terminoL)
         terminoR = self.getValue(terminoR)
         # print('varlor L: ',terminoL,'varlor R: ',terminoR)
-        if(asignar >= 10000 and asignar <= 14999):
+        if(asignar >= 10000 and asignar < 11000):
             self.arrInt[asignar-self.IntBase]= terminoL/terminoR
-        if(asignar >= 15000 and asignar <= 17999):
+        if(asignar >= 15000 and asignar < 16000):
             self.arrFloats[asignar-self.FloatBase]= terminoL/terminoR
-        if(asignar >= 20000 and asignar <= 21999):
+        if(asignar >= 20000 and asignar < 21000):
             self.arrTemps[asignar-self.TempsBase] = terminoL/terminoR
-                
+        
+        if(asignar >= 11000 and asignar <= 14999):
+            self.functions[self.CurrentFunction][0][asignar-self.IntBaseF] = terminoL/terminoR
+        if(asignar >= 16000 and asignar <= 17999):
+            self.functions[self.CurrentFunction][1][asignar-self.FloatBaseF] = terminoL/terminoR
+        if(asignar >= 19000 and asignar <= 19999):
+            self.functions[self.CurrentFunction][2][asignar-self.CharsBaseF] = terminoL/terminoR
+        if(asignar >= 21000 and asignar <= 21999):
+            self.functions[self.CurrentFunction][3][asignar-self.TempsBaseF] = terminoL/terminoR
+                   
         self.CurrentIteration+=1
     
     def goto(self,asignar):
@@ -192,6 +287,7 @@ class MaquinaVirtual:
         # print('GOTOF')
         terminoL = self.getValue(terminoL)
         # print('valor', terminoL)
+        
         if(terminoL != 1):
             self.CurrentIteration = asignar
         else:
@@ -205,55 +301,55 @@ class MaquinaVirtual:
     def read(self,operador, terminoL, terminoR, direccion):
         # print('READ')
         var = input()
-        if(direccion >= 10000 and direccion <= 14999):
+        if(direccion >= 10000 and direccion < 11000):
             # print('int')
             var = int(var)
             self.arrInt[direccion-self.IntBase] = var
-        if(direccion >= 15000 and direccion <= 17999):
+        if(direccion >= 15000 and direccion < 16000):
             # print('floats')
             var = float(var)
             self.arrFloats[direccion-self.FloatBase] = var
-        if(direccion >= 18000 and direccion <= 19999):
+        if(direccion >= 18000 and direccion < 19000):
             # print('chars')
             self.arrChars[direccion-self.CharsBase] = var
+        
+        if(direccion >= 11000 and direccion <= 14999):
+            self.functions[self.CurrentFunction][0][direccion-self.IntBaseF] = var
+        if(direccion >= 16000 and direccion <= 17999):
+            self.functions[self.CurrentFunction][1][direccion-self.FloatBaseF] = var
+        if(direccion >= 19000 and direccion <= 19999):
+            self.functions[self.CurrentFunction][2][direccion-self.CharsBaseF] = var
         self.CurrentIteration+=1
     
     def line(self, operador, terminoL, terminoR, asignar):
-        print('LINE')
         terminoR = self.getValue(terminoR)
         asignar = self.getValue(asignar)
         self.t.goto(terminoR,asignar)
         self.CurrentIteration+=1
         
     def point(self, operador, terminoL, terminoR, asignar):
-        print('POINT')
         self.t.dot(5)
         self.CurrentIteration+=1
         
     def circle(self, operador, terminoL, terminoR, asignar):
-        print('CIRCLE')
         asignar = self.getValue(asignar)
         self.t.circle(asignar)
         self.CurrentIteration+=1
     
     def arc(self, operador, terminoL, terminoR, asignar):
-        print('ARC')
         asignar = self.getValue(asignar)
         self.t.circle(asignar, 180)
         self.CurrentIteration+=1
     
     def penup(self,operador, terminoL, terminoR, asignar):
-        print('PENUP')
         self.t.penup()
         self.CurrentIteration+=1
         
     def pendown(self,operador, terminoL, terminoR, asignar):
-        print('PENDOWN')
         self.t.pendown()
         self.CurrentIteration+=1 
     
     def color(self,operador, terminoL, terminoR, asignar):
-        print('COLOR')
         asignar = self.getValue(asignar)
         terminoR = self.getValue(terminoR)
         terminoL = self.getValue(terminoL)
@@ -262,13 +358,11 @@ class MaquinaVirtual:
         self.CurrentIteration+=1
     
     def size(self,operador, terminoL, terminoR, asignar):
-        print('SIZE')
         asignar = self.getValue(asignar)
         self.t.pensize(asignar)
         self.CurrentIteration+=1
     
     def clear(self,operador, terminoL, terminoR, asignar):
-        print('CLEAR')
         self.t.clear()
         self.CurrentIteration+=1
     
@@ -277,9 +371,15 @@ class MaquinaVirtual:
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL == valorR):
-            self.arrTemps[direccion-self.TempsBase] = 1
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 1
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 1
         else:
-            self.arrTemps[direccion-self.TempsBase] = 2
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 2
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
     
     def different(self,operador, terminoL, terminoR, direccion):
@@ -287,9 +387,15 @@ class MaquinaVirtual:
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL != valorR):
-            self.arrTemps[direccion-self.TempsBase] = 1
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 1
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 1
         else:
-            self.arrTemps[direccion-self.TempsBase] = 2
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 2
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
         
     def lte(self,operador, terminoL, terminoR, direccion):
@@ -297,9 +403,15 @@ class MaquinaVirtual:
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL <= valorR):
-            self.arrTemps[direccion-self.TempsBase] = 1
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 1
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 1
         else:
-            self.arrTemps[direccion-self.TempsBase] = 2
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 2
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
      
     def lt(self,operador, terminoL, terminoR, direccion):
@@ -307,11 +419,20 @@ class MaquinaVirtual:
         valorL = self.getValue(terminoL)
         # print(terminoR)
         valorR = self.getValue(terminoR)
+        # print(valorR,valorL)
         # print('comparacion ',valorL, valorR)
+        # print('valorL',valorL,'valorR', valorR)
         if(valorL < valorR):
-            self.arrTemps[direccion-self.TempsBase] = 1
+            # print(direccion)
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 1
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 1
         else:
-            self.arrTemps[direccion-self.TempsBase] = 2
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 2
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
         # print('SALE LT')
     
@@ -320,9 +441,15 @@ class MaquinaVirtual:
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL >= valorR):
-            self.arrTemps[direccion-self.TempsBase] = 1
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 1
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 1
         else:
-            self.arrTemps[direccion-self.TempsBase] = 2
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 2
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
     
     def gt(self,operador, terminoL, terminoR, direccion):
@@ -332,9 +459,15 @@ class MaquinaVirtual:
         # print('valorR', terminoR)
         valorR = self.getValue(terminoR)
         if(valorL > valorR):
-            self.arrTemps[direccion-self.TempsBase] = 1
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 1
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 1
         else:
-            self.arrTemps[direccion-self.TempsBase] = 2
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 2
+            else:
+                 self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
     
     def andF(self,operador, terminoL, terminoR, direccion):
@@ -342,9 +475,15 @@ class MaquinaVirtual:
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL == 1 and valorR == 1):
-            self.arrTemps[direccion-self.TempsBase] = 1
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 1
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 1
         else:
-            self.arrTemps[direccion-self.TempsBase] = 2
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 2
+            else:
+                 self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
     
     def orF(self,operador, terminoL, terminoR, direccion):
@@ -352,39 +491,88 @@ class MaquinaVirtual:
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL == 1 or valorR == 1):
-            self.arrTemps[direccion-self.TempsBase] = 1
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 1
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 1
         else:
-            self.arrTemps[direccion-self.TempsBase] = 2
+            if direccion >= 21000:
+                self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 2
+            else:
+                self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
     
     def eraF(self,operador, terminoL, terminoR, direccion):
-        # print('EQUAL')
+        self.CurrentFunction +=1
+        # print('ERA')
+        self.initialFunctionValues(direccion)
         self.CurrentIteration+=1
     
     def paramF(self,operador, terminoL, terminoR, direccion):
-        # print('EQUAL')
-        value = self.getValue(terminoL)
-        value = type(value)
-        if(value == int):
-            self.arrInt.append(0)
-        if(value == float):
-            # print('floats')
-            self.arrFloats.append(0)
-        # if(direccion >= 18000 and direccion <= 19999):
-        #     # print('chars')
-        #     self.arrChars[direccion-self.CharsBase] = var
+        asignar = terminoL
+        terminoL = self.getValue(terminoL)
+        # print(asignar, terminoL)
+        if(asignar >= 10000 and asignar < 11000):
+            self.functions[self.CurrentFunction][0][terminoR-1] = terminoL
+        if(asignar >= 15000 and asignar < 16000):
+            self.functions[self.CurrentFunction][1][terminoR-1] = terminoL
+        if(asignar >= 18000 and asignar < 19000):
+            self.functions[self.CurrentFunction][2][terminoR-1] = terminoL
+        if(asignar >= 20000 and asignar < 21000):
+            self.functions[self.CurrentFunction][3][terminoR-1] = terminoL
+        if(asignar >= 22000 and asignar < 23999):
+            self.functions[self.CurrentFunction][4][terminoR-1] = terminoL
+        
+        if(asignar >= 11000 and asignar <= 14999):
+            self.functions[self.CurrentFunction][0][[terminoR-1]] = terminoL
+        if(asignar >= 16000 and asignar <= 17999):
+            self.functions[self.CurrentFunction][1][terminoR-1] = terminoL
+        if(asignar >= 19000 and asignar <= 19999):
+            self.functions[self.CurrentFunction][2][terminoR-1] = terminoL
+        if(asignar >= 21000 and asignar <= 21999):
+            self.functions[self.CurrentFunction][3][terminoR-1] = terminoL
         self.CurrentIteration+=1
         
     def gosubF(self,operador, terminoL, terminoR, direccion):
         # print('EQUAL')
-        
+        # print(self.arrInt)
         self.gosub = self.CurrentIteration
         self.CurrentIteration = direccion
 
     def endF(self,operador, terminoL, terminoR, direccion):
         # print('EQUAL')
         self.CurrentIteration = self.gosub
+        self.currentFunction = 0
         self.CurrentIteration+=1
+    
+    def verify(self,operador, terminoL, terminoR, direccion):
+
+        terminoL = self.getValue(terminoL)
+        # print(self.arrInt)
+        if(terminoL < direccion and terminoL >= terminoR):
+            self.CurrentIteration+=1
+        else:
+            print('ERROR: ARRAY INDEX OUT OF BOUNDS')
+            exit()
+    
+    def memoria(self,operador, terminoL, terminoR, direccion):
+        # print(self.CurrentIteration)
+        terminoL = self.getValue(terminoL)
+        # print('TerminoL',terminoL)
+        terminoR = self.getValue(terminoR)
+        # print('terminoR',terminoR)
+        # print('DIRECCION', direccion)
+        direccion = self.getValue(direccion)
+        # print('DIRECCION',direccion)
+        self.CurrentIteration+=1
+        # terminoL = self.getValue(terminoL)
+        # # print(self.arrInt)
+        # if(terminoL < direccion and terminoL >= terminoR):
+        #     self.CurrentIteration+=1
+        # else:
+        #     print('ERROR: ARRAY INDEX OUT OF BOUNDS')
+        #     exit()
+        
 
     def switch_case(self, operador, terminoL, terminoR, asignar):
         cases = {
@@ -394,6 +582,7 @@ class MaquinaVirtual:
             'READ': lambda: self.read(operador,terminoL,terminoR,asignar),
             '=': lambda: self.assign(operador,terminoL,terminoR,asignar),
             '+': lambda: self.addition(operador,terminoL,terminoR,asignar),
+            '+T': lambda: self.memoria(operador,terminoL,terminoR,asignar),
             '-': lambda: self.substraction(operador,terminoL,terminoR,asignar),
             '*': lambda: self.times(operador,terminoL,terminoR,asignar),
             '/': lambda: self.divide(operador,terminoL,terminoR,asignar),
@@ -418,6 +607,7 @@ class MaquinaVirtual:
             'PARAM': lambda: self.paramF(operador,terminoL,terminoR,asignar),
             'GOSUB': lambda: self.gosubF(operador,terminoL,terminoR,asignar),
             'END': lambda: self.endF(operador,terminoL,terminoR,asignar),
+            'VERIFY': lambda: self.verify(operador,terminoL,terminoR,asignar),
         }
         cases.get(operador, lambda: print("Didn't match a case:"))()
                 
@@ -433,10 +623,14 @@ class MaquinaVirtual:
         print('START READING QUADRUPLES')
         while(self.CurrentIteration <= size):
             # print('iteracion:',self.CurrentIteration)
+            # print(self.CurrentIteration)
+            # print(self.arrTemps)
+            # print(self.functions)
+
             self.readQuadruples(self.CurrentIteration)
-        
+        print(self.functions)
         # print('int',self.arrInt)
         # print('float',self.arrFloats)
         # print('temps',self.arrTemps)
         # print('ctes',self.arrCtes)
-        # turtle.done()
+        turtle.done()

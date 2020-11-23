@@ -28,14 +28,31 @@ class tablaVariables:
             'memory': memory
         }
     
-    def addArr(self, id, typeV, memory, size, m1, m2):            # AGREGA EL ARREGLO Y TIPO A LA TABLA
+    def addArr(self, id, typeV, memory, size, m1, m2, L1, L2):            # AGREGA EL ARREGLO Y TIPO A LA TABLA
         self.variables[id] = {
             'typeV': typeV,
             'memory': memory,
             'size': size,
             'm1': m1,
-            'm2': m2
+            'm2': m2,
+            'L1': L1,
+            'L2': L2
         }
+    
+    def getM(self, id, num):            # AGREGA EL ARREGLO Y TIPO A LA TABLA
+        if num ==1:
+            return self.variables[id]['m1']
+
+        else:
+            return self.variables[id]['m2']
+    
+    def getLim(self, id, num):            # AGREGA EL ARREGLO Y TIPO A LA TABLA
+        if num == 1:
+            return self.variables[id]['L1']
+        else:
+            return self.variables[id]['L2']
+
+    
     def checkArray(self, id):            # AGREGA EL ARREGLO Y TIPO A LA TABLA
         if 'size' in self.variables[id].keys():
             return True
@@ -43,7 +60,8 @@ class tablaVariables:
             return False      
     
     def initialValues(self):
-        return self.variables    
+        return self.variables   
+
         
     def print(self):                    # IMPRIME LA TABLA
         # for key in self.variables:

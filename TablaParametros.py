@@ -27,6 +27,7 @@ class tablaParametros:
         return count
         
     def getType(self, id):                      #DEVUELVE EL TIPO DEL PARAMETRO
+        print(self.parametros)
         return self.parametros[id]['type']
         
     def print(self):                    # IMPRIME LA TABLA

@@ -33,3 +33,28 @@ main(){
     }
     write(m);
 }
+
+program fibbo;
+var int : x,y,z;
+var int : a[9];
+var int : b[5,7];
+var float : r;
+int module uno();
+var int : x;
+{
+    write(x);
+    return(2);
+}
+
+void module imprime(int k);
+{
+    write("imprime");
+}
+main(){
+    x = a[1];
+
+    while(x < 20) do {
+        circle(x*2);
+        x = x +1;
+    }
+}
