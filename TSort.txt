@@ -1,0 +1,41 @@
+program sort;
+var int : arr[10];
+var int : i,j,k,l,m;
+main(){
+    i = 0;
+    j = 0;
+    k = 0;
+    write("InsertData");
+    while(i < 10)do{
+        read(j);
+        arr[i] = j;
+        i = i+1;
+    }
+    
+    i = 0;
+    j = 0;
+    write("Sorting");
+    while(i < 10) do{
+        while(j < 10) do{
+            l = arr[i];
+            m = arr[j];
+            if(l>m)then{
+                k = l;
+                arr[i] = m;
+                arr[j] = k;
+            }
+            j = j+1;
+        }
+    j = 0;
+    i = i+1;
+    }
+    i = 0;
+    j = 0;
+    write("Result");
+    while(i < 10)do{
+        j = arr[i];
+        write(j);
+        i = i+1;
+    }
+
+}

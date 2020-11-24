@@ -31,6 +31,7 @@ class MaquinaVirtual:
     gosub = 0
     t = turtle.Turtle()
     isArray = False
+    drawing = False
     
     def __init__(self, cuadruplosD, funcionesD, cantTemps):
         self.cuadruplosF = cuadruplos()
@@ -136,10 +137,6 @@ class MaquinaVirtual:
                 return self.arrCtes[direccion-self.CtesBase]
             
             if(direccion >= 11000 and direccion <= 14999):
-                print('separadorrrrrr')
-                print(self.CurrentIteration)
-                print(direccion)
-                print(self.IntBaseF)
                 try:
                     return self.functions[self.CurrentFunction][0][direccion-self.IntBaseF]
                 except:
@@ -398,28 +395,34 @@ class MaquinaVirtual:
         terminoR = self.getValue(terminoR)
         asignar = self.getValue(asignar)
         self.t.goto(terminoR,asignar)
+        self.drawing = True
         self.CurrentIteration+=1
         
     def point(self, operador, terminoL, terminoR, asignar):
         self.t.dot(5)
+        self.drawing = True
         self.CurrentIteration+=1
         
     def circle(self, operador, terminoL, terminoR, asignar):
         asignar = self.getValue(asignar)
         self.t.circle(asignar)
+        self.drawing = True
         self.CurrentIteration+=1
     
     def arc(self, operador, terminoL, terminoR, asignar):
         asignar = self.getValue(asignar)
         self.t.circle(asignar, 180)
+        self.drawing = True
         self.CurrentIteration+=1
     
     def penup(self,operador, terminoL, terminoR, asignar):
         self.t.penup()
+        self.drawing = True
         self.CurrentIteration+=1
         
     def pendown(self,operador, terminoL, terminoR, asignar):
         self.t.pendown()
+        self.drawing = True
         self.CurrentIteration+=1 
     
     def color(self,operador, terminoL, terminoR, asignar):
@@ -428,15 +431,18 @@ class MaquinaVirtual:
         terminoL = self.getValue(terminoL)
         self.t.screen.colormode(255)
         self.t.color(terminoL,terminoR,asignar)
+        self.drawing = True
         self.CurrentIteration+=1
     
     def size(self,operador, terminoL, terminoR, asignar):
         asignar = self.getValue(asignar)
         self.t.pensize(asignar)
+        self.drawing = True
         self.CurrentIteration+=1
     
     def clear(self,operador, terminoL, terminoR, asignar):
         self.t.clear()
+        self.drawing = True
         self.CurrentIteration+=1
     
     def equal(self,operador, terminoL, terminoR, direccion):
@@ -489,9 +495,12 @@ class MaquinaVirtual:
      
     def lt(self,operador, terminoL, terminoR, direccion):
         # print('ENTRA LT')
+        # print(self.arrTemps)
+        # print(terminoR)
         valorL = self.getValue(terminoL)
         # print(terminoR)
         valorR = self.getValue(terminoR)
+        # print(valorR)
         # print(valorR,valorL)
         # print('comparacion ',valorL, valorR)
         # print('valorL',valorL,'valorR', valorR)
@@ -705,11 +714,7 @@ class MaquinaVirtual:
                 
     def main(self):
         turtle.title("Compiler MeMyself")
-        self.t.getscreen()
-        
-            
         self.initialValues()
-        print('CONSTANTES:', self.arrCtes)
         size = len(self.Quad)
         # print('--- size -----',size) 
         print('START READING QUADRUPLES')
@@ -719,11 +724,11 @@ class MaquinaVirtual:
             # print(self.arrTemps)
             # print(self.functions)
             self.readQuadruples(self.CurrentIteration)
-        print(self.arrInt)
-        print(len(self.arrInt))
+        print('Program ended with code 0;')
         # print(self.functions)
         # print('int',self.arrInt)
         # print('float',self.arrFloats)
         # print('temps',self.arrTemps)
         # print('ctes',self.arrCtes)
-        turtle.done()
+        if self.drawing:
+            turtle.done()

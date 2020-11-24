@@ -1,0 +1,25 @@
+program factorial;
+var int : a,f,j;
+
+int module fact(int i);
+var int : resultado;
+{
+    resultado = 1;
+    i = i+1;
+    for j = 1 to i do{
+        resultado = resultado*j;
+    }
+    return(resultado);
+}
+
+main(){
+    write("Factorial");
+    read(a);
+    if(a < 0) then{
+        write("ERROR");
+    }
+    else{
+    f = fact(a);
+    write("Result",f);
+    }
+}

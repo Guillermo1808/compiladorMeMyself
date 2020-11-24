@@ -1,4 +1,4 @@
-program fibbo;
+program fibonacci;
 var int : n, first,second,next,c,s;
 main(){
     first = 0;

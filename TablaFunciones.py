@@ -58,6 +58,7 @@ class tablaFunciones:
     def addFunction(self, fid, typeF, FScope, QuadCont):
         if fid in self.funciones.keys():
             print('ERROR:', fid, 'module is already declared')
+            exit()
         else:
             self.funciones[fid] = {
                 'type': typeF,

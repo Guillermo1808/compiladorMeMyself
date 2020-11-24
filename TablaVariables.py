@@ -54,10 +54,14 @@ class tablaVariables:
 
     
     def checkArray(self, id):            # AGREGA EL ARREGLO Y TIPO A LA TABLA
-        if 'size' in self.variables[id].keys():
-            return True
-        else:
-            return False      
+        try:
+            if 'size' in self.variables[id].keys():
+                return True
+            else:
+                return False     
+        except:
+            print('ERROR: VAR',id, 'NOT DECLARED')
+            exit()
     
     def initialValues(self):
         return self.variables   

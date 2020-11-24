@@ -211,12 +211,12 @@ class MeMyselfParser(Parser):
             pass
         
         #       ESTATUTOS
-        @_('estatuto', 'estatutos')
+        @_('estatuto estatutos', '')
         def estatutos(self, p):
             pass
 
         #       ESTATUTO
-        @_('funcionC estatuto', 'asignacion estatuto', 'lectura estatuto', 'escritura estatuto', 'decision estatuto', 'repeticiondo estatuto', 'repeticionfor estatuto', 'exp estatuto', 'especiales estatuto', '')
+        @_('funcionC', 'asignacion', 'lectura', 'escritura', 'decision', 'repeticiondo', 'repeticionfor', 'exp', 'especiales', '')
         def estatuto(self, p):
             pass
         
@@ -1625,7 +1625,7 @@ class MeMyselfParser(Parser):
         # FUNCION PRINCIPAL DEL PROGRAMA 
 if __name__ == '__main__':
 
-    file = open("test.txt", 'r')
+    file = open("TFactorial.txt", 'r')
     masterline = ""
 
     for line in file:
