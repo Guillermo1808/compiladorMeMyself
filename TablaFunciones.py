@@ -104,6 +104,7 @@ class tablaFunciones:
         self.funciones[fid]['parametros'].add(ParCont, typeP)
     
     def checkIfArray(self, fid, id):
+        print('FID',fid)
         return self.funciones[fid]['variables'].checkArray(id)
     
     def getArrM(self, id, num):

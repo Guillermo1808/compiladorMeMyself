@@ -125,3 +125,11 @@ main(){
     x = x +1;
     write(x);
 }
+while(x < 10) do{
+        while(j < 10) do{
+        i[x,j] = 10;
+        j = j+1;
+    }
+    x = x+1;
+    j = 0;
+    }

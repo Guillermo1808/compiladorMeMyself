@@ -13,6 +13,7 @@ from MemoriaVirtual import MaquinaVirtual
 currentFunction = ''
 currentScope = 'global'
 currentType = ''
+nombrePrograma = ''
 varType = ''
 VControl = ''
 ParamPointer = ''
@@ -466,7 +467,7 @@ class MeMyselfParser(Parser):
             # print('ENTRA A QUAD 1A')
             # PID.print()
             # print(currentArray)
-            PID.add(currentArray)
+            # PID.add(currentArray)
             # PID.print()
 
             tipo = DirFuncs.getVarType(currentArray)
@@ -681,18 +682,20 @@ class MeMyselfParser(Parser):
             # print('quad_11')
         @_('')
         def quad_a(self, p): # CUADRUPLO DE ASIGNACION
-            # print('ENTRA')
+            print('ENTRA ASIGNACION')
             global QuadCont
             # PID.print()
             # PQTypes.print()
             # if ((PID.size() >= 2)):
             # PID.print()
             # PID.print()
+            PID.print()
             right_operand = PID.pop()
             right_type = PQTypes.pop()
             left_operand = PID.pop()
             left_type = PQTypes.pop()
             operator = '='
+            
             result_Type = Cube.obtenerTipo(left_type, right_type, operator)
             if(result_Type != 'error'):
                 result = left_operand
@@ -702,6 +705,7 @@ class MeMyselfParser(Parser):
                 if(type(right_operand) == str):
                     right_operand = DirFuncs.getVarDir(right_operand)
                 # print('RESULT memory ',result)
+                print('ASIGNACION', operator, right_operand, 0, result)
                 Quadruples.add(QuadCont, operator, right_operand, 0, result)
                 QuadCont+=1
                 #1 Quadruples.print()
@@ -716,7 +720,9 @@ class MeMyselfParser(Parser):
         @_('')
         def quad_f1(self, p): # ACTUALIZA EL GOTO AL MAIN
             global QuadCont
+            global nombrePrograma
             self.currentScope = 0
+            self.currentFunction = nombrePrograma
             # PSaltos.print()
             Salto = PSaltos.pop()
             Quadruples.updateCuad(Salto, QuadCont)
@@ -1092,6 +1098,8 @@ class MeMyselfParser(Parser):
         @_('')
         def funcs_1(self, p): # Agrega el programa
             global QuadCont
+            global nombrePrograma
+            nombrePrograma = p[-1]
             self.currentFunction = p[-1]
             self.currentScope = 'global'
             DirFuncs.addFunction(self.currentFunction, 'main', self.currentScope, QuadCont)
@@ -1178,6 +1186,12 @@ class MeMyselfParser(Parser):
             global FloatCont
             global CharsBase
             global CharsCont
+            global IntBaseF
+            global IntContF
+            global FloatBaseF
+            global FloatContF
+            global CharsBaseF
+            global CharsContF
             # print('M1', M1, 'M2', M2, 'R', R,' LIM1', LIM1, 'LIM2', LIM2)
             M1 = R/(LIM1+1)
             M1 = int(M1)
@@ -1191,14 +1205,26 @@ class MeMyselfParser(Parser):
                     exit()
             
             if(self.currentType == 'int'):
-                DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, IntBase+IntCont,sizeA,M1, M2, LIM1, LIM2)
-                IntCont+=sizeA
+                if(self.currentScope != 0):
+                    DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, IntBaseF+IntContF,sizeA,M1, M2, LIM1, LIM2)
+                    IntContF+=sizeA
+                else:
+                    DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, IntBase+IntCont,sizeA,M1, M2, LIM1, LIM2)
+                    IntCont+=sizeA
             if(self.currentType == 'float'):
-                DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, FloatBase+FloatCont,sizeA,M1, M2, LIM1, LIM2)
-                FloatCont+=sizeA
+                if(self.currentScope != 0):
+                    DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, FloatBaseF+FloatContF,sizeA,M1, M2, LIM1, LIM2)
+                    FloatContF+=sizeA
+                else:
+                    DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, FloatBase+FloatCont,sizeA,M1, M2, LIM1, LIM2)
+                    FloatCont+=sizeA
             if(self.currentType == 'char'):
-                DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, CharsBase+CharsCont,sizeA,M1, M2, LIM1, LIM2)
-                CharsCont+=sizeA
+                if(self.currentScope != 0):
+                    DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, CharsBase+CharsCont,sizeA,M1, M2, LIM1, LIM2)
+                    CharsContF+=sizeA
+                else:
+                    DirFuncs.addArray(self.currentFunction, p[-7], self.currentType, CharsBase+CharsCont,sizeA,M1, M2, LIM1, LIM2)
+                    CharsCont+=sizeA
                 
             M1 = 1
             M2 = 0
@@ -1241,6 +1267,7 @@ class MeMyselfParser(Parser):
         
         @_('')
         def funcs_cteI(self, p): #Agrega variable constante entera
+            
             self.currentType = 'int'
             global CtesBase
             global CtesCont
@@ -1425,11 +1452,13 @@ class MeMyselfParser(Parser):
         def funcs_calls6(self, p):
             # print('ENTRA A FUNCS CALLS6')
             global QuadCont
+            global ParCounter
             # print('CURRENT FUNCTION', self.currentFunction)
             goTo = DirFuncs.getJump(self.currentFunction)
             # print('GOTO', goTo)
             Quadruples.add(QuadCont,'GOSUB', self.currentFunction, 0, goTo)    
             QuadCont+=1
+            ParCounter = 1
             print('funcs_calls6')
         
         @_('')
@@ -1465,6 +1494,7 @@ class MeMyselfParser(Parser):
             # PID.print()
             typeV = DirFuncs.getVarType(var)
             PQTypes.add(typeV)
+            
             # print('funcs_calls6')
         @_('')
         def quad_array2(self, p):
@@ -1472,9 +1502,9 @@ class MeMyselfParser(Parser):
             print('quad_array2')
             ID = PID.pop()
             typeV = PQTypes.pop()
-            if(DirFuncs.checkIfArray('fibbo', ID)):
+            if(DirFuncs.checkIfArray(self.currentFunction, ID)):
                DIM = 1
-               PDim.add(id)
+               PDim.add(ID)
                PDim.add(DIM) 
                POper.add('(')
             else:
@@ -1498,23 +1528,29 @@ class MeMyselfParser(Parser):
             # PID.print()
             # POper.print()
             if(LIM1):
-                print('LIM2')
                 lim = DirFuncs.getArrL(currentArray, 1)
                 varDir = PID.top()
-                varDir = DirFuncs.getVarDir(varDir)
+                varDir2 = DirFuncs.getVarDir(varDir)
+                if(varDir2 != None):
+                    varDir = varDir2
+                print('VERIFY', varDir)
                 Quadruples.add(QuadCont,'VERIFY',varDir,0, lim)
                 QuadCont+=1
                 m = DirFuncs.getArrM(currentArray, 1)
-                var = DirFuncs.getVarDir(currentArray)
+                var = PID.pop()
+                var2 = DirFuncs.getVarDir(var)
+                if(var2 != None):
+                    var = var2
                 if(self.currentScope != 0):
                     temp = TempsContF + TempsBaseF
                     TempsContF+=1
                 else:
                     temp = TempsCont + TempsBase
                     TempsCont+=1
-                Quadruples.add(QuadCont,'*', var, m, temp)
+                Quadruples.add(QuadCont,'*T', var, m, temp)
                 QuadCont+=1
                 PID.add(temp)
+              
                 
             if(LIM2):
                 print('LIM2')
@@ -1533,7 +1569,8 @@ class MeMyselfParser(Parser):
                     temp = TempsBase+TempsCont
                     TempsCont +=1
                 print('AUX 1', aux1)
-                Quadruples.add(QuadCont,'+', aux1, aux2, temp)
+                aux2 = DirFuncs.getVarDir(aux2)
+                Quadruples.add(QuadCont,'+T2', aux1, aux2, temp)
                 QuadCont+=1
                 PID.add(temp)
             
@@ -1554,23 +1591,28 @@ class MeMyselfParser(Parser):
             global TempsContF
             global TempsBaseF
             print('quad_array5')
+            PID.print()
             aux1 = PID.pop()
-            print('aux1', aux1)
-            print(currentArray)
+            # print('aux1', aux1)
+            
             var = DirFuncs.getVarDir(currentArray)
-            print('VA', var)
-            print('aux1', aux1)
+            # print('VA', var)
+            # print('aux1', aux1)
             if(self.currentScope != 0):
                 temp = TempsContF + TempsBaseF
                 TempsContF+=1
             else:
                 temp = TempsBase+TempsCont
                 TempsCont +=1
+            
             Quadruples.add(QuadCont,'+T', aux1, var, temp)
             PID.add(temp)
+            print('AHHHH------')
+            PID.print()
             QuadCont+=1
             TempsCont+=1
             POper.pop()
+            
             # DirFuncs.printFunction()
             # Quadruples.print()
             
