@@ -452,7 +452,6 @@ class MeMyselfParser(Parser):
             
         @_('')
         def quad_2(self, p): #AGREGAR + o - AL POper 
-            print(p[-1])
             POper.add(p[-1])
             
         @_('')
@@ -1412,7 +1411,7 @@ class MeMyselfParser(Parser):
         # FUNCION PRINCIPAL DEL PROGRAMA 
 if __name__ == '__main__':
 
-    file = open("main.txt", 'r')
+    file = open("TFibonacci.txt", 'r')
     masterline = ""
 
     for line in file:
