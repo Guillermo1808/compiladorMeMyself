@@ -1,4 +1,4 @@
-# COMPILADOR MeMyself     
+# COMPILADOR Mayka :dog:     
 ##### *Proyecto final Compiladores*
 ##### Guillermo Enrique Valles Villegas A01561722 :pizza:
 
@@ -67,6 +67,8 @@ Cuadruplos de los arreglos listos y funcionales.
 
 ## DOCUMENTACION
 
-- [ ] Documentación Completa.
-- [ ] Codigo con comentarios.
+- [x] Documentación Completa.
+- [x] Codigo con comentarios.
 - [x] Esqueleto de Documentación.
+
+## PROYECTO LISTO :tada:
