@@ -2,7 +2,7 @@ program matrices;
 var int : a[3,3];
 var int : b[3,3];
 var int : m[3,3];
-var int : i,j,k,t1,t2,t3;
+var int : i,j,k,t1,t2;
 
 
 main(){
@@ -63,27 +63,20 @@ main(){
     i = 0;
     j = 0;
     k = 0;
-
     write("Multiplicacion");
     while(i<3) do{
 
         while(j<3)do{
-            t3 = 0;
+
             while(k<3)do{
 
             t1 = a[i,k];
             t2 = b[k,j];
-            write(k);
-            m[i,j] = t3+t1*t2;
-
+            m[i,j] = a*b;
             k = k+1;
-            
             }
-            k = 0;
             j = j+1;
-            
         }
-        k = 0;
         j = 0;
         i = i+1;
     }

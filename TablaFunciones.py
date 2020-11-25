@@ -21,7 +21,7 @@ class tablaFunciones:
         for fid in self.funciones.keys():
             if self.funciones[fid]['variables'].search(id):
                 if(self.funciones[fid]['variables'].getType(id) == None):
-                    print('ERROR: VAR NOT FOUND')
+                    print('ERROR: VAR',id, 'NOT DECLARED')
                     exit()
                 else:
                     return self.funciones[fid]['variables'].getType(id)
@@ -34,16 +34,10 @@ class tablaFunciones:
                     print('ERROR: VAR NOT FOUND')
                     exit()
                 else:
-                    # print(id,'DIR:',self.funciones[fid]['variables'].getDir(id))
                     return self.funciones[fid]['variables'].getDir(id)
-        # for fid in self.funciones.keys():
-        #     if self.funciones[fid]['variables'].search(id):
-        #         return self.funciones[fid]['variables'].getDir(id)
-            #     return self.funciones[fid]['variables'].getType(id)
         
     def getParType(self, fid, num):                 # DEVUELVE EL TYPE DE PARAMETRO          
         return self.funciones[fid]['parametros'].getType(num)
-            #     return self.funciones[fid]['variables'].getType(id)
     def getParCount(self, fid):
         if(fid in self.funciones.keys()):
             count = self.funciones[fid]['parametros'].numPar()
@@ -83,7 +77,6 @@ class tablaFunciones:
         
     # AGREGA VARIABLES A LA TABLA
     def addVariable(self, fid, id, typeV, memory):
-        #print('fid', fid, 'id',id,'type', typeV,'memory', memory)
         if(self.funciones[fid]['variables'].search(id)):
             if(fid != 'globales'):
                 print('ERROR:', id, 'VARIABLE IS ALREADY DECLARED')
@@ -93,7 +86,6 @@ class tablaFunciones:
     
     # AGREGA ARREGLOS A LA TABLA
     def addArray(self, fid, id, typeV, memory, size, m1, m2, L1, L2):
-        #print('fid', fid, 'id',id,'type', typeV,'memory', memory)
         if(self.funciones[fid]['variables'].search(id)):
             if(fid != 'globales'):
                 print('ERROR:', id, 'VARIABLE IS ALREADY DECLARED')
@@ -115,7 +107,6 @@ class tablaFunciones:
                     print('ERROR: VAR NOT FOUND')
                     exit()
                 else:
-                    # print(id,'DIR:',self.funciones[fid]['variables'].getDir(id))
                     return self.funciones[fid]['variables'].getM(id, num)
     
     def getArrL(self, id, num):
@@ -125,7 +116,6 @@ class tablaFunciones:
                     print('ERROR: VAR NOT FOUND')
                     exit()
                 else:
-                    # print(id,'DIR:',self.funciones[fid]['variables'].getDir(id))
                     return self.funciones[fid]['variables'].getLim(id, num)
         
         
@@ -144,45 +134,15 @@ class tablaFunciones:
         self.funciones[fid]['variables'] = {}
     
     def getInitialValues(self):
-        # self.funciones['globales']['variables'].print()
         resultado = self.funciones['globales']['variables'].initialValues()
-        # print(type(resultado))
         return resultado
     def getFunctionInitialValues(self,fid):
-        # self.funciones['globales']['variables'].print()
         return self.funciones[fid]['cantidad']
 
-        # print(type(resultado))
-        
     
-    def getGlobalVarsValues(self):
-        # self.funciones['globales']['variables'].print()
-        
+    def getGlobalVarsValues(self):        
         for keys in self.funciones:
             if(self.funciones[keys]['FScope'] == 'global'):
                 resultado = self.funciones[keys]['variables'].initialValues()
-        # print(type(resultado))
         return resultado
 
-# if __name__ == "__main__":
-#     tablaFun = tablaFunciones()
-#     tablaFun.addFunction('metodo', 'int', 'global')
-#     # tablaFun.addParametros('metodo', 'int')
-#     # tablaFun.addParametros('metodo', 'char')
-#     # tablaFun.printFunction()
-#     tablaFun.addFunction('suma', 'int', 'funsuma')
-#     tablaFun.addVariable('suma', 'smigle', 'char', 100)
-#     tablaFun.addVariable('suma', 'memo', 'char', 101)
-#     print(tablaFun.search('suma'))
-#     x = tablaFun.getVarType('memo')
-#     print(x)
-# #     tablaFun.addVariable('suma', 'float', 'lotr')
-    
-#     tablaFun.printFunction()
-    
-    # tablaFun.addFunction('sumar', 'int', ['int', 'float', 'char'], ['uno', 'dos', 'tres'])
-    # tablaFun.addVariable('sumar', 'int', 'smigle')
-    # tablaFun.addVariable('sumar', 'char', 'memo')
-    # tablaFun.printFunction('sumar')
-    
-    # tablaFun.addFunction('sumar', 'int', ['int', 'float', 'char'], ['uno', 'dos', 'tres'])

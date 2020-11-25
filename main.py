@@ -24,7 +24,6 @@ PID = stacks()
 PPar = stacks()
 PQPar = stacks()
 PSaltos = stacks()
-PArreglos = stacks()
 PTypes = stacks()
 PQTypes = stacks()
 PDim = stacks()
@@ -183,9 +182,12 @@ class MeMyselfParser(Parser):
         @_('LETRERO funcs_cteL quad_let quad_writeL  printe2', 'exp quad_write printe2')
         def printe(self, p):
             pass
-        @_('"," LETRERO funcs_cteL quad_let quad_writeL  printe2', '"," exp quad_write printe2', '')
+        @_('"," printe', '')
         def printe2(self, p):
             pass
+        # @_('"," LETRERO funcs_cteL quad_let quad_writeL  printe2', '"," exp quad_write printe2', '')
+        # def printe2(self, p):
+        #     pass
 
         #       DECISION
         @_('IF "(" expresion ")" quad_if1 THEN decision2 decision3 quad_if2')
@@ -299,7 +301,6 @@ class MeMyselfParser(Parser):
             pass
 
         #      EXPRESION
-        # @_('comparar LOGICOS quad_19 comparar', 'comparar')
         @_('comparar LOGICOS quad_10 comparar quad_11', 'comparar')
         def expresion(self,p):
             pass
@@ -327,7 +328,6 @@ class MeMyselfParser(Parser):
         @_('factor quad_5 termino2')
         def termino(self,p):
             pass
-        # @_('TIMES quad_3 factor termino2', 'DIVIDE quad_3 factor termino2','')
         @_('TIMES quad_3 termino', 'DIVIDE quad_3 termino','')
         def termino2(self,p):
             pass
@@ -344,7 +344,6 @@ class MeMyselfParser(Parser):
             pass
 
         #       FACTOR
-        #@_('"(" quad_6 expresion ")" quad_7','PLUS varcte',  'MINUS varcte', 'varcte')
         @_('"(" quad_6 exp ")" quad_7','PLUS varcte',  'MINUS varcte','varcte')
         def factor(self,p):
             pass
@@ -377,14 +376,6 @@ class MeMyselfParser(Parser):
         def varsN2(self, p):
             pass
         
-        # #       VARS
-        # @_('VAR tipov ":" ID funcs_2A "[" varsD2 "]" funcs_5A ";"') 
-        # def varsD(self, p):
-        #     pass
-        # @_('exp funcs_3A', 'exp funcs_3A "," exp funcs_4A')
-        # def varsD2(self, p):
-        #     pass
-        #       VARS ARREGLOS
         @_('VAR tipov ":" ID funcs_2A "[" CTEINT funcs_3A varsD2 "]" funcs_5A ";"') 
         def varsD(self, p):
             pass
@@ -410,46 +401,36 @@ class MeMyselfParser(Parser):
                 cte = '-'+cte
             PID.add(cte)
             PQTypes.add('int')
-            # print('quad_cteI')
         @_('')
         def quad_cteF(self, p): # HACER PUSH A LOS STACKS CON CTE FLOATS
             cte = p[-2]
             PID.add(cte)
             PQTypes.add('float')
-            # print('quad_cteF')
             
         @_('')
         def quad_cteC(self, p): # HACER PUSH A LOS STACKS CON CTE INTS
             cte = p[-2]
             PID.add(cte)
             PQTypes.add('char')
-            # print('quad_cteI')
         @_('')
         def quad_let(self, p): # HACER PUSH A LOS STACKS CON LETREROS
-            # print('--------------- ENTRA A LETRERO --------')
             cte = p[-2]
             PID.add(cte)
             PQTypes.add('letrero')
-            # print('quad_cteS')
         @_('')
         def quad_1(self, p): # HACER PUSH A LOS STACKS CON EL ID DE LA VARIABLE Y SU TIPO
             PID.add(p[-1])
             tipo = DirFuncs.getVarType(p[-1])
             if tipo == None:
-                print('ERROR: VARIABLE ERROR', p[-1], 'NOT DECLARED')
+                print('ERROR: VARIABLE', p[-1], 'NOT DECLARED')
                 exit()
             else:
                 PQTypes.add(tipo)
-            # PID.print()
-            # PQTypes.print()
-            # print('quad_1')
             
         @_('')
         def quad_1a(self, p): # HACER PUSH A LOS STACKS CON EL ID DE LA VARIABLE Y SU TIPO
-            # print('ENTRA A QUAD 1A')
-            # PID.print()
+            
             PID.add(p[-2])
-            # PID.print()
 
             tipo = DirFuncs.getVarType(p[-2])
             if tipo == None:
@@ -457,39 +438,27 @@ class MeMyselfParser(Parser):
                 exit()
             else:
                 PQTypes.add(tipo)
-            # PID.print()
-            # PQTypes.print()
-            # print('quad_1')
+            
             
         @_('')
         def quad_1array(self, p): # HACER PUSH A LOS STACKS CON EL ID DE LA VARIABLE Y SU TIPO
             global currentArray
-            # print('ENTRA A QUAD 1A')
-            # PID.print()
-            # print(currentArray)
-            # PID.add(currentArray)
-            # PID.print()
-
             tipo = DirFuncs.getVarType(currentArray)
             if tipo == None:
                 print('ERROR: VARIABLE', currentArray, 'NOT DECLARED')
                 exit()
             else:
                 PQTypes.add(tipo)
-            # PID.print()
-            # PQTypes.print()
-            print('quad_1array')
+            
         @_('')
         def quad_2(self, p): #AGREGAR + o - AL POper 
             print(p[-1])
             POper.add(p[-1])
-            # POper.print()
-            # print('quad_2')
+            
         @_('')
         def quad_3(self, p): #AGREGAR * o / AL POper
             POper.add(p[-1])
-            # POper.print()
-            # print('quad_3')    
+             
         @_('')
         def quad_4(self, p): # CREA EL CUADRUPLO CON + -
             global QuadCont
@@ -497,19 +466,13 @@ class MeMyselfParser(Parser):
             global TempsBase
             global TempsContF
             global TempsBaseF
-            # POper.print()
-            # PID.print()
             if ((POper.empty() == False) and (PID.size() >= 2)):
-                # print('entra al primer if')
                 if ((POper.top() == '+') or (POper.top() == '-')):
-                    # print("entra al segundo if")
                     right_operand = PID.pop()
                     right_type = PQTypes.pop()
                     left_operand = PID.pop()
                     left_type = PQTypes.pop()
-                    # print('RO:', right_operand, '| RT: ', right_type, '| LO:', left_operand, '| LT: ', left_type)
                     operator = POper.pop()
-                    # print('CUBE:', left_type, right_type, operator)
                     result_Type = Cube.obtenerTipo(left_type, right_type, operator)
                     if(result_Type != 'error'):
                         if(self.currentScope != 0):
@@ -526,11 +489,9 @@ class MeMyselfParser(Parser):
                         PQTypes.add(result_Type)
                         PID.add(result)
                         QuadCont+=1
-                        #1 Quadruples.print()
                     else:
                         print("ERROR: TYPE MISMATCH")
                         exit()
-            # print('quad_4')
         @_('')
         def quad_5(self, p): # CREA EL CUADRUPLO CON / *
             global QuadCont
@@ -538,19 +499,13 @@ class MeMyselfParser(Parser):
             global TempsBase
             global TempsBaseF
             global TempsContF
-            # POper.print()
-            # PID.print()
             if ((POper.empty() == False) and (PID.size() >= 2)):
-                # print('entra al primer if')
                 if ((POper.top() == '/') or (POper.top() == '*')):
-                    # print("entra al segundo if")
                     right_operand = PID.pop()
                     right_type = PQTypes.pop()
                     left_operand = PID.pop()
                     left_type = PQTypes.pop()
-                    # print('RO:', right_operand, '| RT: ', right_type, '| LO:', left_operand, '| LT: ', left_type)
                     operator = POper.pop()
-                    # print('CUBE:', left_type, right_type, operator)
                     result_Type = Cube.obtenerTipo(left_type, right_type, operator)
                     if(result_Type != 'error'):
                         
@@ -568,27 +523,22 @@ class MeMyselfParser(Parser):
                         PQTypes.add(result_Type)
                         PID.add(result)
                         QuadCont+=1
-                        #1 Quadruples.print()
                     else:
                         print("ERROR: TYPE MISMATCH")
                         exit()
-            # print('quad_5')
             
         @_('')
         def quad_6(self, p): # PUSH FALSE BOTTOM MARK
             POper.add(p[-1])
-            # POper.print()
-            # print('quad_6')
+            
         @_('')
         def quad_7(self, p): # POP FALSE BOTTOM MARK
             POper.pop()
-            # POper.print()
-            # print('quad_7')
+           
         @_('')
-        def quad_8(self, p): # POP FALSE BOTTOM MARK
+        def quad_8(self, p): # Agrega RELOPS a la pila de operandos (!=)|(==)|(<=)|(>=)|(<)|(>)
             POper.add(p[-1])
-            # POper.print()
-            # print('quad_7')
+            
         
         @_('')
         def quad_9(self, p): # CREA EL CUADRUPLO CON RELOPS (!=)|(==)|(<=)|(>=)|(<)|(>)
@@ -596,19 +546,13 @@ class MeMyselfParser(Parser):
             global TempsCont
             global TempsBase
             global TempsContF
-            # POper.print()
-            # PID.print()
             if ((POper.empty() == False) and (PID.size() >= 2)):
-                # print('entra al primer if')
                 if ((POper.top() == '!=') or (POper.top() == '==')or (POper.top() == '<=')or (POper.top() == '>=')or (POper.top() == '<')or (POper.top() == '>')):
-                    # print("entra al segundo if")
                     right_operand = PID.pop()
                     right_type = PQTypes.pop()
                     left_operand = PID.pop()
                     left_type = PQTypes.pop()
-                    # print('RO:', right_operand, '| RT: ', right_type, '| LO:', left_operand, '| LT: ', left_type)
                     operator = POper.pop()
-                    # print('CUBE:', left_type, right_type, operator)
                     result_Type = Cube.obtenerTipo(left_type, right_type, operator)
                     if(result_Type != 'error'):
                         
@@ -626,39 +570,32 @@ class MeMyselfParser(Parser):
                         PQTypes.add(result_Type)
                         PID.add(result)
                         QuadCont+=1
-                        #1 Quadruples.print()
                     else:
                         print("ERROR: TYPE MISMATCH")
                         exit()
-            # print('quad_9')
             
         @_('')
-        def quad_10(self, p): # POP FALSE BOTTOM MARK
+        def quad_10(self, p): # Agrega & o | a la Pila de Operandos
             POper.add(p[-1])
-            # POper.print()
-            # print('quad_10')
+            
         @_('')
         def quad_11(self, p): # CREA EL CUADRUPLO CON & |
-            # print('AND Y OR')
+
             global QuadCont
             global TempsCont
             global TempsBase
             global TempsBaseF
             global TempsContF
-            # POper.print()
-            # PID.print()
-            # PQTypes.print()
+            
             if ((POper.empty() == False) and (PID.size() >= 2)):
-                # print('entra al primer if')
+                
                 if ((POper.top() == '&') or (POper.top() == '|')):
-                    # print("entra al segundo if")
+                    
                     right_operand = PID.pop()
                     right_type = PQTypes.pop()
                     left_operand = PID.pop()
                     left_type = PQTypes.pop()
-                    # print('RO:', right_operand, '| RT: ', right_type, '| LO:', left_operand, '| LT: ', left_type)
                     operator = POper.pop()
-                    # print('CUBE:', left_type, right_type, operator)
                     result_Type = Cube.obtenerTipo(left_type, right_type, operator)
                     if(result_Type != 'error'):
                         if(self.currentScope != 0):
@@ -675,21 +612,13 @@ class MeMyselfParser(Parser):
                         PQTypes.add(result_Type)
                         PID.add(result)
                         QuadCont+=1
-                        #1 Quadruples.print()
                     else:
                         print("ERROR: TYPE MISMATCH")
                         exit()
-            # print('quad_11')
         @_('')
         def quad_a(self, p): # CUADRUPLO DE ASIGNACION
-            print('ENTRA ASIGNACION')
             global QuadCont
-            # PID.print()
-            # PQTypes.print()
-            # if ((PID.size() >= 2)):
-            # PID.print()
-            # PID.print()
-            PID.print()
+        
             right_operand = PID.pop()
             right_type = PQTypes.pop()
             left_operand = PID.pop()
@@ -699,20 +628,15 @@ class MeMyselfParser(Parser):
             result_Type = Cube.obtenerTipo(left_type, right_type, operator)
             if(result_Type != 'error'):
                 result = left_operand
-                # print('RESULT ',result)
                 if(type(result) == str):
                     result = DirFuncs.getVarDir(result)
                 if(type(right_operand) == str):
                     right_operand = DirFuncs.getVarDir(right_operand)
-                # print('RESULT memory ',result)
-                print('ASIGNACION', operator, right_operand, 0, result)
                 Quadruples.add(QuadCont, operator, right_operand, 0, result)
                 QuadCont+=1
-                #1 Quadruples.print()
             else:
                 print("ERROR: CANNOT ASSING VALUE", left_type ,'TO', right_type)
                 exit()
-            # print('quad_a')
             
         ###############            
         # PUNTOS NEURALGICOS: FUNCIONES PARA GOTOS Y FUNCIONES
@@ -723,22 +647,12 @@ class MeMyselfParser(Parser):
             global nombrePrograma
             self.currentScope = 0
             self.currentFunction = nombrePrograma
-            # PSaltos.print()
             Salto = PSaltos.pop()
             Quadruples.updateCuad(Salto, QuadCont)
-            # print('quad_f1')
         @_('')
         def quad_if1(self, p): # CON BASE SI EL TIPO ES CORRECTO, AGREGA EL CUADRUPLO CON GOTOF Y 
                                 #       HACE UN PUSH A LA PILA DE SALTOS // COMIENZA EL IF
             global QuadCont
-            # PTypes.print()
-            # PSaltos.print()
-            # print('pqtypes')
-            # PQTypes.print()
-            # print('pid')
-            # PID.print()
-            # print('ptypes')
-            # PTypes.print()
             exp_type = PQTypes.pop()
             if(exp_type != 'int'):
                 print('ERROR: TYPE MISMATCH')
@@ -750,39 +664,28 @@ class MeMyselfParser(Parser):
                 Quadruples.add(QuadCont, 'GOTOF', result, 0, '_')
                 PSaltos.add(QuadCont)
                 QuadCont+=1
-            # print('quad_if1')
+
         @_('')
         def quad_if2(self, p): # ACTUALIZA EL CUADRUPLO DE GOTOF // FINAL DEL IF 
             global QuadCont
-            # PTypes.print()
-            # PSaltos.print()
             end = PSaltos.pop()
             Quadruples.updateCuad(end, QuadCont)
-            # print('quad_if2')
         @_('')
         def quad_if3(self, p): # HACE EL CUADRUPLO GOTO // COMIENZA EL ELSE
             global QuadCont
-            # PQTypes.print()
-            # PSaltos.print()
             Quadruples.add(QuadCont,'GOTO', 0, 0, '_')
             falseV = PSaltos.pop()
             PSaltos.add(QuadCont)
             QuadCont+=1
             Quadruples.updateCuad(falseV, QuadCont)
-            # print('quad_if3')
-        
+                    
         @_('')
         def quad_wd1(self, p): # DEJAMOS LA "SEMILLA" // COMIENZA EL WHILE
             global QuadCont
-            # PTypes.print()
-            # PSaltos.print()
             PSaltos.add(QuadCont)
-            # print('quad_wd1')
         @_('')
         def quad_wd2(self, p): # ACTUALIZA EL CUADRUPLO DE GOTOF // FINAL DEL IF 
             global QuadCont
-            # PQTypes.print()
-            # PSaltos.print()
             exp_type = PQTypes.pop()
             if(exp_type != 'int'):
                 print('ERROR: TYPE MISMATCH')
@@ -793,18 +696,15 @@ class MeMyselfParser(Parser):
                 Quadruples.add(QuadCont, 'GOTOF', result, 0, '_')
                 QuadCont+=1
                 PSaltos.add(QuadCont)
-            # print('quad_wd2')
         @_('')
         def quad_wd3(self, p): # HACE EL CUADRUPLO GOTO // COMIENZA EL ELSE
             global QuadCont
-            # PTypes.print()
-            # PSaltos.print()
             end = PSaltos.pop()
             returnS = PSaltos.pop()
             Quadruples.add(QuadCont, 'GOTO', 0, 0, returnS)
             QuadCont+=1
             Quadruples.updateCuad(returnS+1, QuadCont)
-            # print('quad_wd3')      
+               
                     
         @_('')
         def quad_for1(self, p): # DEJAMOS LA "SEMILLA" // COMIENZA EL FOR
@@ -812,16 +712,13 @@ class MeMyselfParser(Parser):
             global VControl
             var = p[-1]
             PID.add(var)
-            # print(var)
             typeV = DirFuncs.getVarType(var)
             PQTypes.add(typeV)
-            # print(typeV)
             if(typeV != 'int' and typeV != 'float'):
                 print('ERROR: TYPE MISMATCH')
                 exit()
-            # print('quad_for1')
         @_('')
-        def quad_for2(self, p): # DEJAMOS LA "SEMILLA" // COMIENZA EL FOR
+        def quad_for2(self, p): # Cuadruplo para iniciar la variable con el primer valor
             global QuadCont
             global VControl
             global TempsCont
@@ -839,24 +736,17 @@ class MeMyselfParser(Parser):
                 Control_type = PQTypes.pop()
                 Tipo_Res = Cube.obtenerTipo(Control_type, exp_type, '=')
                 if(Tipo_Res != 'error'):
-                    # result = TempsBase + TempsCont
-                    # TempsCont+=1
-                    # print(exp, VControl)
                     exp_dir = DirFuncs.getVarDir(exp)
                     VControl_dir = DirFuncs.getVarDir(VControl)
-                    
                     Quadruples.add(QuadCont, '=', exp_dir, 0, VControl_dir)
-                    # Quadruples.print()
-                    # print('----')
                     PTypes.add(Tipo_Res)
                     PID.add(VControl)
                     QuadCont+=1
                 else:
                     print('ERROR: TYPE MISMATCH')
                     exit()
-            # print('quad_for2')
         @_('')
-        def quad_for3(self, p): # DEJAMOS LA "SEMILLA" // COMIENZA EL FOR
+        def quad_for3(self, p): # Crea cuadruplo para verificar que ID sea menor que el valor cada vez. Crea el gotof y hace Push a la pila de saltos. 
             global QuadCont
             global VControl
             global TempsBase
@@ -887,28 +777,23 @@ class MeMyselfParser(Parser):
                     exp = DirFuncs.getVarDir(exp)
                 if(type(resultF) == str):
                     resultF = DirFuncs.getVarDir(resultF)
-                print(QuadCont, '=', exp, 0, resultF)
                 Quadruples.add(QuadCont, '=', exp, 0, resultF)
-                # Quadruples.print()
-                # print('----')
+        
                 QuadCont+=1
                 if(type(VControl) == str):
                     VControl = DirFuncs.getVarDir(VControl)
                 if(type(resultF) == str):
                     resultF = DirFuncs.getVarDir(resultF)
                 Quadruples.add(QuadCont, '<', VControl, resultF, result)
-                # Quadruples.print()
-                # print('----')
+               
                 PSaltos.add(QuadCont-1)
                 QuadCont+=1
                 Quadruples.add(QuadCont, 'GOTOF',result, 0 ,'_')
                 QuadCont+=1
-                # Quadruples.print()
-                # print('----')
+                
                 PSaltos.add(QuadCont-1)
-            # print('quad_for3')
         @_('')
-        def quad_for4(self, p): # DEJAMOS LA "SEMILLA" // COMIENZA EL FOR
+        def quad_for4(self, p): # Crea cuádruplo para sumarle 1 al ID. Actualiza el cuádruplo de gotof y hace un cuádruplo goto con pop de para volver al do.
             global QuadCont
             global VControl
             global TempsCont
@@ -917,26 +802,20 @@ class MeMyselfParser(Parser):
             global TempsContF
             global CtesBase
             global CtesCont
-            # print('VControl',VControl)
+            
             if(not DirFuncs.searchVar('globales', '1')):
                 DirFuncs.addVariable('globales','1','int',CtesCont+CtesBase)
                 CtesCont+=1
             if(type(VControl) == str):
                     VControl = DirFuncs.getVarDir(VControl)
-            # print('cuaduplo added + at', QuadCont)
             uno = DirFuncs.getVarDir('1')
             Quadruples.add(QuadCont, '+', VControl, uno, VControl)
             QuadCont+=1
             fin = PSaltos.pop()
             ret = PSaltos.pop()
-            # print(fin, ret)
             Quadruples.add(QuadCont, 'GOTO', 0, 0, ret)
-            # Quadruples.print()
-            # print('----')
             QuadCont+=1
-            # print(fin, QuadCont)
             Quadruples.updateCuad(fin, QuadCont)
-            # print('quad_for4')
         
         ###############            
         # PUNTOS NEURALGICOS PARA FUNCIONES ESPECIALES
@@ -944,7 +823,7 @@ class MeMyselfParser(Parser):
         ############### 
         
         @_('')
-        def quad_line(self, p):
+        def quad_line(self, p):# Crea el cuadruplo para line 
             global QuadCont
             typeV = PQTypes.pop()
             var = PID.pop()
@@ -961,15 +840,13 @@ class MeMyselfParser(Parser):
             else:
                 print('ERROR: TYPE MISMATCH')
                 exit()
-            print('quad_line')
         @_('')
-        def quad_point(self, p):
+        def quad_point(self, p):# Crea el cuadruplo para punto 
             global QuadCont
             Quadruples.add(QuadCont, 'POINT', 0, 0, 0)
             QuadCont+=1
-            print('quad_point') 
         @_('')
-        def quad_circle(self, p):
+        def quad_circle(self, p):# Crea el cuadruplo para circulo 
             global QuadCont
             typeV = PQTypes.pop()
             var = PID.pop()
@@ -982,9 +859,8 @@ class MeMyselfParser(Parser):
             else:
                 print('ERROR: TYPE MISMATCH')
                 exit()
-            # print('quad_circle') 
         @_('')
-        def quad_arc(self, p):
+        def quad_arc(self, p):# Crea el cuadruplo para arc 
             global QuadCont
             typeV = PQTypes.pop()
             var = PID.pop()
@@ -997,21 +873,18 @@ class MeMyselfParser(Parser):
             else:
                 print('ERROR: TYPE MISMATCH')
                 exit()
-            # print('quad_arc') 
         @_('')
-        def quad_penup(self, p):
+        def quad_penup(self, p):# Crea el cuadruplo para penup 
             global QuadCont
             Quadruples.add(QuadCont, 'PENUP', 0, 0, 0)
             QuadCont+=1
-            # print('quad_penup')
         @_('')
-        def quad_pendown(self, p):
+        def quad_pendown(self, p):# Crea el cuadruplo para pendown 
             global QuadCont
             Quadruples.add(QuadCont, 'PENDOWN', 0, 0, 0)
             QuadCont+=1
-            # print('quad_pendown') 
         @_('')
-        def quad_color(self, p):
+        def quad_color(self, p): # Crea el cuadruplo para color 
             global QuadCont
             typeV = PQTypes.pop()
             b = PID.pop()
@@ -1031,9 +904,8 @@ class MeMyselfParser(Parser):
                     b = DirFuncs.getVarDir(b)
                 Quadruples.add(QuadCont, 'COLOR', r, g, b)
                 QuadCont+=1
-            # print('quad_color') 
         @_('')
-        def quad_size(self, p):
+        def quad_size(self, p):# Crea el cuadruplo para size con expresion
             global QuadCont
             typeV = PQTypes.pop()
             var = PID.pop()
@@ -1046,16 +918,14 @@ class MeMyselfParser(Parser):
             else:
                 print('ERROR: TYPE MISMATCH')
                 exit()
-            # print('quad_size')
         @_('')
         def quad_clear(self, p):
             global QuadCont
             Quadruples.add(QuadCont, 'CLEAR', 0, 0, 0)
             QuadCont+=1
-            # print('quad_clear')
              
         @_('')
-        def quad_write(self, p):
+        def quad_write(self, p): # Crea el cuadruplo para WRITE con expresion
             global QuadCont
             typeV = PQTypes.pop()
             var = PID.pop()
@@ -1063,10 +933,9 @@ class MeMyselfParser(Parser):
                 var = DirFuncs.getVarDir(var)
             Quadruples.add(QuadCont, 'WRITE', 0, 0, var)
             QuadCont+=1
-            # print('quad_write')
-        
+                    
         @_('')
-        def quad_writeL(self, p):
+        def quad_writeL(self, p): # Crea el cuadruplo para WRITE con letrero
             global QuadCont
             typeV = PQTypes.pop()
             var = PID.pop()
@@ -1074,10 +943,9 @@ class MeMyselfParser(Parser):
                 var = DirFuncs.getVarDir(var)
             Quadruples.add(QuadCont, 'WRITE', 0, 0, var)
             QuadCont+=1
-            # print('quad_write')
             
         @_('')
-        def quad_read(self, p):
+        def quad_read(self, p): #Luego de verificar que la variable exista, crea el cuadruplo READ
             global QuadCont
             var = p[-1]
             typeV = DirFuncs.getVarType(var)
@@ -1088,23 +956,21 @@ class MeMyselfParser(Parser):
                 QuadCont+=1
             else:
                 print('ERROR: VAR', var,'NOT DECLARED')
-                exit()
-            # print('quad_read')
-        
+                exit()        
          
         ###############            
         # FUNCIONES PARA AGREGAR A LAS TABLAS
         ############### 
         @_('')
-        def funcs_1(self, p): # Agrega el programa
+        def funcs_1(self, p): # Agrega el programa, creando la tabla de funciones principal 
             global QuadCont
             global nombrePrograma
             nombrePrograma = p[-1]
             self.currentFunction = p[-1]
             self.currentScope = 'global'
             DirFuncs.addFunction(self.currentFunction, 'main', self.currentScope, QuadCont)
-            Quadruples.add(QuadCont, 'GOTO', 0, 0, '_')
-            PSaltos.add(QuadCont)
+            Quadruples.add(QuadCont, 'GOTO', 0, 0, '_') #goto al main 
+            PSaltos.add(QuadCont) #agrega el cuadruplo 1 a la pila de saltos
             self.currentScope = 0
             QuadCont+=1
             # print('funcs_1')
@@ -1118,9 +984,9 @@ class MeMyselfParser(Parser):
             global FloatContF
             global CharsContF
             
-            # print('SCOPE', self.currentScope)
+            
             if(self.currentScope == 0):
-            #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
+            
                 if(self.currentType == 'int'):
                     DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, IntBase+IntCont)
                     IntCont+=1
@@ -1140,14 +1006,11 @@ class MeMyselfParser(Parser):
                 if(self.currentType == 'char'):
                     DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, CharsBaseF+CharsContF)
                     CharsContF+=1
-            # print('funcs_2')
         
         @_('')
-        def funcs_2A(self, p): #Agrega Variable
+        def funcs_2A(self, p): #Agrega el tipo a la pila de tipos
             self.currentType = PTypes.pop()
-                        
-            # print('funcs_2')
-        
+                                
         @_('')
         def funcs_3A(self, p): #Agrega Variable
             global LIM1
@@ -1192,7 +1055,6 @@ class MeMyselfParser(Parser):
             global FloatContF
             global CharsBaseF
             global CharsContF
-            # print('M1', M1, 'M2', M2, 'R', R,' LIM1', LIM1, 'LIM2', LIM2)
             M1 = R/(LIM1+1)
             M1 = int(M1)
             sizeA = LIM1+1
@@ -1238,7 +1100,6 @@ class MeMyselfParser(Parser):
             global IntCont
             global FloatCont
             global CharsCont
-            #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
             if(self.currentType == 'int'):
                 DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, IntBase+IntCont)
                 IntCont+=1
@@ -1248,20 +1109,15 @@ class MeMyselfParser(Parser):
             if(self.currentType == 'char'):
                 DirFuncs.addVariable(self.currentFunction, p[-1], self.currentType, CharsBase+CharsCont)
                 CharsCont+=1
-            # print('funcs_2')
         @_('')
         def funcs_3(self, p): #Agregar modulo a DirFuncs
             self.currentType = PTypes.pop()
-            # print('current Type:', self.currentType)
             self.currentFunction = p[-1]
-            
             self.currentScope +=1
-            # print('current function: ', self.currentFunction)
             DirFuncs.addFunction(self.currentFunction, self.currentType, self.currentScope, QuadCont)
         @_('')
         def funcs_4(self, p): #Agregar parametros a modulo
             global ParCont
-            # DirFuncs.getVarDir()
             DirFuncs.addParametros(self.currentFunction, ParCont ,self.currentType)
             ParCont+=1
         
@@ -1274,61 +1130,49 @@ class MeMyselfParser(Parser):
             var = p[-1]
             if(p[-2] == '-'):
                 var = '-'+var
-            #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
             if(not DirFuncs.searchVar('globales', var)):
                 DirFuncs.addVariable('globales', var, self.currentType, CtesCont+CtesBase)
                 CtesCont+=1
-            # print('funcs_2')
         @_('')
-        def funcs_cteC(self, p): #Agrega variable constante entera
+        def funcs_cteC(self, p): #Agrega variable char 
             self.currentType = 'char'
             global CtesBase
             global CtesCont
-            #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
             if(not DirFuncs.searchVar('globales', p[-1])):
                 DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
                 CtesCont+=1
-            # print('funcs_2')
         @_('')
-        def funcs_cteF(self, p): #Agrega variable constante entera
+        def funcs_cteF(self, p): #Agrega variable constante flotante
             self.currentType = 'float'
             global CtesBase
             global CtesCont
-            #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
             if(not DirFuncs.searchVar('globales', p[-1])):
                 DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
                 CtesCont+=1
-            # print('funcs_2')
         @_('')
-        def funcs_cteL(self, p): #Agrega variable constante entera
-            # print('--------------- ENTRA A LETRERO FUNCS --------')
+        def funcs_cteL(self, p): #Agrega constante Letrero
+
             self.currentType = 'letrero'
             global CtesBase
             global CtesCont
-            #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
             if(not DirFuncs.searchVar('globales', p[-1])):
                 DirFuncs.addVariable('globales', p[-1], self.currentType, CtesCont+CtesBase)
                 CtesCont+=1
-            # print('funcs_2')
                        
         @_('')
-        def funcs_r(self, p):
+        def funcs_r(self, p): #Agrega la variable constante que tendra el valor de retorno del modulo
             global CtesBase
             global CtesCont
-            #print('IntCont:', IntCont, 'FloatCont', FloatCont,'CharsCont', CharsCont)
             DirFuncs.addVariable('globales', 'return'+p[-2], self.currentType, CtesCont+CtesBase)
             CtesCont+=1
-            # print('funcs_r')
             
         @_('')
-        def funcs_r2(self, p):
+        def funcs_r2(self, p): # Crea cuadruplo para asignarle el valor al reutrn de la funcion donde este
             global QuadCont
             var = PID.pop()
             typeV = PQTypes.pop()
             varR = DirFuncs.getVarDir('return'+self.currentFunction)
             typeR = DirFuncs.getVarType('return'+self.currentFunction)
-            # DirFuncs.printFunction()
-            # print(var, typeV, varR, typeR)
             result_type = Cube.obtenerTipo(typeV, typeR, '=')
             if(result_type != 'error'):
                 if(type(var) == str):
@@ -1340,48 +1184,30 @@ class MeMyselfParser(Parser):
             else:
                 print('ERROR: TYPE MISMATCH')
                 exit()
-            # print('funcs_r2')
         
         @_('')
-        def funcs_calls(self, p):
-            # print('ENTRA A FUNCS CALLS')
+        def funcs_calls(self, p): # Verifica que la funcion haya sido declarada previamente
             self.currentFunction = p[-1]
             var = 'return'+p[-1]
             PID.add(var)
-            # PID.print()
             
             tipo = DirFuncs.getVarType(var)
             PQTypes.add(tipo)
             
-            # print(DirFuncs.search(func))
             if(not DirFuncs.search(self.currentFunction)):
                 print('ERROR: FUNCTION', self.currentFunction, 'NOT DECLARED')
                 exit()
-            # print('funcs_calls')
         
         @_('')
-        def funcs_calls2(self, p):
-            # print('ENTRA A FUNCS CALLS2')
+        def funcs_calls2(self, p): #Crea cuadruplo ERA
             global QuadCont
             global ParCounter
             global ParamPointer
             Quadruples.add(QuadCont, 'ERA', 0 ,0, self.currentFunction)
             QuadCont+=1
-            
-            # print(DirFuncs.getParType(self.currentFunction, ParCounter))
-            # try:
-            # ParamPointer = DirFuncs.getParType(self.currentFunction, ParCounter)
-            # except:
-            #     ParCounter = 0
-            # else:
-            #     ParCounter = 1
-            #     ParamPointer = DirFuncs.getParType(self.currentFunction, ParCounter)
-            # print(DirFuncs.getParType(self.currentFunction, ParCounter))
-            # print('funcs_calls2')
         
         @_('')
-        def funcs_calls3(self, p):
-            # print('ENTRA A FUNCS CALLS3')
+        def funcs_calls3(self, p): #Verifica que el tipo de parametro dado concuerde con el que se declaro y crea el cuadruplo PARAM
             global QuadCont
             global TempsBase
             global TempsCont
@@ -1389,9 +1215,6 @@ class MeMyselfParser(Parser):
             global TempsBaseF
             global ParamPointer
             global ParCounter
-            print('ParCounter', ParCounter)
-            PID.print()
-            PQTypes.print()
             argument = PID.pop()
             argumentType = PQTypes.pop()
             try:
@@ -1415,12 +1238,9 @@ class MeMyselfParser(Parser):
                     TempsCont+=1
                 else:
                     print('ERROR: PARAM TYPE. EXPECTED:', ParamPointer, ', GIVEN:', argumentType)
-                    exit()
-                print('funcs_calls3')
-        
+                    exit()        
         @_('')
-        def funcs_calls4(self, p):
-            # print('ENTRA A FUNCS CALLS4')
+        def funcs_calls4(self, p): #Aumenta el counter de parametros y regresa error si se excede el numero de parametros
             global ParCounter
             global ParamPointer
             ParCounter+=1
@@ -1431,12 +1251,9 @@ class MeMyselfParser(Parser):
                 exit()
             else:
                 ParamPointer = DirFuncs.getParType(self.currentFunction, ParCounter)
-                
-            # print('funcs_calls4')
-        
+                        
         @_('')
-        def funcs_calls5(self, p):
-            # print('ENTRA A FUNCS CALLS5')
+        def funcs_calls5(self, p): #Regresa error si no se esperaban parametros
             global ParCounter
             global ParamPointer
             try:
@@ -1446,31 +1263,23 @@ class MeMyselfParser(Parser):
             else:
                 print('ERROR: WRONG NUMBER OF PARAMETERS. EXPECTED: 0')
                 exit() 
-            # print('funcs_calls5')
             
         @_('')
-        def funcs_calls6(self, p):
-            # print('ENTRA A FUNCS CALLS6')
+        def funcs_calls6(self, p): #Crea cuadruplo GOSUB
             global QuadCont
             global ParCounter
-            # print('CURRENT FUNCTION', self.currentFunction)
             goTo = DirFuncs.getJump(self.currentFunction)
-            # print('GOTO', goTo)
             Quadruples.add(QuadCont,'GOSUB', self.currentFunction, 0, goTo)    
             QuadCont+=1
             ParCounter = 1
-            print('funcs_calls6')
         
         @_('')
-        def funcs_calls7(self, p):
-            # print('ENTRA A FUNCS CALLS7')
+        def funcs_calls7(self, p): # Agrega cuadruplo de End y reinicia los contadores de variables
             global QuadCont
             global IntContF
             global FloatContF   
             global CharsContF  
             global TempsContF
-            # print('CURRENT FUNCTION', self.currentFunction)
-            # print('GOTO', goTo)
             Quadruples.add(QuadCont,'END', 0, 0, 0)    
             QuadCont+=1
             DirFuncs.addVarCant(self.currentFunction, IntContF,FloatContF,CharsContF, TempsContF)
@@ -1487,19 +1296,15 @@ class MeMyselfParser(Parser):
             global LIM2
             LIM1 = True
             LIM2 = False
-            print('quad_array1')
             var = p[-1]
             currentArray = var
             PID.add(var)
-            # PID.print()
             typeV = DirFuncs.getVarType(var)
             PQTypes.add(typeV)
             
-            # print('funcs_calls6')
         @_('')
         def quad_array2(self, p):
             global DIM 
-            print('quad_array2')
             ID = PID.pop()
             typeV = PQTypes.pop()
             if(DirFuncs.checkIfArray(self.currentFunction, ID)):
@@ -1511,8 +1316,6 @@ class MeMyselfParser(Parser):
                 print('ERROR: VAR', ID, 'NOT DECLARED AS ARRAY')
                 exit()
             
-            
-            # print('funcs_calls6')
         @_('')
         def quad_array3(self, p):
             global QuadCont
@@ -1524,16 +1327,13 @@ class MeMyselfParser(Parser):
             global TempsCont
             global TempsContF
             global TempsBaseF
-            print('QUAD ARRAY3')
-            # PID.print()
-            # POper.print()
+
             if(LIM1):
                 lim = DirFuncs.getArrL(currentArray, 1)
                 varDir = PID.top()
                 varDir2 = DirFuncs.getVarDir(varDir)
                 if(varDir2 != None):
                     varDir = varDir2
-                print('VERIFY', varDir)
                 Quadruples.add(QuadCont,'VERIFY',varDir,0, lim)
                 QuadCont+=1
                 m = DirFuncs.getArrM(currentArray, 1)
@@ -1553,7 +1353,6 @@ class MeMyselfParser(Parser):
               
                 
             if(LIM2):
-                print('LIM2')
                 lim = DirFuncs.getArrL(currentArray, 2)
                 varDir = PID.top()
                 varDir = DirFuncs.getVarDir(varDir)
@@ -1568,7 +1367,6 @@ class MeMyselfParser(Parser):
                 else:
                     temp = TempsBase+TempsCont
                     TempsCont +=1
-                print('AUX 1', aux1)
                 aux2 = DirFuncs.getVarDir(aux2)
                 Quadruples.add(QuadCont,'+T2', aux1, aux2, temp)
                 QuadCont+=1
@@ -1581,7 +1379,6 @@ class MeMyselfParser(Parser):
             global LIM2
             LIM1 = False
             LIM2 = True
-            print('quad_array4')
         @_('')
         def quad_array5(self, p):
             global currentArray
@@ -1590,14 +1387,9 @@ class MeMyselfParser(Parser):
             global TempsBase
             global TempsContF
             global TempsBaseF
-            print('quad_array5')
-            PID.print()
             aux1 = PID.pop()
-            # print('aux1', aux1)
             
             var = DirFuncs.getVarDir(currentArray)
-            # print('VA', var)
-            # print('aux1', aux1)
             if(self.currentScope != 0):
                 temp = TempsContF + TempsBaseF
                 TempsContF+=1
@@ -1607,25 +1399,20 @@ class MeMyselfParser(Parser):
             
             Quadruples.add(QuadCont,'+T', aux1, var, temp)
             PID.add(temp)
-            print('AHHHH------')
-            PID.print()
             QuadCont+=1
             TempsCont+=1
             POper.pop()
             
-            # DirFuncs.printFunction()
-            # Quadruples.print()
             
         @_('')
         def current_typeV(self, p):
             PTypes.add('void')
-            # print('current_typeV')
         
 
         # FUNCION PRINCIPAL DEL PROGRAMA 
 if __name__ == '__main__':
 
-    file = open("TFactorial.txt", 'r')
+    file = open("main.txt", 'r')
     masterline = ""
 
     for line in file:
@@ -1635,29 +1422,11 @@ if __name__ == '__main__':
     parser = MeMyselfParser()
     cuadruplo = cuadruplos()
     result = parser.parse(lexer.tokenize(masterline))
-    #print(result)
-    # while True:
-    #     try:
-    #         text = input('duck > ')
-    #         result = parser.parse(lexer.tokenize(text))
-    #         print(result)
-    #         # for line in file:
-    #         #     result = parser.parse(lexer.tokenize(line.strip()))
-    #         #     print(result)
-
-    #     except EOFError:
-    #         break
     file.close()
-    DirFuncs.printFunction()
-    print('Cuadruplos')
-    Quadruples.print()
-    print('PID')
-    PID.print()
-    print('PTypes')
-    PTypes.print()
-    print('PQTypes')
-    PQTypes.print()
-    print('PPar')
-    PPar.print()
-    VirtualMachine = MaquinaVirtual(Quadruples, DirFuncs, TempsCont)
+    # DirFuncs.printFunction()
+    # print('Cuadruplos')
+    # Quadruples.print()
+    
+    #Llama a la maquina virtual. De parametros envia los cuadruplos, el directorio, y los temporales que se necesitan
+    VirtualMachine = MaquinaVirtual(Quadruples, DirFuncs, TempsCont) 
     VirtualMachine.main()

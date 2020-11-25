@@ -1,9 +1,10 @@
 program fibonacci;
-var int : n, first,second,next,c,s;
-main(){
+var int : n, first,second,next,c;
+
+void module fib(int i);
+{
     first = 0;
     second = 1;
-    n = 14;
     for c = 0 to n do {
         if(c<=1) then{
             next = c;
@@ -13,6 +14,14 @@ main(){
             second = next;
         }
         size(3);
+        write(next);
         arc(next);
     }
+
+}
+main(){
+     
+    n = 14;
+    call fib(n);
+    
 }

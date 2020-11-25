@@ -94,18 +94,9 @@ class CuboSemantico:
         # SIZE
     cuboSemantico['int']['_']['SIZE'] = 'int'
     cuboSemantico['float']['_']['SIZE'] = 'int'
-    
 
-
-    def obtenerTipo(self, left, right, operador):
+    def obtenerTipo(self, left, right, operador):       #Obtiene el tipo dependinedo que valores reciba. En caso de no encontrarlo, devuelve 'error'
         if(self.cuboSemantico[left][right][operador] == None):
             return 'error'
         else:
             return self.cuboSemantico[left][right][operador]
-
-# if __name__ == '__main__':
-#     a = input()
-#     b = input()
-#     c = input()
-#     d = obtenerTipo(a,b,c)
-#     print(d)

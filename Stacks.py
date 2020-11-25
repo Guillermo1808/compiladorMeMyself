@@ -34,11 +34,3 @@ class stacks:
     def size(self):
         return len(self.stack)
     
-# if __name__ == "__main__":
-#     POper = stacks()
-#     PIper = stacks()
-#     POper.add('x')
-#     em = POper.empty()
-#     print(em)
-#     em = PIper.empty()
-#     print(em)

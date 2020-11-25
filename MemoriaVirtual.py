@@ -41,9 +41,9 @@ class MaquinaVirtual:
         self.Quad = self.cuadruplosF.getValues()
         self.Temporales = cantTemps
         
-    def initialFunctionValues(self, fid):
+    def initialFunctionValues(self, fid):     #Cuando es llamado con ERA, esta funcion agrega un diccionario con arreglos
+                                            #  cuyo tamaño depende del que tiene la funcion guardado
         valores = self.DirFunc.getFunctionInitialValues(fid)
-        # print(valores)
         self.functions[self.CurrentFunction] = {
             0: [],
             1: [],
@@ -58,13 +58,10 @@ class MaquinaVirtual:
             self.functions[self.CurrentFunction][2].append(0)
         for x in range(valores[3]):
             self.functions[self.CurrentFunction][3].append(0)
-        # print(self.functions)
         
         
-    def initialValues(self):
-        print('---- INITIAL VALUES ----')
+    def initialValues(self):        #Obtiene los valores principales de la memoria
         valores = self.DirFunc.getInitialValues()
-        # print(valores)
         for keys in valores:
             var = keys
             typeV = valores[keys]['typeV']
@@ -89,38 +86,25 @@ class MaquinaVirtual:
                 var = var[1:lenght]
                 self.arrCtes.append(var)
                 
-        # print(self.arrCtes)
         valoresVars = self.DirFunc.getGlobalVarsValues()
-        # print(valoresVars)
         for keys in valoresVars:
             direccion = valoresVars[keys]['memory']
             if(direccion >= 10000 and direccion <= 11000):
-                # print('int')
                 if 'size' in valoresVars[keys].keys():
                     for x in range(valoresVars[keys]['size']):
                         self.arrInt.append(0)
                 else:
                     self.arrInt.append(0)
             if(direccion >= 15000 and direccion <= 16000):
-                # print('floats')
                 self.arrFloats.append(0)
             if(direccion >= 18000 and direccion <= 19000):
-                # print('chars')
                 self.arrChars.append(0)
-            # if(direccion >= 20000 and direccion <= 21000):
-            #     print('temps')
-            #     self.arrTemps[direccion-self.TempsBase] = 0
-            # if(direccion >= 22000 and direccion <= 23999):
-            #     print('ctes')
-            #     self.arrCtes[direccion-self.CtesBase] = 0
-        # print('INTS',self.arrInt, 'FLOATS',self.arrFloats, 'CHARS',self.arrChars)
+            
         for i in range(self.Temporales):
             self.arrTemps.append(0)
         
-        # print('TEMPS', self.arrTemps)
     
-    def getValue(self,direccion):
-        # print(direccion)
+    def getValue(self,direccion):       #Con la direccion, obtiene el valor de la variable
         if(type(direccion) == str):
             direccion = int(direccion)
             return direccion
@@ -149,22 +133,15 @@ class MaquinaVirtual:
                 return self.functions[self.CurrentFunction][2][direccion-self.CharsBaseF]
             if(direccion >= 21000 and direccion <= 21999):
                 return self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF]
-            # if(direccion >= 20000 and direccion <= 21000):
-            #     return self.arrTemps[direccion-self.TempsBase]
         
-    def readQuadruples(self, iteration):
-        # print('---- READ QUADS ----')
-        # print(iteration,self.Quad[iteration])
+    def readQuadruples(self, iteration): #lee los cuadruplos y le manda los valores al switch case
         operador = self.Quad[iteration]['operador']
         terminoL = self.Quad[iteration]['termino1']
         terminoR = self.Quad[iteration]['termino2']
         asignar = self.Quad[iteration]['asignar']
-        # print(operador,terminoL,terminoR,asignar)
         self.switch_case(operador, terminoL, terminoR, asignar)
     
-    def assign(self, operador, terminoL, terminoR, asignar):
-        # print('-----ASSIGN----', self.CurrentIteration)
-        # print(operador, terminoL, terminoR, asignar)
+    def assign(self, operador, terminoL, terminoR, asignar): #Funcion encargada para asignar valores
         
         if(not self.isArray):
             terminoL = self.getValue(terminoL)
@@ -188,20 +165,16 @@ class MaquinaVirtual:
             if(asignar >= 21000 and asignar <= 21999):
                 self.functions[self.CurrentFunction][3][asignar-self.TempsBaseF] = terminoL
         else:
-            # print('ARRAY')
-            # print(operador, terminoL, terminoR, asignar)
+            #Si es arreglo las direcciones son apuntadores, por lo que necesitan doble get value
             aux = asignar
             aux = self.getValue(aux)
             aux = self.getValue(aux)
-            # print(aux)
             if(aux == None):
                 terminoL = self.getValue(terminoL)
                 terminoL = self.getValue(terminoL)
             else:
                 terminoL = self.getValue(terminoL)
                 asignar = self.getValue(asignar)
-            # print('terminoL', terminoL)
-            # print('asignar', asignar)
             if(asignar >= 10000 and asignar < 11000):
                 self.arrInt[asignar-self.IntBase]= terminoL
             if(asignar >= 15000 and asignar < 16000):
@@ -220,37 +193,14 @@ class MaquinaVirtual:
                 self.functions[self.CurrentFunction][2][asignar-self.CharsBaseF] = terminoL
             if(asignar >= 21000 and asignar <= 21999):
                 self.functions[self.CurrentFunction][3][asignar-self.TempsBaseF] = terminoL
-            # else:
-            #     terminoL = self.getValue(terminoL)
-            #     print('dir if 2', terminoL)
-            #     if(asignar >= 10000 and asignar < 11000):
-            #         self.arrInt[asignar-self.IntBase]= terminoL
-            #     if(asignar >= 15000 and asignar < 16000):
-            #         self.arrFloats[asignar-self.FloatBase]= terminoL
-            #     if(asignar >= 18000 and asignar < 19000):
-            #         self.arrChars[asignar-self.CharsBase]= terminoL
-            #     if(asignar >= 20000 and asignar < 21000):
-            #         self.arrTemps[asignar-self.TempsBase] = terminoL
-            #     if(asignar >= 22000 and asignar < 23999):
-            #         self.arrCtes[asignar-self.CtesBase] = terminoL
-            #     if(asignar >= 11000 and asignar <= 14999):
-            #         self.functions[self.CurrentFunction][0][asignar-self.IntBaseF] = terminoL
-            #     if(asignar >= 16000 and asignar <= 17999):
-            #         self.functions[self.CurrentFunction][1][asignar-self.FloatBaseF] = terminoL
-            #     if(asignar >= 19000 and asignar <= 19999):
-            #         self.functions[self.CurrentFunction][2][asignar-self.CharsBaseF] = terminoL
-            #     if(asignar >= 21000 and asignar <= 21999):
-            #         self.functions[self.CurrentFunction][3][asignar-self.TempsBaseF] = terminoL
+
             self.isArray = False
         self.CurrentIteration+=1
-        # print(self.CurrentIteration)
-        # print('ASSIGN END')
-                
+        
+            #Funcion encargada para sumar valores    
     def addition(self, operador, terminoL, terminoR, asignar):
-        # print('ADDITION')
         terminoL = self.getValue(terminoL)
         terminoR = self.getValue(terminoR)
-        # print('varlor L: ',terminoL,'varlor R: ',terminoR)
         if(asignar >= 10000 and asignar < 11000):
             self.arrInt[asignar-self.IntBase]= terminoL+terminoR
         if(asignar >= 15000 and asignar < 16000):
@@ -269,12 +219,10 @@ class MaquinaVirtual:
             
         self.CurrentIteration+=1
 
-        
+        #Funcion encargada para restar valores
     def substraction(self, operador, terminoL, terminoR, asignar):
-        # print('SUBSTRACTION')
         terminoL = self.getValue(terminoL)
         terminoR = self.getValue(terminoR)
-        # print('varlor L: ',terminoL,'varlor R: ',terminoR)
         if(asignar >= 10000 and asignar < 11000):
             self.arrInt[asignar-self.IntBase]= terminoL-terminoR
         if(asignar >= 15000 and asignar < 16000):
@@ -292,13 +240,11 @@ class MaquinaVirtual:
             self.functions[self.CurrentFunction][3][asignar-self.TempsBaseF] = terminoL-terminoR
                
         self.CurrentIteration+=1
-        
+        #Funcion encargada para multiplicar valores
     def times(self, operador, terminoL, terminoR, asignar):
-        # print('TIMES')
         
         terminoL = self.getValue(terminoL)
         terminoR = self.getValue(terminoR)
-        # print('varlor L: ',terminoL,'varlor R: ',terminoR)
         if(asignar >= 10000 and asignar < 11000):
             self.arrInt[asignar-self.IntBase]= terminoL*terminoR
         if(asignar >= 15000 and asignar < 16000):
@@ -317,12 +263,10 @@ class MaquinaVirtual:
               
         self.CurrentIteration+=1
         
-        
+        #Funcion encargada para dividir valores
     def divide(self, operador, terminoL, terminoR, asignar):
-        # print('DIVIDE')
         terminoL = self.getValue(terminoL)
         terminoR = self.getValue(terminoR)
-        # print('varlor L: ',terminoL,'varlor R: ',terminoR)
         if(asignar >= 10000 and asignar < 11000):
             self.arrInt[asignar-self.IntBase]= terminoL/terminoR
         if(asignar >= 15000 and asignar < 16000):
@@ -341,24 +285,18 @@ class MaquinaVirtual:
                    
         self.CurrentIteration+=1
     
-    def goto(self,asignar):
-        # print('GOTO')
+    def goto(self,asignar):     #Cambia el valor del apuntador actual de los cuadruplos
         self.CurrentIteration = asignar
-        # print('CURRENT ITERATION:', self.CurrentIteration)
-        # self.readQuadruples(asignar)
     
     def gotof(self,operador, terminoL, terminoR, asignar):
-        # print('GOTOF')
-        terminoL = self.getValue(terminoL)
-        # print('valor', terminoL)
+        terminoL = self.getValue(terminoL) #Cambia el valor del apuntador actual de los cuadruplos
         
         if(terminoL != 1):
             self.CurrentIteration = asignar
         else:
             self.CurrentIteration+=1
     
-    def write(self,asignar):
-        # print('WRITE')
+    def write(self,asignar): #Funcion para imprimir los resultados
 
         if self.isArray:
             x = self.getValue(asignar)
@@ -368,19 +306,15 @@ class MaquinaVirtual:
             print(self.getValue(asignar))
         self.CurrentIteration+=1
     
-    def read(self,operador, terminoL, terminoR, direccion):
-        # print('READ')
+    def read(self,operador, terminoL, terminoR, direccion):#Asigna el valor leido de consola a la variable
         var = input()
         if(direccion >= 10000 and direccion < 11000):
-            # print('int')
             var = int(var)
             self.arrInt[direccion-self.IntBase] = var
         if(direccion >= 15000 and direccion < 16000):
-            # print('floats')
             var = float(var)
             self.arrFloats[direccion-self.FloatBase] = var
         if(direccion >= 18000 and direccion < 19000):
-            # print('chars')
             self.arrChars[direccion-self.CharsBase] = var
         
         if(direccion >= 11000 and direccion <= 14999):
@@ -391,41 +325,40 @@ class MaquinaVirtual:
             self.functions[self.CurrentFunction][2][direccion-self.CharsBaseF] = var
         self.CurrentIteration+=1
     
-    def line(self, operador, terminoL, terminoR, asignar):
-        terminoR = self.getValue(terminoR)
+    def line(self, operador, terminoL, terminoR, asignar):#Funcion Turtle - Dibuja una linea
         asignar = self.getValue(asignar)
         self.t.goto(terminoR,asignar)
         self.drawing = True
         self.CurrentIteration+=1
         
-    def point(self, operador, terminoL, terminoR, asignar):
+    def point(self, operador, terminoL, terminoR, asignar):#Funcion Turtle - Dibuja un punto
         self.t.dot(5)
         self.drawing = True
         self.CurrentIteration+=1
         
-    def circle(self, operador, terminoL, terminoR, asignar):
+    def circle(self, operador, terminoL, terminoR, asignar):#Funcion Turtle - Dibuja un circulo
         asignar = self.getValue(asignar)
         self.t.circle(asignar)
         self.drawing = True
         self.CurrentIteration+=1
     
-    def arc(self, operador, terminoL, terminoR, asignar):
+    def arc(self, operador, terminoL, terminoR, asignar):#Funcion Turtle - Dibuja un arco
         asignar = self.getValue(asignar)
         self.t.circle(asignar, 180)
         self.drawing = True
         self.CurrentIteration+=1
     
-    def penup(self,operador, terminoL, terminoR, asignar):
+    def penup(self,operador, terminoL, terminoR, asignar):#Funcion Turtle - Levanta la pluma para dejar de escribir
         self.t.penup()
         self.drawing = True
         self.CurrentIteration+=1
         
-    def pendown(self,operador, terminoL, terminoR, asignar):
+    def pendown(self,operador, terminoL, terminoR, asignar):#Funcion Turtle - Baja la pluma para escribir
         self.t.pendown()
         self.drawing = True
         self.CurrentIteration+=1 
     
-    def color(self,operador, terminoL, terminoR, asignar):
+    def color(self,operador, terminoL, terminoR, asignar):#Funcion Turtle - Cambia el color con valores RGB
         asignar = self.getValue(asignar)
         terminoR = self.getValue(terminoR)
         terminoL = self.getValue(terminoL)
@@ -434,19 +367,20 @@ class MaquinaVirtual:
         self.drawing = True
         self.CurrentIteration+=1
     
-    def size(self,operador, terminoL, terminoR, asignar):
+    def size(self,operador, terminoL, terminoR, asignar):#Funcion Turtle - Cambia el tamaño del lapiz
         asignar = self.getValue(asignar)
         self.t.pensize(asignar)
         self.drawing = True
         self.CurrentIteration+=1
     
-    def clear(self,operador, terminoL, terminoR, asignar):
+    def clear(self,operador, terminoL, terminoR, asignar):#Funcion Turtle - Limpia la pantalla
         self.t.clear()
         self.drawing = True
         self.CurrentIteration+=1
     
-    def equal(self,operador, terminoL, terminoR, direccion):
-        # print('EQUAL')
+    #Comienzan los "boleanos". En base a lo que de de resultado la comparación. Devuelven 1, que es True, o 2 que es false
+    
+    def equal(self,operador, terminoL, terminoR, direccion):#Funcion encargada de checar si es igual
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL == valorR):
@@ -461,8 +395,7 @@ class MaquinaVirtual:
                 self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
     
-    def different(self,operador, terminoL, terminoR, direccion):
-        # print('EQUAL')
+    def different(self,operador, terminoL, terminoR, direccion):#Funcion encargada de checar si es diferente
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL != valorR):
@@ -477,8 +410,7 @@ class MaquinaVirtual:
                 self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
         
-    def lte(self,operador, terminoL, terminoR, direccion):
-        # print('EQUAL')
+    def lte(self,operador, terminoL, terminoR, direccion):#Funcion encargada de checar si es menor o igual
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL <= valorR):
@@ -493,19 +425,11 @@ class MaquinaVirtual:
                 self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
      
-    def lt(self,operador, terminoL, terminoR, direccion):
-        # print('ENTRA LT')
-        # print(self.arrTemps)
-        # print(terminoR)
+    def lt(self,operador, terminoL, terminoR, direccion):#Funcion encargada de checar si es menor
         valorL = self.getValue(terminoL)
-        # print(terminoR)
         valorR = self.getValue(terminoR)
-        # print(valorR)
-        # print(valorR,valorL)
-        # print('comparacion ',valorL, valorR)
-        # print('valorL',valorL,'valorR', valorR)
+       
         if(valorL < valorR):
-            # print(direccion)
             if direccion >= 21000:
                 self.functions[self.CurrentFunction][3][direccion-self.TempsBaseF] = 1
             else:
@@ -516,10 +440,8 @@ class MaquinaVirtual:
             else:
                 self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
-        # print('SALE LT')
     
-    def gte(self,operador, terminoL, terminoR, direccion):
-        # print('EQUAL')
+    def gte(self,operador, terminoL, terminoR, direccion):#Funcion encargada de checar si es mayor o igual
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL >= valorR):
@@ -534,11 +456,8 @@ class MaquinaVirtual:
                 self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
     
-    def gt(self,operador, terminoL, terminoR, direccion):
-        # print('EQUAL')
-        # print('valorL', terminoL)
+    def gt(self,operador, terminoL, terminoR, direccion):#Funcion encargada de checar si es mayor
         valorL = self.getValue(terminoL)
-        # print('valorR', terminoR)
         valorR = self.getValue(terminoR)
         if(valorL > valorR):
             if direccion >= 21000:
@@ -552,8 +471,7 @@ class MaquinaVirtual:
                  self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
     
-    def andF(self,operador, terminoL, terminoR, direccion):
-        # print('EQUAL')
+    def andF(self,operador, terminoL, terminoR, direccion):#Funcion encargada de checar si ambos terminos son true
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL == 1 and valorR == 1):
@@ -568,8 +486,7 @@ class MaquinaVirtual:
                  self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
     
-    def orF(self,operador, terminoL, terminoR, direccion):
-        # print('EQUAL')
+    def orF(self,operador, terminoL, terminoR, direccion): #Funcion encargada de checar si alguno de los terminos es true
         valorL = self.getValue(terminoL)
         valorR = self.getValue(terminoR)
         if(valorL == 1 or valorR == 1):
@@ -583,17 +500,17 @@ class MaquinaVirtual:
             else:
                 self.arrTemps[direccion-self.TempsBase] = 2
         self.CurrentIteration+=1
+        
+        #Terminan los boleanos
     
-    def eraF(self,operador, terminoL, terminoR, direccion):
+    def eraF(self,operador, terminoL, terminoR, direccion):#Crea el contexto para la función
         self.CurrentFunction +=1
-        # print('ERA')
         self.initialFunctionValues(direccion)
         self.CurrentIteration+=1
     
-    def paramF(self,operador, terminoL, terminoR, direccion):
+    def paramF(self,operador, terminoL, terminoR, direccion):#Asigna el valor para parametros
         asignar = terminoL
         terminoL = self.getValue(terminoL)
-        # print(asignar, terminoL)
         if(asignar >= 10000 and asignar < 11000):
             self.functions[self.CurrentFunction][0][terminoR-1] = terminoL
         if(asignar >= 15000 and asignar < 16000):
@@ -616,26 +533,21 @@ class MaquinaVirtual:
         self.CurrentIteration+=1
         
     def gosubF(self,operador, terminoL, terminoR, direccion):
-        # print('EQUAL')
-        # print(self.arrInt)
         self.gosub = self.CurrentIteration
         self.CurrentIteration = direccion
 
-    def endF(self,operador, terminoL, terminoR, direccion):
-        # print('EQUAL')
+    def endF(self,operador, terminoL, terminoR, direccion):#termina la función. Setea el currentFunction a 0  (global)
         self.CurrentIteration = self.gosub
         self.currentFunction = 0
         self.CurrentIteration+=1
     
-    def verify(self,operador, terminoL, terminoR, direccion):
+    def verify(self,operador, terminoL, terminoR, direccion):#Funcion encargada de verificar si el valor de arreglo esta dentro del rango
 
         terminoL = self.getValue(terminoL)
-        # print(self.arrInt)
         if(terminoL < direccion and terminoL >= terminoR):
             self.CurrentIteration+=1
         else:
             print('ERROR: ARRAY INDEX OUT OF BOUNDS')
-            print(terminoL)
             exit()
     
     def memoria(self,operador, terminoL, terminoR, direccion):
@@ -648,7 +560,7 @@ class MaquinaVirtual:
         self.isArray = True
         self.CurrentIteration+=1
         
-    def memoria2(self,operador, terminoL, terminoR, direccion):
+    def memoria2(self,operador, terminoL, terminoR, direccion):#Funcion encargada de sumar memorias para los arreglos
         
         terminoL = self.getValue(terminoL)
         terminoR = self.getValue(terminoR)
@@ -663,7 +575,7 @@ class MaquinaVirtual:
         self.isArray = True
         self.CurrentIteration+=1
         
-        
+    
     def timesm(self,operador, terminoL, terminoR, direccion):
         terminoL = self.getValue(terminoL)
         result = terminoL*terminoR
@@ -673,7 +585,7 @@ class MaquinaVirtual:
             self.arrTemps[direccion-self.TempsBase] = result
         self.CurrentIteration+=1
 
-    def switch_case(self, operador, terminoL, terminoR, asignar):
+    def switch_case(self, operador, terminoL, terminoR, asignar): #Swtich case para los valores que pueda tener el operador de los cuadruplos
         cases = {
             'GOTO': lambda: self.goto(asignar),
             'GOTOF': lambda: self.gotof(operador, terminoL, terminoR, asignar),
@@ -712,23 +624,14 @@ class MaquinaVirtual:
         }
         cases.get(operador, lambda: print("Didn't match a case:"))()
                 
-    def main(self):
-        turtle.title("Compiler MeMyself")
+    def main(self): #Funcion principal.
+        turtle.title("Mayka")
         self.initialValues()
         size = len(self.Quad)
-        # print('--- size -----',size) 
-        print('START READING QUADRUPLES')
-        while(self.CurrentIteration <= size):
-            # print('iteracion:',self.CurrentIteration)
-            # print(self.CurrentIteration)
-            # print(self.arrTemps)
-            # print(self.functions)
+        while(self.CurrentIteration <= size): #While que lee todos los cuadruplos
+    
             self.readQuadruples(self.CurrentIteration)
         print('Program ended with code 0;')
-        # print(self.functions)
-        # print('int',self.arrInt)
-        # print('float',self.arrFloats)
-        # print('temps',self.arrTemps)
-        # print('ctes',self.arrCtes)
+   
         if self.drawing:
             turtle.done()

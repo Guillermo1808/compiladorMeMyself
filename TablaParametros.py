@@ -34,10 +34,3 @@ class tablaParametros:
         if(self.parametros != {}):
             print('PARAMETROS:')
             print(self.parametros)
-
-
-# if __name__ == "__main__":
-#     tablaPar = tablaParametros()
-#     tablaPar.add(1,'int')
-#     tablaPar.add(2,'float')
-#     tablaPar.print()

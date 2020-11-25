@@ -60,7 +60,7 @@ class tablaVariables:
             else:
                 return False     
         except:
-            print('ERROR: VAR',id, 'NOT DECLARED')
+            print('ERROR: VAR NOT FOUND')
             exit()
     
     def initialValues(self):
