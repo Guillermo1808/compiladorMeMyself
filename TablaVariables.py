@@ -60,7 +60,7 @@ class tablaVariables:
             else:
                 return False     
         except:
-            print('ERROR: VAR NOT FOUND')
+            print('ERROR: VAR',id, 'NOT DECLARED')
             exit()
     
     def initialValues(self):
@@ -68,20 +68,6 @@ class tablaVariables:
 
         
     def print(self):                    # IMPRIME LA TABLA
-        # for key in self.variables:
         if(self.variables != {}):
             print('VARIABLES:')
             print(self.variables)
-                # print(self.variables[key]['tabla'])
-                # if(self.variables[key]['tabla'] != {}):
-                #     self.variables[key]['tabla']
-            
-
-
-# if __name__ == "__main__":
-#     tablaVar = tablaVariables()
-#     tablaVar.add('x', 'int', 10002)
-#     tablaVar.add('y', 'float', 3001)
-#     tablaVar.print()
-#     x = tablaVar.getType('x')
-#     print(x)
